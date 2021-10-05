@@ -7,7 +7,6 @@ tmp/
 *.o
 *.a
 .deps
-config.h
 INSTALL
 
 Makefile.in
@@ -23,11 +22,6 @@ lib/gtest/
 
 # generated manual pages
 *.1
-
-build-aux/ar-lib
-build-aux/compile
-build-aux/test-driver
-build-aux/ylwrap
 
 src/components/verilog/DLS_1ton.cpp
 src/components/verilog/DLS_nto1.cpp
@@ -81,7 +75,6 @@ src/components/verilog/*.cpp
 src/components/verilog/constants.vams
 src/components/verilog/disciplines.vams
 
-# qucsator generated files (in src)
 src/scan_netlist.cpp
 src/parse_netlist.cpp
 src/scan_dataset.cpp
@@ -108,7 +101,6 @@ src/gperfapphash.cpp
 src/gperfapphash.gph
 src/gperfappgen.h
 
-# spice converter generated files
 src/converter/parse_spice.cpp
 src/converter/scan_spice.cpp
 src/converter/tokens_spice.h
