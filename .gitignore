@@ -1,4 +1,11 @@
+.vscode/
+.idea/
+build*/
+cmake-build*/
+tmp/
+*~
 *.o
+*.a
 Makefile.in
 Makefile
 .deps
@@ -17,7 +24,6 @@ build-stamp
 aclocal.m4
 INSTALL
 depcomp
-*.a
 install-sh
 
 CMakeCache.txt
@@ -33,7 +39,6 @@ lib/gtest/
 # generated manual pages
 *.1
 
-# from qucs-core/.gitignore
 build-aux/ar-lib
 build-aux/compile
 build-aux/test-driver
@@ -90,39 +95,37 @@ src/components/verilog/*.cpp
 src/components/verilog/constants.vams
 src/components/verilog/disciplines.vams
 
-# qucsator generated files (in qucs-core/src)
-scan_netlist.cpp
-parse_netlist.cpp
-scan_dataset.cpp
-parse_dataset.cpp
-tokens_dataset.h
-tokens_netlist.h
-parse_touchstone.cpp
-tokens_touchstone.h
-scan_touchstone.cpp
-parse_citi.cpp
-tokens_citi.h
-scan_citi.cpp
-parse_zvr.cpp
-scan_zvr.cpp
-tokens_zvr.h
-parse_mdl.cpp
-scan_mdl.cpp
-tokens_mdl.h
-parse_csv.cpp
-tokens_csv.h
-scan_csv.cpp
-qucsdefs.h
-gperfapphash.cpp
-gperfapphash.gph
-gperfappgen.h
+# qucsator generated files (in src)
+src/scan_netlist.cpp
+src/parse_netlist.cpp
+src/scan_dataset.cpp
+src/parse_dataset.cpp
+src/tokens_dataset.h
+src/tokens_netlist.h
+src/parse_touchstone.cpp
+src/tokens_touchstone.h
+src/scan_touchstone.cpp
+src/parse_citi.cpp
+src/tokens_citi.h
+src/scan_citi.cpp
+src/parse_zvr.cpp
+src/scan_zvr.cpp
+src/tokens_zvr.h
+src/parse_mdl.cpp
+src/scan_mdl.cpp
+src/tokens_mdl.h
+src/parse_csv.cpp
+src/tokens_csv.h
+src/scan_csv.cpp
+src/qucsdefs.h
+src/gperfapphash.cpp
+src/gperfapphash.gph
+src/gperfappgen.h
 
-# spice converter generated files (in qucs-core/src/converter)
-parse_spice.cpp
-scan_spice.cpp
-tokens_spice.h
-parse_vcd.cpp
-scan_vcd.cpp
-tokens_vcd.h
-
-*~
+# spice converter generated files
+src/converter/parse_spice.cpp
+src/converter/scan_spice.cpp
+src/converter/tokens_spice.h
+src/converter/parse_vcd.cpp
+src/converter/scan_vcd.cpp
+src/converter/tokens_vcd.h
