@@ -24,7 +24,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 //#include <cstdlib>
@@ -514,7 +514,7 @@ nr_double_t conj (const nr_double_t r) {
  * \return input in degree (x)*180/pi
  */
 nr_double_t rad2deg (const nr_double_t x) {
-  return (180.0 * (x) / pi); 
+  return (180.0 * (x) / pi);
 }
 
 /*!
@@ -523,7 +523,7 @@ nr_double_t rad2deg (const nr_double_t x) {
  * \return input in radian (x)*pi/180
  */
 nr_double_t deg2rad (const nr_double_t x) {
-  return (pi * (x) / 180.0); 
+  return (pi * (x) / 180.0);
 }
 
 

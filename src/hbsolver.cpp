@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include<algorithm>
@@ -1090,7 +1090,7 @@ void hbsolver::loadMatrices (void) {
 }
 
 /* The following function transforms a vector using a Fast Fourier
-   Transformation from the time domain to the frequency domain. 
+   Transformation from the time domain to the frequency domain.
    \todo rewrite ugly should die
 */
 void hbsolver::VectorFFT (tvector<nr_complex_t> * V, int isign) {

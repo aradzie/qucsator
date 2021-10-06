@@ -28,7 +28,7 @@
 */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <cmath>
@@ -918,4 +918,3 @@ nr_double_t deg2rad (const nr_complex_t x) {
 }
 
 } // namespace qucs
-

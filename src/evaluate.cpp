@@ -24,7 +24,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -3447,8 +3447,8 @@ constant * evaluate::groupdelay_mv_i_i (constant * args) {
   int index1 = D (_ARES(1))-1;//Input port
   int index2 = D (_ARES(2))-1;//Output port
   _DEFV ();
-  
-  strlist * deps = _ARG(0)->collectDataDependencies ();  
+
+  strlist * deps = _ARG(0)->collectDataDependencies ();
   if (!deps || deps->length () != 1) {//Check there's an unique dependency
     THROW_MATH_EXCEPTION ("Not an appropriate dependent data vector");
     _RETC (0.0);
@@ -3488,8 +3488,8 @@ constant * evaluate::groupdelay_mv (constant * args) {
   _ARMV0 (S);
   _DEFV ();
   qucs::vector svec = S->get (1, 0);
-  
-  strlist * deps = _ARG(0)->collectDataDependencies ();  
+
+  strlist * deps = _ARG(0)->collectDataDependencies ();
   if (!deps || deps->length () != 1) {//Check there's an unique dependency
     THROW_MATH_EXCEPTION ("Not an appropriate dependent data vector");
     _RETC (0.0);
@@ -3502,8 +3502,8 @@ constant * evaluate::groupdelay_mv (constant * args) {
 constant * evaluate::groupdelay_v (constant * args) {
   _ARV0 (svec);
   _DEFV ();
-  
-  strlist * deps = _ARG(0)->collectDataDependencies ();  
+
+  strlist * deps = _ARG(0)->collectDataDependencies ();
   if (!deps || deps->length () != 1) {//Check there's an unique dependency
     THROW_MATH_EXCEPTION ("Not an appropriate dependent data vector");
     _RETC (0.0);
@@ -4872,4 +4872,3 @@ constant * evaluate::receiver_v_v (constant * args) {
 
 // Include the application array.
 #include "applications.h"
-

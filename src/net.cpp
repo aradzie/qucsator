@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -85,7 +85,7 @@ net::~net () {
     n = (circuit *) c->getNext ();
     delete c;
   }
-  // delete original actions 
+  // delete original actions
   for(auto * element : *orgacts) {
     delete element;
     element = nullptr;

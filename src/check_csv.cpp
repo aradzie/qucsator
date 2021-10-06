@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -185,4 +185,3 @@ void csv_init (void) {
   csv_vector = NULL;
   csv_header = NULL;
 }
-

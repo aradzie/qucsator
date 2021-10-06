@@ -61,7 +61,7 @@
 
 <admst:for-each select="/module">
 #if HAVE_CONFIG_H
-#include &lt;config.h&gt;
+#include "config.h"
 #endif
 
 #include "$(filename).$(module).analogfunction.h"

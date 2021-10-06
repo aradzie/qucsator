@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include "component.h"
@@ -54,7 +54,7 @@ void vrect::initDC (void) {
   if (tf > tl) tf = tl;
   // DC value defined as 0.0 instead of
   // (th + (tf - tr) / 2) / (th + tl) previously used
-  // so that the transient starting value will also be 0, 
+  // so that the transient starting value will also be 0,
   // otherwise a discontinuity occurs
   nr_double_t a  = 0.0;
   nr_double_t u  = getPropertyDouble ("U") * a;

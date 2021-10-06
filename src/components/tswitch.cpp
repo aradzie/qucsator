@@ -32,7 +32,7 @@
 
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <iostream>
@@ -161,14 +161,14 @@ void tswitch::calcTR (nr_double_t t) {
   } else {
     // calculate the time since the last switch occurred
     nr_double_t tdiff = std::max(NR_TINY, t - ts);
-    
+
     // set the time difference to be no more than the max switch
     // duration so when we interpolate below we only get the max
     // or min function value if we are past a switching time
     if (tdiff > duration) {
       tdiff = duration;
     }
-    // Set the appropriate resistance. 
+    // Set the appropriate resistance.
     if (on) {
       r_0 = roff;
       rdiff = ron - roff;
@@ -183,7 +183,7 @@ void tswitch::calcTR (nr_double_t t) {
       r = r_0 + rdiff * tdiff / duration;
     } else { // assume trans_type is "spline"
 	// the resistance is interpolated along a constrained cubic spline
-	// with zero derivative at the start and end points to ensure a 
+	// with zero derivative at the start and end points to ensure a
 	// smooth derivative
 	//r = r_0 + ((3. * s_i * qucs::pow (tdiff,2.0)) / (duration))
 	//        + ((-2. * s_i * qucs::pow (tdiff,3.0)) / qucs::pow (duration, 2.0));

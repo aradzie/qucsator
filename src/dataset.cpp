@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -400,7 +400,7 @@ void dataset::printData (vector * v, FILE * f) {
       fprintf (f, "  %+." "20" "e\n", (double) real (c));
     }
     else {
-      fprintf (f, "  %+." "20" "e%cj%." "20" "e\n", (double) real (c), 
+      fprintf (f, "  %+." "20" "e%cj%." "20" "e\n", (double) real (c),
 	       imag (c) >= 0.0 ? '+' : '-', (double) fabs (imag (c)));
     }
   }

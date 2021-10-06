@@ -22,7 +22,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include "component.h"
@@ -45,7 +45,7 @@ spembed::spembed () : spfile () {
 void spembed::initSP (void) {
   // allocate S-parameter matrix
   allocMatrixS ();
-  
+
   // initialize data
   // check type of data
   const char * const dtype = getPropertyString ("Data");

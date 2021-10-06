@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <algorithm>
@@ -92,7 +92,7 @@ bool nodelist::contains (const std::string &str) const {
 
 // Returns the node number of the given node name.
 int nodelist::getNodeNr (const std::string &str) const {
-  
+
   if(sorting) {
     auto it = std::find_if(narray.begin(),narray.end(),[str](nodelist_t *n) { return n->name == str; });
     if(it == narray.end())

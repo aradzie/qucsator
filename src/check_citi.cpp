@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -284,4 +284,3 @@ void citi_init (void) {
   citi_result = NULL;
   citi_root = NULL;
 }
-

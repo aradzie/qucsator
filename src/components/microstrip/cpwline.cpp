@@ -24,7 +24,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <limits>
@@ -49,7 +49,7 @@ cpwline::cpwline () : circuit (2) {
 */
 /* The function computes the complete elliptic integral of first kind
    K(k) using the arithmetic-geometric mean algorithm (AGM) found e.g.
-   in Abramowitz and Stegun (17.6.1). 
+   in Abramowitz and Stegun (17.6.1).
    Note that the argument of the function here is the elliptic modulus k
    and not the parameter m=k^2 . */
 /* \todo move to common math */

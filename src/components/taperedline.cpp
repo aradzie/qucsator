@@ -29,11 +29,11 @@
 [1] Microwave Engineering. David M Pozar. John Wiley and Sons. 4th edition. Pages 261-267
 [2] "Conversions between S, Z, Y, h, ABCD and T parameters which are Valid for Complex source and load impedances".
 Dean A. Frickey. IEEE Transaction on Microwave Theory and Techniques. Vol 42. No 2. February 1994
-[3] "Handbook of Mathematical functions with Formulas, Graphs and Mathematical Tables". Milton Abramowitz. 
+[3] "Handbook of Mathematical functions with Formulas, Graphs and Mathematical Tables". Milton Abramowitz.
 US department of commerce (1964). Link: http://people.math.sfu.ca/~cbm/aands/page_375.htm
 */
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include "component.h"
@@ -63,15 +63,15 @@ void taperedline::calcABCDparams(nr_double_t frequency)
   a = cosh(gamma*lstep);
   b = sinh(gamma*lstep); // need to be multiplied by Zi
   c = sinh(gamma*lstep); // need to be divided by Zi
-  d = cosh(gamma*lstep); 
+  d = cosh(gamma*lstep);
 
   nr_double_t l = lstep/2.0; // compute impedance in the middle of the section
   for (int idx = 0 ; idx < Nsteps; idx++)
   {
     // The line is discretized in finite elements. The size of these elements can be considered a differential
-    // length since the impedance change across the actual section is small. 
+    // length since the impedance change across the actual section is small.
     // Taking into account the cascading property of the ABCD matrix, the overall
-    // ABCD matrix can be calculated as the product of the individual ABCD matrices.   
+    // ABCD matrix can be calculated as the product of the individual ABCD matrices.
     Zi = Zprofile[idx];
     ABCDaux.set(0,0,a);
     ABCDaux.set(0,1,Zi*b);
@@ -133,7 +133,7 @@ nr_double_t L = getPropertyDouble ("L");//Length
      nr_double_t Zaux = Z2;
      Z2 = Z1;
      Z1 = Zaux;
-  } 
+  }
 
   nr_double_t gamma_max = getPropertyDouble ("Gamma_max");;//Maximum ripple (Klopfenstein weighting only)
   nr_double_t lstep = L/Nsteps; //Size of the differential elements
@@ -143,9 +143,9 @@ nr_double_t L = getPropertyDouble ("L");//Length
   for (idx = 0, l = lstep/2.0 ; idx < Nsteps; idx++, l += lstep)
   {
     // The line is discretized in finite elements. The size of these elements can be considered a differential
-    // length since the impedance change across the actual section is small. 
+    // length since the impedance change across the actual section is small.
     // Taking into account the cascading property of the ABCD matrix, the overall
-    // ABCD matrix can be calculated as the product of the individual ABCD matrices.   
+    // ABCD matrix can be calculated as the product of the individual ABCD matrices.
     if (!strcmp (getPropertyString ("Weighting"), "Exponential"))
     {
        Zprofile[idx] = calcExponential(l, L, Z1, Z2);
@@ -201,7 +201,7 @@ void taperedline::calcSP (nr_double_t frequency) {
   matrix Stmp = qucs::atos(ABCD, z0, z0);
   if (Z1 > Z2)
   {//Flip S matrix
-    Stmp.exchangeRows(0,1); 
+    Stmp.exchangeRows(0,1);
     Stmp.exchangeCols(0,1);
   }
   setMatrixS(Stmp);

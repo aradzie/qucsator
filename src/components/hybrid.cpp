@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include "component.h"
@@ -114,4 +114,3 @@ PROP_OPT [] = {
   PROP_NO_PROP };
 struct define_t hybrid::cirdef =
   { "Hybrid", 4, PROP_COMPONENT, PROP_NO_SUBSTRATE, PROP_LINEAR, PROP_DEF };
-

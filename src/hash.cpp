@@ -7,23 +7,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this package; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
- * Boston, MA 02110-1301, USA.  
+ * Boston, MA 02110-1301, USA.
  *
  * $Id$
  *
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <assert.h>
@@ -74,7 +74,7 @@ template <class type_t>
 qucs::hash<type_t>::hash (int size) {
   // set initial hash table size to a binary value
   int n;
-  for (n = size, buckets = 1; n != 1; n >>= 1) 
+  for (n = size, buckets = 1; n != 1; n >>= 1)
     buckets <<= 1;
   if (buckets < HASH_MIN_SIZE)
     buckets = HASH_MIN_SIZE;

@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -651,8 +651,8 @@ void trsolver::adjustDelta (nr_double_t t)
                     // and next step will be very tiny, possibly causing numerical issues
                     // so reduce it so that next step will likely not end up too close
                     // to the breakpoint
-                    delta /= 2.0; 
-		} 
+                    delta /= 2.0;
+		}
                 else
 	        {
                     if (delta > (t - current) && t > current)

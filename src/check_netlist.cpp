@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -2353,4 +2353,3 @@ void netlist_destroy_env (void)
         env_root = NULL;
     }
 }
-

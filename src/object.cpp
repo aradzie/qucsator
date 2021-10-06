@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -185,8 +185,8 @@ int object::countProperties (void) const {
 // This function returns a text representation of the objects properties.
 const char * object::propertyList (void) const {
   std::string ptxt;
-  for(auto it = props.cbegin(); it != props.cend(); ++it) {      
-    std::string n = it->first;    
+  for(auto it = props.cbegin(); it != props.cend(); ++it) {
+    std::string n = it->first;
     std::string val = it->second.toString ();
     std::string text = n+"=\""+val+"\"";
     ptxt += text;

@@ -23,7 +23,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include "config.h"
 #endif
 
 #include <stdio.h>
@@ -504,4 +504,3 @@ int mdl2qucs (struct actionset_t * action, char * infile, char * outfile) {
   mdl_destroy ();
   return 0;
 }
-
