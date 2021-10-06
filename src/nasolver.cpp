@@ -24,9 +24,6 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#else
-// BUG
-#include "qucs_typedefs.h"
 #endif
 
 #include <stdio.h>
@@ -1380,11 +1377,11 @@ void nasolver<nr_type_t>::saveResults (const std::string &volts, const std::stri
                     c->getOperatingPoint ("VAi")), f);
 		   continue;
 		}
-           	
+
            	std::string n = createOP(c->getName(), p.getName());
            	saveVariable(n, p.getValue(), f);
-       	    }	    
-	    	    
+       	    }
+
         }
     }
 

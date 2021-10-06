@@ -27,10 +27,8 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#else
-// BUG
-#include "qucs_typedefs.h"
 #endif
+
 #include "tvector.h"
 #include "tmatrix.h"
 #include "eqnsys.h"
