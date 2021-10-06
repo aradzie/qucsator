@@ -17,9 +17,6 @@
  * along with this package; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
  * Boston, MA 02110-1301, USA.
- *
- * $Id$
- *
  */
 
 #ifndef __HISTORY_H__
@@ -39,9 +36,9 @@ public:
     sign(false),
     age(0),
     values(std::make_shared<std::vector<nr_double_t>>()),
-    t(std::make_shared<std::vector<nr_double_t>>()) 
+    t(std::make_shared<std::vector<nr_double_t>>())
   {};
-  
+
   /*! The copy constructor creates a new instance based on the given
       history object. */
   history (const history &h)
@@ -54,7 +51,7 @@ public:
   /*! The function appends the given value to the history. */
   void push_back (const nr_double_t val) {
     this->values->push_back(val);
-    if (this->values != this->t) 
+    if (this->values != this->t)
       this->drop ();
   }
 
@@ -103,14 +100,14 @@ public:
     int vs = values->size ();
     return vs - ts > 0 ? vs - ts : 0;
   }
-  
+
   //! Returns the duration of the history.
   nr_double_t duration(void) const {
      return last () - first ();
   }
-  
+
   void truncate (const nr_double_t);
-  
+
   void drop (void);
   void self (void) { this->t = this->values; }
 

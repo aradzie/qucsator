@@ -17,9 +17,6 @@
  * along with this package; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
  * Boston, MA 02110-1301, USA.
- *
- * $Id: components.h 1872 2013-03-06 14:13:37Z fransschreuder $
- *
  */
 
 #ifndef __COMPONENTS_H__

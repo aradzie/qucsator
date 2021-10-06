@@ -17,9 +17,6 @@
  * along with this package; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
  * Boston, MA 02110-1301, USA.
- *
- * $Id$
- *
  */
 
 #ifndef __DCSOLVER_H__
@@ -49,4 +46,3 @@ class dcsolver : public nasolver<nr_double_t>
 } // namespace qucs
 
 #endif /* __DCSOLVER_H__ */
-

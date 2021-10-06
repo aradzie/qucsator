@@ -17,9 +17,6 @@
  * along with this package; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
  * Boston, MA 02110-1301, USA.
- *
- * $Id: object.h 1871 2013-03-06 12:53:05Z crobarcro $
- *
  */
 
  /*! \file object.h
