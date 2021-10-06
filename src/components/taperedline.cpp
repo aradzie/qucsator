@@ -32,9 +32,7 @@ Dean A. Frickey. IEEE Transaction on Microwave Theory and Techniques. Vol 42. No
 [3] "Handbook of Mathematical functions with Formulas, Graphs and Mathematical Tables". Milton Abramowitz.
 US department of commerce (1964). Link: http://people.math.sfu.ca/~cbm/aands/page_375.htm
 */
-#if HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include "component.h"
 #include "taperedline.h"

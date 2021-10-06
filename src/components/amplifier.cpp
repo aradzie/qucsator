@@ -30,9 +30,7 @@
     to output and blocks all signals flowing into the output.
 */
 
-#if HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include "component.h"
 #include "amplifier.h"

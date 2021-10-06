@@ -4,10 +4,10 @@ function qucstrsolversetup(dodebug, verbose)
     if nargin < 1
         dodebug = false;
     end
-    
+
     if nargin < 2
         verbose = false;
-    end 
+    end
 
     if isoctave
         cc.Name = 'gcc';
@@ -31,11 +31,11 @@ function qucstrsolversetup(dodebug, verbose)
     % set some common compiler flags, we replace all calls to printf to
     % calls to mexPrintf
     if dodebug
-        common_compiler_flags = {'-DHAVE_CONFIG_H', '-g', '-D"_MEX_DEBUG"'};
+        common_compiler_flags = {'-g', '-D"_MEX_DEBUG"'};
     else
-        common_compiler_flags = {'-DHAVE_CONFIG_H'};% common_compiler_flags = '-D"printf=mexPrintf"';
+        common_compiler_flags = {};% common_compiler_flags = '-D"printf=mexPrintf"';
     end
-    
+
     if verbose
         common_compiler_flags = [common_compiler_flags, {'-v'}];
     end

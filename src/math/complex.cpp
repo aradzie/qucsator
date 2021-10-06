@@ -27,9 +27,7 @@
    Implements complex number class and functions
 */
 
-#if HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <cmath>
 #include <assert.h>

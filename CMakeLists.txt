@@ -41,8 +41,6 @@ endif(POLICY CMP0048)
 # otherwise qucsator cannot generate qucsdefs.h
 add_definitions(-DDEBUG)
 
-# defines nr_double_t
-add_definitions(-DHAVE_CONFIG_H)
 
 # ~~~
 # TODO

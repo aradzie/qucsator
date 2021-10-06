@@ -30,7 +30,7 @@ LIBS=-lqucsator
 ifeq ($(OS),Windows_NT)
   DLLEXT=.dll
   CXX=g++
-  CXXFLAGS=-std=gnu++11 -shared -DHAVE_CONFIG_H -DQUCSADMS_DYLOAD -I./  -I$(INC)
+  CXXFLAGS=-std=gnu++11 -shared -DQUCSADMS_DYLOAD -I./  -I$(INC)
 
   # handle deletion if Windows cmd.exe or MinGW MSYS terminal
   RM=del
@@ -45,7 +45,7 @@ else
     CXX=g++
     CXXFLAGS=-std=gnu++11 -fPIC -shared -rdynamic
     CXXFLAGS:=$(CXXFLAGS) -Wl,-soname,$(MODEL)$(DLLEXT)
-    CXXFLAGS:=$(CXXFLAGS) -DHAVE_CONFIG_H -DQUCSADMS_DYLOAD -I./  -I$(INC)
+    CXXFLAGS:=$(CXXFLAGS) -DQUCSADMS_DYLOAD -I./  -I$(INC)
   endif
 
   ifeq ($(UNAME_S),Darwin)
@@ -53,7 +53,7 @@ else
     CXX=clang++
     CXXFLAGS=-stdlib=libc++ -dynamiclib -flat_namespace
     CXXFLAGS:=$(CXXFLAGS) -undefined dynamic_lookup -Wl,-headerpad_max_install_names
-    CXXFLAGS:=$(CXXFLAGS) -DHAVE_CONFIG_H -DQUCSADMS_DYLOAD -I./  -I$(INC)
+    CXXFLAGS:=$(CXXFLAGS) -DQUCSADMS_DYLOAD -I./  -I$(INC)
   endif
 
   # common to Linux, Darwin

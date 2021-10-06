@@ -81,9 +81,7 @@
       http://authors.library.caltech.edu/6226/01/WEDieeetmtt92.pdf
 
 */
-#if HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <assert.h>
 #include <stdio.h>

@@ -1125,9 +1125,7 @@ double $(module)_d_$(function) (<admst:join select="variable[input='yes']" separ
  *
  */
 
-#if HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include &lt;stdio.h&gt;
 #include "$(filename).$(module).analogfunction.h"
