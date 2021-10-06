@@ -1,15 +1,18 @@
 include_directories(
-  ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src/math
-  ${CMAKE_CURRENT_BINARY_DIR}) # qucdefs.h
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/src/math
+  ${CMAKE_CURRENT_BINARY_DIR})
 
-set(QUCSCONV_SRC
-    check_spice.cpp
-    check_vcd.cpp
-    matlab_producer.cpp
-    csv_producer.cpp
-    qucs_producer.cpp
-    qucsconv.cpp
-    touchstone_producer.cpp)
+set(
+  QUCSCONV_SRC
+  check_spice.cpp
+  check_vcd.cpp
+  matlab_producer.cpp
+  csv_producer.cpp
+  qucs_producer.cpp
+  qucsconv.cpp
+  touchstone_producer.cpp)
 
 
 set(ParserTypes spice vcd)
