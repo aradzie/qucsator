@@ -96,17 +96,6 @@ else()
 endif()
 message(STATUS "using double type: ${DoubleType}; size: ${DoubleSize}")
 
-# defines used in qucs_typedefs.h
-set(QUCS_INT32_TYPE ${nr_int32_t})
-set(QUCS_INT16_TYPE ${nr_int16_t})
-set(QUCS_DOUBLE_TYPE ${DoubleType})
-set(QUCS_DOUBLE_SIZE ${DoubleSize})
-#
-# Configure the header qucs_typedefs.h, interpolate above definitions.
-#
-configure_file("${qucs-core_SOURCE_DIR}/qucs_typedefs.h.cmake"
-               "${qucs-core_BINARY_DIR}/qucs_typedefs.h")
-
 #
 # Check for library functions * not all functions seem to be used after defined.
 # TODO check for HAVE_{func}
@@ -389,7 +378,6 @@ set(TEMPLATES
 #
 set(PUBLIC_HEADERS
     ${qucs-core_BINARY_DIR}/config.h
-    ${qucs-core_BINARY_DIR}/qucs_typedefs.h
     circuit.h
     compat.h
     constants.h
