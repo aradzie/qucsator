@@ -30,10 +30,6 @@ __BEGIN_DECLS
 void logprint (int, const char *, ...);
 void loginit (void);
 void redirect_status_to_stdout();
-void logprogressbar (nr_double_t, nr_double_t, int);
-void logprogressclear (int);
-extern int progressbar_enable;
-extern int progressbar_gui;
 
 __END_DECLS
 

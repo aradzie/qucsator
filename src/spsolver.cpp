@@ -595,7 +595,6 @@ int spsolver::solve (void) {
   swp->reset ();
   for (int i = 0; i < swp->getSize (); i++) {
     freq = swp->next ();
-    if (progress) logprogressbar (i, swp->getSize (), 40);
 
     ports = subnet->countNodes ();
     subnet->setReduced (0);
@@ -616,7 +615,6 @@ int spsolver::solve (void) {
     subnet->deleteUnusedCircuits (nlist);
     if (saveCVs & SAVE_CVS) saveCharacteristics (freq);
   }
-  if (progress) logprogressclear (40);
   dropConnections ();
 #if SORTED_LIST
   delete nlist; nlist = NULL;

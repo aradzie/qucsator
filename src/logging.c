@@ -52,46 +52,6 @@ void loginit (void) {
 }
 
 /* Customize logging. */
-void redirect_status_to_stdout(){
-	file_status = stdout;
-}
-
-/* Last number of '*' in the progress bar. */
-int progressbar_last = 0;
-
-/* Print a tiny progress-bar depending on the arguments. */
-void logprogressbar (nr_double_t current, nr_double_t final, int points) {
-  int i;
-  if (progressbar_enable) {
-    if (((int) (current * 100 / final)) == progressbar_last && current)
-      return;
-    progressbar_last = (int) (current * 100 / final);
-    if (progressbar_gui) {
-      logprint (LOG_STATUS, "\t%02d\r", progressbar_last);
-    }
-    else {
-      logprint (LOG_STATUS, "[");
-      for (i = 0; i < (current  * points / final); i++)
-	logprint (LOG_STATUS, "*");
-      for (; i < points; i++) logprint (LOG_STATUS, " ");
-      logprint (LOG_STATUS, "] %.2f%%      \r",
-		(double) (current * 100.0 / final));
-    }
-  }
-}
-
-/* If non-zero then progress bars are painted... */
-int progressbar_enable = 0;
-
-/* If non-zero then progress bars are painted for the GUI. */
-int progressbar_gui = 0;
-
-/* Clears up the progress bar if requested. */
-void logprogressclear (int points) {
-  int i;
-  progressbar_last = 0;
-  if (progressbar_enable && !progressbar_gui) {
-    for (i = 0; i < points + 15; i++) logprint (LOG_STATUS, " ");
-    logprint (LOG_STATUS, "\r");
-  }
+void redirect_status_to_stdout() {
+  file_status = stdout;
 }

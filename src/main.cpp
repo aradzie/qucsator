@@ -73,11 +73,8 @@ int main (int argc, char ** argv) {
       fprintf (stdout,
 	"Usage: %s [OPTION]...\n\n"
 	"  -h, --help     display this help and exit\n"
-	"  -v, --version  display version information and exit\n"
 	"  -i FILENAME    use file as input netlist (default stdin)\n"
 	"  -o FILENAME    use file as output dataset (default stdout)\n"
-	"  -b, --bar      enable textual progress bar\n"
-	"  -g, --gui      special progress bar used by gui\n"
 	"  -c, --check    check the input netlist and exit\n"
 #if DEBUG
     "  -l, --listing  emit C-code for available definitions\n"
@@ -93,12 +90,6 @@ int main (int argc, char ** argv) {
     else if (!strcmp (argv[i], "-o")) {
       outfile = argv[++i];
       redirect_status_to_stdout();
-    }
-    else if (!strcmp (argv[i], "-b") || !strcmp (argv[i], "--bar")) {
-      progressbar_enable = 1;
-    }
-    else if (!strcmp (argv[i], "-g") || !strcmp (argv[i], "--gui")) {
-      progressbar_gui = 1;
     }
     else if (!strcmp (argv[i], "-c") || !strcmp (argv[i], "--check")) {
       netlist_check = 1;

@@ -233,7 +233,6 @@ int trsolver::solve (void)
     for (int i = 0; i < swp->getSize (); i++)
     {
         time = swp->next ();
-        if (progress) logprogressbar (i, swp->getSize (), 40);
 
 #if DEBUG && 0
         logprint (LOG_STATUS, "NOTIFY: %s: solving netlist for t = %e\n",
@@ -381,7 +380,6 @@ int trsolver::solve (void)
     } // for (int i = 0; i < swp->getSize (); i++)
 
     solve_post ();
-    if (progress) logprogressclear (40);
     logprint (LOG_STATUS, "NOTIFY: %s: average time-step %g, %d rejections\n",
               getName (), (double) (saveCurrent / statSteps), statRejected);
     logprint (LOG_STATUS, "NOTIFY: %s: average NR-iterations %g, "

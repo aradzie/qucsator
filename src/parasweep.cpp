@@ -149,8 +149,6 @@ int parasweep::solve (void) {
   for (int i = 0; i < swp->getSize (); i++) {
     // obtain next sweep point
     nr_double_t v = swp->next ();
-    // display progress bar if requested
-    if (progress) logprogressbar (i, swp->getSize (), 40);
     // update environment and equation checker, then run solver
     env->setDoubleConstant (n, v);
     env->setDouble (n, v);
@@ -169,8 +167,6 @@ int parasweep::solve (void) {
 	data->assignDependency (dep->getName (), var->getName ());
     }
   }
-  // clear progress bar
-  if (progress) logprogressclear (40);
   return err;
 }
 
