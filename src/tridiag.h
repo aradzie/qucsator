@@ -23,7 +23,6 @@
 #define __TRIDIAG_H__
 
 #include <vector>
-//#include "tvector.h"
 
 namespace qucs {
 

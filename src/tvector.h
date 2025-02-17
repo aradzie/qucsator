@@ -89,7 +89,6 @@ class tvector
   int  contains (nr_type_t, nr_double_t eps = std::numeric_limits<nr_double_t>::epsilon());
 
   // some basic vector operations
-#ifndef _MSC_VER
   friend tvector operator +<> (tvector, tvector);
   friend tvector operator -<> (tvector, tvector);
   friend tvector operator *<> (tvector, nr_double_t);
@@ -98,22 +97,17 @@ class tvector
   friend tvector operator -<> (tvector);
   friend tvector operator +<> (tvector, nr_type_t);
   friend tvector operator +<> (nr_type_t, tvector);
-#endif
 
   // other operations
-#ifndef _MSC_VER
   friend nr_double_t norm<> (tvector);
   friend nr_double_t maxnorm<> (tvector);
   friend nr_type_t   sum<> (tvector);
   friend nr_type_t   scalar<> (tvector, tvector);
   friend tvector     conj<> (tvector);
-#endif
 
   // comparisons
-#ifndef _MSC_VER
   friend bool operator < <> (tvector, tvector);
   friend bool operator > <> (tvector, tvector);
-#endif
 
   // intrinsic operators
   tvector operator += (tvector);
@@ -141,15 +135,6 @@ class tvector
   std::vector<nr_type_t> data;
 
 };
-
-  /*
-  int  contains (nr_type_t val, nr_double_t eps = std::numeric_limits<nr_double_t>::epsilon()) {
-    int count = 0;
-    for (int i = 0; i < (int)data.size (); i++) if (abs ((data)[i] - val) <= eps) count++;
-    return count;
-    }*/
-
-
 
 } // namespace qucs
 

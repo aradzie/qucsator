@@ -46,7 +46,7 @@
 #include "vector.h"
 #include "dataset.h"
 #include "check_dataset.h"
-#include "parse_dataset.hpp"
+#include "parse_dataset.h"
 
 using namespace qucs;
 

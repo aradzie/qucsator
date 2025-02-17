@@ -22,17 +22,21 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <cstring>
 #include <cmath>
 
 #include "object.h"
 #include "complex.h"
 #include "circuit.h"
+#include "dataset.h"
 #include "sweep.h"
 #include "net.h"
 #include "netdefs.h"
 #include "analysis.h"
 #include "nasolver.h"
 #include "acsolver.h"
+#include "vector.h"
+#include "node.h"
 
 namespace qucs {
 
@@ -90,7 +94,6 @@ int acsolver::solve (void) {
   swp->reset ();
   for (int i = 0; i < swp->getSize (); i++) {
     freq = swp->next ();
-    if (progress) logprogressbar (i, swp->getSize (), 40);
 
 #if DEBUG && 0
     logprint (LOG_STATUS, "NOTIFY: %s: solving netlist for f = %e\n",
@@ -108,7 +111,6 @@ int acsolver::solve (void) {
     saveAllResults (freq);
   }
   solve_post ();
-  if (progress) logprogressclear (40);
   return 0;
 }
 

@@ -1,11 +1,12 @@
 include_directories(
-  ${qucs-core_SOURCE_DIR}
-  ${qucs-core_CURRENT_SOURCE_DIR}
-  ${qucs-core_SOURCE_DIR}/src/math
-  ${qucs-core_SOURCE_DIR}/src/components)
+  ${CMAKE_SOURCE_DIR}/src
+  ${CMAKE_SOURCE_DIR}/src/components
+  ${CMAKE_SOURCE_DIR}/src/components/digital
+  ${CMAKE_SOURCE_DIR}/src/math
+)
 
 set(
-  DIGITAL_SRC
+  SOURCES
   and.cpp
   buffer.cpp
   digisource.cpp
@@ -15,6 +16,7 @@ set(
   nor.cpp
   or.cpp
   xnor.cpp
-  xor.cpp)
+  xor.cpp
+)
 
-add_library(coreDigital OBJECT ${DIGITAL_SRC})
+add_library(coreDigital OBJECT ${SOURCES})

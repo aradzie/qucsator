@@ -1,12 +1,13 @@
 include_directories(
-  ${qucs-core_SOURCE_DIR}
-  ${qucs-core_CURRENT_SOURCE_DIR}
-  ${qucs-core_SOURCE_DIR}/src/math
-  ${qucs-core_SOURCE_DIR}/src/components
-  ${qucs-core_SOURCE_DIR}/src/components/devices)
+  ${CMAKE_SOURCE_DIR}/src
+  ${CMAKE_SOURCE_DIR}/src/components
+  ${CMAKE_SOURCE_DIR}/src/components/devices
+  ${CMAKE_SOURCE_DIR}/src/components/microstrip
+  ${CMAKE_SOURCE_DIR}/src/math
+)
 
 set(
-  MICROSTRIP_SRC
+  SOURCES
   bondwire.cpp
   circularloop.cpp
   cpwgap.cpp
@@ -27,6 +28,7 @@ set(
   mstee.cpp
   msvia.cpp
   spiralinductor.cpp
-  substrate.cpp)
+  substrate.cpp
+)
 
-add_library(coreMicrostrip OBJECT ${MICROSTRIP_SRC})
+add_library(coreMicrostrip OBJECT ${SOURCES})

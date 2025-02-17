@@ -1,11 +1,12 @@
 include_directories(
-  ${qucs-core_SOURCE_DIR}
-  ${qucs-core_CURRENT_SOURCE_DIR}
-  ${qucs-core_SOURCE_DIR}/src/math
-  ${qucs-core_SOURCE_DIR}/src/components)
+  ${CMAKE_SOURCE_DIR}/src
+  ${CMAKE_SOURCE_DIR}/src/components
+  ${CMAKE_SOURCE_DIR}/src/components/devices
+  ${CMAKE_SOURCE_DIR}/src/math
+)
 
 set(
-  DEVICES_SRC
+  SOURCES
   bjt.cpp
   device.cpp
   diac.cpp
@@ -15,10 +16,7 @@ set(
   mosfet.cpp
   thyristor.cpp
   triac.cpp
-  tunneldiode.cpp)
+  tunneldiode.cpp
+)
 
-add_library(coreDevices OBJECT ${DEVICES_SRC})
-
-set(HEADERS device.h)
-
-install(FILES ${HEADERS} DESTINATION include/qucs-core)
+add_library(coreDevices OBJECT ${SOURCES})

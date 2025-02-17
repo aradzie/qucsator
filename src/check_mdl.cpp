@@ -39,7 +39,7 @@
 #include "valuelist.h"
 #include "constants.h"
 #include "check_mdl.h"
-#include "parse_mdl.hpp"
+#include "parse_mdl.h"
 
 using namespace qucs;
 

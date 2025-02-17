@@ -46,7 +46,7 @@
 #include "vector.h"
 #include "dataset.h"
 #include "check_csv.h"
-#include "parse_csv.hpp"
+#include "parse_csv.h"
 
 using namespace qucs;
 

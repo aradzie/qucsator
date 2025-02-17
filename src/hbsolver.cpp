@@ -21,9 +21,10 @@
 
 #include "config.h"
 
-#include<algorithm>
+#include <algorithm>
 
 #include <stdio.h>
+#include <cstring>
 
 #include "object.h"
 #include "logging.h"
@@ -43,6 +44,8 @@
 #include "dataset.h"
 #include "fourier.h"
 #include "hbsolver.h"
+#include "exception.h"
+#include "exceptionstack.h"
 
 #define HB_DEBUG 0
 

@@ -55,19 +55,17 @@
 */
 
 
-//#include "config.h"
-//
-//#include <cmath>
-//#include <assert.h>
-//#include <errno.h>
-//#include <stdio.h>
-//#include <stdlib.h>
-//
-//#include "real.h"
-//#include "complex.h"
-//#include "constants.h"
-//#include "precision.h"
-//#include <limits>
+#include "config.h"
+
+#include <cassert>
+#include <cmath>
+#include <limits>
+
+#include "real.h"
+#include "complex.h"
+#include "constants.h"
+#include "precision.h"
+
 
 #define SMALL_J0_BOUND 1e6
 
@@ -90,7 +88,7 @@
     R_{-1}&=1 & R_k &= a_k R_{k-1} \\
     a_0&=\frac{\left(\frac{1}{2}z\right)^n}{n!} &
     a_{+k}&=\frac{-\frac{1}{4} z^2}{k(n+k)}
-    \}
+   \}
 
     \todo Not really adapted to high order
           therefore we do not check overflow for n >> 1
@@ -230,7 +228,7 @@ cbesselj_largearg (unsigned int n, nr_complex_t z)
   Q_ = Q0;
   Qk = Q0;
 
-  m1a8z2 = (-1.0) / (8.0 * sqr (z));
+  m1a8z2 = (-1.0) / (8.0 * qucs::sqr (z));
 
   /* P */
   for (k = 1;; k++)
@@ -238,7 +236,7 @@ cbesselj_largearg (unsigned int n, nr_complex_t z)
       /* Usually converge before overflow */
       assert (k <= MAX_LARGE_ITERATION);
 
-      num = (4 * sqr (n) - sqr (4 * k - 3)) * (4 * sqr (n) - (4 * k - 1));
+      num = (4 * qucs::sqr (n) - qucs::sqr (4 * k - 3)) * (4 * qucs::sqr (n) - (4 * k - 1));
       denum = 2 * k * (2 * k - 1);
       Pk = Pk * ((nr_double_t) num * m1a8z2) / ((nr_double_t) denum);
 
@@ -255,7 +253,7 @@ cbesselj_largearg (unsigned int n, nr_complex_t z)
       /* Usually converge before overflow */
       assert (k <= MAX_LARGE_ITERATION);
 
-      num = (4 * sqr (n) - sqr (4 * k - 1)) * (4 * sqr (n) - (4 * k - 1));
+      num = (4 * qucs::sqr (n) - qucs::sqr (4 * k - 1)) * (4 * qucs::sqr (n) - (4 * k - 1));
       denum = 2 * k * (2 * k - 1);
       Qk = Qk * ((nr_double_t) num * m1a8z2) / ((nr_double_t) denum);
 

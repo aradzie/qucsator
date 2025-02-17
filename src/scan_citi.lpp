@@ -46,7 +46,7 @@
 #include "vector.h"
 #include "dataset.h"
 #include "check_citi.h"
-#include "parse_citi.hpp"
+#include "parse_citi.h"
 
 using namespace qucs;
 

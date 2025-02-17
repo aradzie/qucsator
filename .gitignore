@@ -8,10 +8,8 @@ tmp/
 *.o
 *.a
 .deps
-INSTALL
 
-CMakeCache.txt
-CMakeFiles
-cmake_install.cmake
-uninstall.cmake
-install_manifest.txt
+src/parse_*.h
+src/parse_*.cpp
+src/scan_*.h
+src/scan_*.cpp

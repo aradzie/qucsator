@@ -33,14 +33,14 @@
 #include "analyses.h"
 #include "netdefs.h"
 #include "module.h"
+#include "logging.h"
+#include "nodeset.h"
 
-#ifdef __MINGW32__
- #include <windows.h>
-#else
- #include <dlfcn.h>
-#endif
+#include <dlfcn.h>
 
 #include <cstdlib> //for exit
+
+namespace qucs {
 
 // Global module hash.
 qucs::hash<module> module::modules;
@@ -259,45 +259,6 @@ void module::registerModules (void) {
   REGISTER_CIRCUIT (digisource);
   REGISTER_CIRCUIT (buffer);
 
-  REGISTER_CIRCUIT (EKV26MOS);
-  REGISTER_CIRCUIT (log_amp);
-  REGISTER_CIRCUIT (mod_amp);
-  REGISTER_CIRCUIT (MESFET);
-  REGISTER_CIRCUIT (nigbt);
-  REGISTER_CIRCUIT (photodiode);
-  REGISTER_CIRCUIT (phototransistor);
-  REGISTER_CIRCUIT (potentiometer);
-
-  REGISTER_CIRCUIT (dff_SR);
-  REGISTER_CIRCUIT (tff_SR);
-  REGISTER_CIRCUIT (jkff_SR);
-  REGISTER_CIRCUIT (gatedDlatch);
-  REGISTER_CIRCUIT (logic_1);
-  REGISTER_CIRCUIT (logic_0);
-  REGISTER_CIRCUIT (mux2to1);
-  REGISTER_CIRCUIT (mux4to1);
-  REGISTER_CIRCUIT (mux8to1);
-  REGISTER_CIRCUIT (DLS_nto1);
-  REGISTER_CIRCUIT (DLS_1ton);
-  REGISTER_CIRCUIT (andor4x2);
-  REGISTER_CIRCUIT (andor4x3);
-  REGISTER_CIRCUIT (andor4x4);
-  REGISTER_CIRCUIT (dmux2to4);
-  REGISTER_CIRCUIT (dmux3to8);
-  REGISTER_CIRCUIT (dmux4to16);
-  REGISTER_CIRCUIT (ha1b);
-  REGISTER_CIRCUIT (fa1b);
-  REGISTER_CIRCUIT (fa2b);
-  REGISTER_CIRCUIT (pad2bit);
-  REGISTER_CIRCUIT (pad3bit);
-  REGISTER_CIRCUIT (pad4bit);
-  REGISTER_CIRCUIT (binarytogrey4bit);
-  REGISTER_CIRCUIT (greytobinary4bit);
-  REGISTER_CIRCUIT (comp_1bit);
-  REGISTER_CIRCUIT (comp_2bit);
-  REGISTER_CIRCUIT (comp_4bit);
-  REGISTER_CIRCUIT (hpribin4bit);
-  REGISTER_CIRCUIT (vcresistor);
   REGISTER_CIRCUIT (ecvs);
 
   // analyses
@@ -307,7 +268,7 @@ void module::registerModules (void) {
   REGISTER_ANALYSIS (trsolver);
   REGISTER_ANALYSIS (hbsolver);
   REGISTER_ANALYSIS (parasweep);
-  REGISTER_ANALYSIS (e_trsolver);
+  REGISTER_ANALYSIS (trsolver);
 }
 
 // Global module unregistration.
@@ -454,27 +415,11 @@ void module::registerDynamicModules (char *proj, std::list<std::string> modlist)
 
     std::string absPathLib = proj;
 
-#ifdef __APPLE__
-    absPathLib = absPathLib + "/" + *it + ".dylib";
-#endif
-#ifdef __linux__
   absPathLib = absPathLib + "/" + *it + ".so";
-#endif
-#ifdef __MINGW32__
-  absPathLib = absPathLib + "\\" + *it + ".dll";
-#endif
 
     // which lib is going to be loaded
     fprintf( stdout, "try loading %s\n", absPathLib.c_str() );
 
-#if __MINGW32__
-    // Load the DLL
-    HINSTANCE dlib = ::LoadLibrary(TEXT(absPathLib.c_str()));
-    if (!dlib) {
-        std::cerr << "Unable to load DLL!\n";
-        exit(-1);
-    }
-#else //Linux and OSX
     // for some reason the RTLD_NOW alones makes dlopen
     // stick with the name (content) of the first loaded library
     void* dlib = dlopen(absPathLib.c_str(), RTLD_NOW|RTLD_LOCAL);
@@ -482,7 +427,6 @@ void module::registerDynamicModules (char *proj, std::list<std::string> modlist)
       std::cerr << dlerror() << std::endl;
       exit(-1);
     }
-#endif
 
     // add the handle to our list
     dl_list.insert(dl_list.end(), dlib);
@@ -544,10 +488,8 @@ void module::registerDynamicModules (char *proj, std::list<std::string> modlist)
 void module::closeDynamicLibs()
 {
   for(itr=dl_list.begin(); itr!=dl_list.end(); itr++){
-#if __MINGW32__
-    FreeLibrary(*itr);
-#else
     dlclose(*itr);
-#endif
   }
+}
+
 }

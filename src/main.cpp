@@ -1,6 +1,4 @@
 /*
- * ucs.cpp - main program implementation
- *
  * Copyright (C) 2003-2009 Stefan Jahn <stefan@lkcc.org>
  *
  * This is free software; you can redistribute it and/or modify
@@ -71,23 +69,6 @@ int main (int argc, char ** argv) {
 
   // check program arguments
   for (int i = 1; i < argc; i++) {
-    if (!strcmp (argv[i], "-v") || !strcmp (argv[i], "--version")) {
-      fprintf (stdout,
-#ifdef GIT_REVISION
-	"Qucsator " PACKAGE_VERSION " (" GIT_REVISION ") \n"
-#else
-	"Qucsator " PACKAGE_VERSION "\n"
-#endif
-	"Copyright (C) 2003-2009 "
-	"Stefan Jahn <stefan@lkcc.org>\n"
-        "Copyright (C) 2006 Helene Parruitte <parruit@enseirb.fr>\n"
-        "Copyright (C) 2006 Bastien Roucaries <roucaries.bastien@gmail.com>\n"
-	"\nThis is free software; see the source for copying "
-	"conditions.  There is NO\n"
-	"warranty; not even for MERCHANTABILITY or FITNESS FOR A "
-	"PARTICULAR PURPOSE.\n");
-      return 0;
-    }
     if (!strcmp (argv[i], "-h") || !strcmp (argv[i], "--help")) {
       fprintf (stdout,
 	"Usage: %s [OPTION]...\n\n"
@@ -102,8 +83,8 @@ int main (int argc, char ** argv) {
     "  -l, --listing  emit C-code for available definitions\n"
 #endif
     "  -p, --path     project path (or location of dynamic modules)\n"
-    "  -m, --module   list of dynamic loaded modules (base names separated by space)\n"
-	"\nReport bugs to <" PACKAGE_BUGREPORT ">.\n", argv[0]);
+    "  -m, --module   list of dynamic loaded modules (base names separated by space)\n",
+              argv[0]);
       return 0;
     }
     else if (!strcmp (argv[i], "-i")) {

@@ -39,6 +39,8 @@
 #include "history.h"
 #include "trsolver.h"
 #include "transient.h"
+#include "vector.h"
+#include "dataset.h"
 #include "exception.h"
 #include "exceptionstack.h"
 

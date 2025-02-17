@@ -1,10 +1,11 @@
 include_directories(
-  ${qucs-core_SOURCE_DIR}
-  ${qucs-core_CURRENT_SOURCE_DIR}
-  ${qucs-core_SOURCE_DIR}/src/math)
+  ${CMAKE_SOURCE_DIR}/src
+  ${CMAKE_SOURCE_DIR}/src/components
+  ${CMAKE_SOURCE_DIR}/src/math
+)
 
 set(
-  COMPONENTS_SRC
+  SOURCES
   amplifier.cpp
   attenuator.cpp
   biastee.cpp
@@ -75,10 +76,7 @@ set(
   vpulse.cpp
   vrect.cpp
   vvnoise.cpp
-  wprobe.cpp)
+  wprobe.cpp
+)
 
-set(HEADERS component.h component_id.h components.h)
-
-add_library(coreComponents OBJECT ${COMPONENTS_SRC})
-
-install(FILES ${HEADERS} DESTINATION include/qucs-core)
+add_library(coreComponents OBJECT ${SOURCES})

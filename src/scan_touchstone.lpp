@@ -46,7 +46,7 @@
 #include "vector.h"
 #include "dataset.h"
 #include "check_touchstone.h"
-#include "parse_touchstone.hpp"
+#include "parse_touchstone.h"
 
 using namespace qucs;
 

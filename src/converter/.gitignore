@@ -1,6 +1,0 @@
-parse_spice.cpp
-parse_vcd.cpp
-scan_spice.cpp
-scan_vcd.cpp
-tokens_spice.h
-tokens_vcd.h

@@ -41,7 +41,7 @@
 #endif
 
 #include "check_zvr.h"
-#include "parse_zvr.hpp"
+#include "parse_zvr.h"
 
 #if !HAVE_STRCHR
 # define strchr  index

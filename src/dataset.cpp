@@ -337,7 +337,7 @@ void dataset::print (void) {
   }
 
   // print header
-  fprintf (f, "<Qucs Dataset " PACKAGE_VERSION ">\n");
+  fprintf (f, "<Qucs Dataset>\n");
 
   // print dependencies
   for (vector * d = dependencies; d != NULL; d = (vector *) d->getNext ()) {

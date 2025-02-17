@@ -30,6 +30,7 @@
 #ifndef __CONSTANTS_H__
 #define __CONSTANTS_H__
 
+#include "config.h"
 #include "consts.h"
 #include "precision.h"
 

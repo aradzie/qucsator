@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <cstring>
 
 #include "object.h"
 #include "complex.h"
@@ -31,6 +32,9 @@
 #include "analysis.h"
 #include "nasolver.h"
 #include "dcsolver.h"
+#include "exception.h"
+#include "exceptionstack.h"
+#include "logging.h"
 
 namespace qucs {
 

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,6 +26,8 @@
 #include <float.h>
 #include <assert.h>
 #include <limits>
+
+#include "config.h"
 
 #include "logging.h"
 #include "complex.h"

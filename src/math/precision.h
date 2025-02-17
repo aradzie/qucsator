@@ -1,6 +1,4 @@
 /*
- * precision.h - global precision header file
- *
  * Copyright (C) 2005, 2006 Stefan Jahn <stefan@lkcc.org>
  *
  * This is free software; you can redistribute it and/or modify

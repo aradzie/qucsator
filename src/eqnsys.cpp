@@ -1,6 +1,4 @@
 /*
- * eqnsys.cpp - equation system solver class implementation
- *
  * Copyright (C) 2004, 2005, 2006, 2007, 2008 Stefan Jahn <stefan@lkcc.org>
  *
  * This is free software; you can redistribute it and/or modify
@@ -1323,10 +1321,6 @@ void eqnsys<nr_type_t>::factorize_svd (void) {
   // calculated; now diagonalization can begin
   diagonalize_svd ();
 }
-
-#ifndef MAX
-# define MAX(x,y) (((x) > (y)) ? (x) : (y))
-#endif
 
 //! Helper function computes Givens rotation.
 static inline nr_double_t

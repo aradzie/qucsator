@@ -37,6 +37,6 @@
 #include "acsolver.h"
 #include "trsolver.h"
 #include "hbsolver.h"
-#include "e_trsolver.h"
+#include "trsolver.h"
 
 #endif /* __ANALYSES_H__ */

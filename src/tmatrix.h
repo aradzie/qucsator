@@ -29,6 +29,9 @@ namespace qucs {
 template <class nr_type_t>
 class tmatrix;
 
+template <class nr_type_t>
+class tvector;
+
 // Forward declarations of friend functions.
 template <class nr_type_t>
 tmatrix<nr_type_t> inverse (tmatrix<nr_type_t>);

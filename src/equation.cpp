@@ -773,13 +773,6 @@ void application::evalTypeArgs (void)
 }
 
 
-// gperfapphash has register inside, ignore warning
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-register"
-#endif
-#include "gperfapphash.cpp"
-
 /* The function creates a hash key for the given type of
    application. */
 char * application::createKey (void)
@@ -798,18 +791,6 @@ char * application::createKey (void)
    gperf-generated hash. */
 int application::evalTypeFast (void)
 {
-    char * key = createKey ();
-    struct appindex * idx = gperfapphash::get (key, strlen (key));
-    free (key);
-    if (idx != NULL)
-    {
-        application_t * app = &applications[idx->index];
-        if (app->eval)
-        {
-            eval = app->eval;
-            setType (app->retval);
-        }
-    }
     return getType ();
 }
 

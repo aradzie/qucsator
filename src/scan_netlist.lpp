@@ -43,7 +43,7 @@
 #include "logging.h"
 #include "equation.h"
 #include "check_netlist.h"
-#include "parse_netlist.hpp"
+#include "parse_netlist.h"
 
 #if !HAVE_STRCHR
 # define strchr  index

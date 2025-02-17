@@ -24,6 +24,11 @@
 
 #include <limits>
 
+#ifndef MAX
+# define MAX(x,y) (((x) > (y)) ? (x) : (y))
+#endif
+
+
 //! Definition of equation system solving algorithms.
 enum algo_type {
   ALGO_INVERSE                    = 0x0001,
