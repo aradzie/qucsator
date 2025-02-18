@@ -23,8 +23,6 @@ set(
   TEMPLATE_SOURCES
   eqnsys.h
   hash.h
-  nasolution.h
-  nasolver.h
   ptrlist.h
   states.h
   tmatrix.h
@@ -38,8 +36,6 @@ set(
   SOURCES
   ${GENERATED_SOURCES}
   ${TEMPLATE_SOURCES}
-  acsolver.cpp
-  analysis.cpp
   check_citi.cpp
   check_csv.cpp
   check_dataset.cpp
@@ -49,7 +45,6 @@ set(
   check_zvr.cpp
   circuit.cpp
   dataset.cpp
-  dcsolver.cpp
   devstates.cpp
   differentiate.cpp
   environment.cpp
@@ -58,7 +53,6 @@ set(
   exception.cpp
   exceptionstack.cpp
   fourier.cpp
-  hbsolver.cpp
   history.cpp
   input.cpp
   integrator.cpp
@@ -75,21 +69,21 @@ set(
   range.cpp
   receiver.cpp
   spline.cpp
-  spsolver.cpp
   strlist.cpp
   sweep.cpp
   transient.cpp
-  trsolver.cpp
   variable.cpp
   vector.cpp
 )
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/src
+  ${CMAKE_SOURCE_DIR}/src/analyses
   ${CMAKE_SOURCE_DIR}/src/components
   ${CMAKE_SOURCE_DIR}/src/math
 )
 
+add_subdirectory(analyses)
 add_subdirectory(components)
 add_subdirectory(components/devices)
 add_subdirectory(components/digital)
@@ -98,4 +92,4 @@ add_subdirectory(math)
 
 add_executable(qucsator main.cpp ${SOURCES})
 
-target_link_libraries(qucsator PRIVATE coreComponents coreDevices coreDigital coreMicrostrip coreMath)
+target_link_libraries(qucsator PRIVATE coreAnalyses coreComponents coreDevices coreDigital coreMicrostrip coreMath)
