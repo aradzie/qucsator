@@ -26,7 +26,6 @@
 
 #include <limits>
 
-#include "compat.h"
 #include "logging.h"
 #include "precision.h"
 #include "complex.h"

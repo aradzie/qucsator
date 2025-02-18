@@ -26,7 +26,6 @@
 #include <float.h>
 #include <algorithm>
 
-#include "compat.h"
 #include "object.h"
 #include "logging.h"
 #include "complex.h"

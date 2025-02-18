@@ -26,7 +26,6 @@
 #include <cmath>
 #include <vector>
 
-#include "compat.h"
 #include "complex.h"
 #include "tvector.h"
 #include "precision.h"

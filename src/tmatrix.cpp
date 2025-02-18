@@ -27,7 +27,6 @@
 #include <string.h>
 #include <cmath>
 
-#include "compat.h"
 #include "logging.h"
 #include "complex.h"
 #include "tmatrix.h"

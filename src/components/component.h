@@ -29,7 +29,6 @@
 #include <cmath>
 #include <float.h>
 
-#include "compat.h"
 #include "logging.h"
 #include "complex.h"
 #include "object.h"

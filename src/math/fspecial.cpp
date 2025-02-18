@@ -28,7 +28,6 @@
 #include <float.h>
 #include <algorithm>
 
-#include "compat.h"
 #include "constants.h"
 #include "fspecial.h"
 
