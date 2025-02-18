@@ -20,25 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/**
- \file consts.h
- \brief Global math constants header file
- @file consts.h
- @defgroup qucsMathConstants Qucs Math Constants
-*/
-
 #ifndef __CONSTS_H__
 #define __CONSTS_H__
 
-#include <cmath>
-
 namespace qucs {
-
-/**
-\addtogroup qucsMathConstants
-Qucs mathematical constants.
-@{
-*/
 
 /*!\brief  Archimedes' constant (\f$\pi\f$) */
 static const double pi = 3.1415926535897932384626433832795029;
@@ -64,7 +49,7 @@ static const double euler = 2.7182818284590452353602874713526625;
 /*!\brief Decimal logartihm of Euler's constant (\f$\log_{10} (e)\f$) */
 static const double log10e = 0.4342944819032518276511289189166051;
 
-/*!\brief Binary logartihm of Euler's constant (\f$\log_{2} (e)\f$)*/
+/*!\brief Binary logartihm of Euler's constant (\f$\log_{2} (e)\f$) */
 static const double log2e = 1.4426950408889634073599246810018922;
 
 /*!\brief Natural logarithm of 2 (\f$\ln 2\f$) */
@@ -81,10 +66,6 @@ static const double sqrt1_2 = 0.7071067811865475244008443621048490;
 
 /*!\brief Limiting exponential factor */
 static const double limitexp = 80.0;
-
-/**
-@}
-*/
 
 } // namespace qucs
 

@@ -20,27 +20,20 @@
 #ifndef __PRECISION_H__
 #define __PRECISION_H__
 
-#include <limits>
-
 #define NR_DOUBLE_SIZE 8
 
-#if NR_DOUBLE_SIZE == 4  /* S 23bit MAN | S 7bit EXP */
-  /* single precision */
+#if NR_DOUBLE_SIZE == 4 /* S 23bit MAN | S 7bit EXP */
+/* single precision */
 #define NR_TINY 1e-6
-
-#elif NR_DOUBLE_SIZE == 8  /* S 52bit MAN | S 10bit EXP */
-  /* double precision */
+#elif NR_DOUBLE_SIZE == 8 /* S 52bit MAN | S 10bit EXP */
+/* double precision */
 #define NR_TINY 1e-12
-
 #elif NR_DOUBLE_SIZE == 12 /* S 63bit MAN | S 14bit EXP */
-  /* IEEE 80-bit floating point */
+/* IEEE 80-bit floating point */
 #define NR_TINY 1e-15
-
 #elif NR_DOUBLE_SIZE == 16 /* S 112bit MAN | S 14bit EXP */
-  /* IEEE 128-bit floating point */
+/* IEEE 128-bit floating point */
 #define NR_TINY 1e-15
 #endif
-
-
 
 #endif /* __PRECISION_H__ */
