@@ -22,13 +22,13 @@
 #ifndef __LOGGING_H__
 #define __LOGGING_H__
 
-#define LOG_ERROR  0
+#define LOG_ERROR 0
 #define LOG_STATUS 1
-#include <stdio.h>
+
 __BEGIN_DECLS
 
-void logprint (int, const char *, ...);
-void loginit (void);
+void logprint(int, const char *, ...);
+void loginit(void);
 void redirect_status_to_stdout();
 
 __END_DECLS

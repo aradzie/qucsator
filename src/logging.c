@@ -19,36 +19,31 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdlib.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "logging.h"
 
 /* Both of the log level dependent FILE streams. */
-FILE * file_status = NULL;
-FILE * file_error = NULL;
+FILE *file_status = NULL;
+FILE *file_error = NULL;
 
 /* This function prints the given messages format and the appropriate
    arguments to a FILE stream depending on the given log level. */
-void logprint (int level, const char * format, ...) {
-  FILE * f;
-  va_list args;
-
-  f = level == LOG_STATUS ? file_status : file_error;
+void logprint(int level, const char *format, ...) {
+  FILE *f = level == LOG_STATUS ? file_status : file_error;
   if (f != NULL) {
-    va_start (args, format);
-    vfprintf (f, format, args);
-    va_end (args);
-    fflush (f);
+    va_list args;
+    va_start(args, format);
+    vfprintf(f, format, args);
+    va_end(args);
+    fflush(f);
   }
 }
 
 /* Initialization of the logging interface. */
-void loginit (void) {
-  file_error = file_status = stderr;
-}
+void loginit(void) { file_error = file_status = stderr; }
 
 /* Customize logging. */
-void redirect_status_to_stdout() {
-  file_status = stdout;
-}
+void redirect_status_to_stdout() { file_status = stdout; }
