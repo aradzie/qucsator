@@ -8,8 +8,3 @@ tmp/
 *.o
 *.a
 .deps
-
-src/parse_*.h
-src/parse_*.cpp
-src/scan_*.h
-src/scan_*.cpp
