@@ -86,7 +86,7 @@ public:
   int getTag (void) { return tag; }
   void setType (int tag) { type = tag; }
   constant * getResult (void) { return res; }
-  nr_double_t getResultDouble (void);
+  double getResultDouble (void);
   nr_complex_t getResultComplex (void);
   qucs::vector getResultVector (void);
   void setResult (constant *);
@@ -163,7 +163,7 @@ public:
   bool dataref;
   int type;
   union {
-    nr_double_t d;
+    double d;
     nr_complex_t * c;
     qucs::vector * v;
     matrix * m;
@@ -291,8 +291,8 @@ public:
   void constants (void);
   int check (int noundefined = 1);
   strlist * variables (void);
-  node * addDouble (const char *, const char *, nr_double_t);
-  node * createDouble (const char *, const char *, nr_double_t);
+  node * addDouble (const char *, const char *, double);
+  node * createDouble (const char *, const char *, double);
   node * addComplex (const char *, const char *, nr_complex_t);
   node * createComplex (const char *, const char *, nr_complex_t);
   node * addReference (const char *, const char *, char *);
@@ -302,8 +302,8 @@ public:
   node * findEquation (const char *
 		       const) const;
   bool containsVariable (const char * const) const;
-  nr_double_t getDouble (const char *const) const;
-  void setDouble (const char *const, nr_double_t);
+  double getDouble (const char *const) const;
+  void setDouble (const char *const, double);
   qucs::vector getVector (const char * const) const;
   void setDefinitions (struct definition_t * d) { defs = d; }
   struct definition_t * getDefinitions (void) { return defs; }

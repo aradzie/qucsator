@@ -27,8 +27,8 @@ class vvnoise : public qucs::circuit
  public:
   CREATOR (vvnoise);
   void initSP (void);
-  void calcNoiseSP (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcNoiseSP (double);
+  void calcNoiseAC (double);
   void initDC (void);
   void initAC (void);
   void initTR (void);

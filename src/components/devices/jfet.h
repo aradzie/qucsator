@@ -26,8 +26,8 @@ class jfet : public qucs::circuit
 {
  public:
   CREATOR (jfet);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void calcDC (void);
   void initDC (void);
   void restartDC (void);
@@ -35,19 +35,19 @@ class jfet : public qucs::circuit
   void calcOperatingPoints (void);
   void loadOperatingPoints (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 
  private:
-  qucs::matrix calcMatrixY (nr_double_t);
-  qucs::matrix calcMatrixCy (nr_double_t);
+  qucs::matrix calcMatrixY (double);
+  qucs::matrix calcMatrixCy (double);
   void initModel (void);
 
  private:
-  nr_double_t Ugs, Ugd, Uds, UgsPrev, UgdPrev;
-  nr_double_t ggs, ggd, gm, gds, Ids, Qgs, Qgd;
+  double Ugs, Ugd, Uds, UgsPrev, UgdPrev;
+  double ggs, ggd, gm, gds, Ids, Qgs, Qgd;
   qucs::circuit * rs;
   qucs::circuit * rd;
 };

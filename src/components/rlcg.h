@@ -26,17 +26,17 @@ class rlcg : public qucs::circuit
 {
  public:
   CREATOR (rlcg);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initTR (void);
-  void calcNoiseAC (nr_double_t);
-  void calcNoiseSP (nr_double_t);
-  void saveCharacteristics (nr_double_t);
+  void calcNoiseAC (double);
+  void calcNoiseSP (double);
+  void saveCharacteristics (double);
 
  private:
-  void calcPropagation (nr_double_t);
+  void calcPropagation (double);
   nr_complex_t g;
   nr_complex_t z;
 };

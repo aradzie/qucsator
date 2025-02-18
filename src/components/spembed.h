@@ -33,20 +33,20 @@ class spembed : public spfile, public qucs::circuit
   CREATOR(spembed);
 
   void initSP (void);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initTR (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
 
-  void calcNoiseSP (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcNoiseSP (double);
+  void calcNoiseAC (double);
 
-  qucs::matrix correlationMatrix (nr_double_t, nr_complex_t, nr_double_t, qucs::matrix);
-  nr_double_t noiseFigure (qucs::matrix, qucs::matrix, nr_double_t&, nr_complex_t&, nr_double_t&);
+  qucs::matrix correlationMatrix (double, nr_complex_t, double, qucs::matrix);
+  double noiseFigure (qucs::matrix, qucs::matrix, double&, nr_complex_t&, double&);
   qucs::matrix expandNoiseMatrix (qucs::matrix, qucs::matrix);
   qucs::matrix shrinkNoiseMatrix (qucs::matrix, qucs::matrix);
-  qucs::matrix calcMatrixCs (nr_double_t);
+  qucs::matrix calcMatrixCs (double);
 };
 
 #endif /* SPEMBED_H */

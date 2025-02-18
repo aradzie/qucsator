@@ -26,7 +26,7 @@ class circulator : public qucs::circuit
 {
  public:
   CREATOR (circulator);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
   void initTR (void);

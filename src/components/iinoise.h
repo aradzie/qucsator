@@ -27,11 +27,11 @@ class iinoise : public qucs::circuit
  public:
   CREATOR (iinoise);
   void initSP (void);
-  void calcNoiseSP (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcNoiseSP (double);
+  void calcNoiseAC (double);
 
  private:
-  qucs::matrix calcMatrixCy (nr_double_t);
+  qucs::matrix calcMatrixCy (double);
 };
 
 #endif /* __IINOISE_H__ */

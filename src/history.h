@@ -35,8 +35,8 @@ public:
   history ():
     sign(false),
     age(0),
-    values(std::make_shared<std::vector<nr_double_t>>()),
-    t(std::make_shared<std::vector<nr_double_t>>())
+    values(std::make_shared<std::vector<double>>()),
+    t(std::make_shared<std::vector<double>>())
   {};
 
   /*! The copy constructor creates a new instance based on the given
@@ -44,12 +44,12 @@ public:
   history (const history &h)
   {
       this->age = h.age;
-      this->t = std::make_shared<std::vector<nr_double_t>>(*(h.t));
-      this->values = std::make_shared<std::vector<nr_double_t>>(*(h.values));
+      this->t = std::make_shared<std::vector<double>>(*(h.t));
+      this->values = std::make_shared<std::vector<double>>(*(h.values));
   }
 
   /*! The function appends the given value to the history. */
-  void push_back (const nr_double_t val) {
+  void push_back (const double val) {
     this->values->push_back(val);
     if (this->values != this->t)
       this->drop ();
@@ -68,8 +68,8 @@ public:
     return t->size ();
   }
 
-  void setAge (const nr_double_t a) { this->age = a; }
-  nr_double_t getAge (void) const { return this->age; }
+  void setAge (const double a) { this->age = a; }
+  double getAge (void) const { return this->age; }
 
   // apply history
   void apply (const history & h) {
@@ -77,12 +77,12 @@ public:
   }
 
   //! Returns the last (youngest) time value in the history
-  nr_double_t last (void) const {
+  double last (void) const {
     return this->t->empty() ? 0.0 : this->t->back();
   }
 
   //! Returns the first (oldest) time value in the history.
-  nr_double_t first (void) const {
+  double first (void) const {
     return this->t->empty() ? 0.0 : (*this->t)[leftidx ()];
   }
 
@@ -102,31 +102,31 @@ public:
   }
 
   //! Returns the duration of the history.
-  nr_double_t duration(void) const {
+  double duration(void) const {
      return last () - first ();
   }
 
-  void truncate (const nr_double_t);
+  void truncate (const double);
 
   void drop (void);
   void self (void) { this->t = this->values; }
 
-  nr_double_t interpol (nr_double_t, int, bool);
-  nr_double_t nearest (nr_double_t, bool interpolate = true);
-  int seek (nr_double_t, int, int, nr_double_t&, int);
+  double interpol (double, int, bool);
+  double nearest (double, bool interpolate = true);
+  int seek (double, int, int, double&, int);
 
-  nr_double_t getTfromidx (const int idx)  {
+  double getTfromidx (const int idx)  {
     return this->t == NULL ? 0.0 : (*this->t)[idx];
   }
-  nr_double_t getValfromidx (const int idx) {
+  double getValfromidx (const int idx) {
     return this->values == NULL ? 0.0 : (*this->values)[idx];
   }
 
  private:
   bool sign;
-  nr_double_t age;
-  std::shared_ptr<std::vector<nr_double_t>> values;
-  std::shared_ptr<std::vector<nr_double_t>> t;
+  double age;
+  std::shared_ptr<std::vector<double>> values;
+  std::shared_ptr<std::vector<double>> t;
 };
 
 } // namespace qucs

@@ -17,8 +17,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <assert.h>
 #include <time.h>
 #include <cmath>
@@ -99,7 +97,7 @@ void eqnsys<nr_type_t>::passEquationSys (tmatrix<nr_type_t> * nA,
       N = A->getCols ();
       delete[] cMap; cMap = new int[N];
       delete[] rMap; rMap = new int[N];
-      delete[] nPvt; nPvt = new nr_double_t[N];
+      delete[] nPvt; nPvt = new double[N];
     }
   }
   else {
@@ -185,7 +183,7 @@ void eqnsys<nr_type_t>::solve_inverse (void) {
    elimination with full column pivoting only (no row pivoting). */
 template <class nr_type_t>
 void eqnsys<nr_type_t>::solve_gauss (void) {
-  nr_double_t MaxPivot;
+  double MaxPivot;
   nr_type_t f;
   int i, c, r, pivot;
 
@@ -225,7 +223,7 @@ void eqnsys<nr_type_t>::solve_gauss (void) {
    pivoting). */
 template <class nr_type_t>
 void eqnsys<nr_type_t>::solve_gauss_jordan (void) {
-  nr_double_t MaxPivot;
+  double MaxPivot;
   nr_type_t f;
   int i, c, r, pivot;
 
@@ -310,7 +308,7 @@ void eqnsys<nr_type_t>::solve_lu_doolittle (void) {
    the matrix A using (implicit) partial row pivoting. */
 template <class nr_type_t>
 void eqnsys<nr_type_t>::factorize_lu_crout (void) {
-  nr_double_t d, MaxPivot;
+  double d, MaxPivot;
   nr_type_t f;
   int k, c, r, pivot;
 
@@ -362,7 +360,7 @@ void eqnsys<nr_type_t>::factorize_lu_crout (void) {
     if (c != pivot) {
       A->exchangeRows (c, pivot);
       Swap (int, rMap[c], rMap[pivot]);
-      Swap (nr_double_t, nPvt[c], nPvt[pivot]);
+      Swap (double, nPvt[c], nPvt[pivot]);
     }
   }
 #if LU_FAILURE
@@ -376,7 +374,7 @@ void eqnsys<nr_type_t>::factorize_lu_crout (void) {
    decomposition of the matrix A using (implicit) partial row pivoting. */
 template <class nr_type_t>
 void eqnsys<nr_type_t>::factorize_lu_doolittle (void) {
-  nr_double_t d, MaxPivot;
+  double d, MaxPivot;
   nr_type_t f;
   int k, c, r, pivot;
 
@@ -428,7 +426,7 @@ void eqnsys<nr_type_t>::factorize_lu_doolittle (void) {
     if (c != pivot) {
       A->exchangeRows (c, pivot);
       Swap (int, rMap[c], rMap[pivot]);
-      Swap (nr_double_t, nPvt[c], nPvt[pivot]);
+      Swap (double, nPvt[c], nPvt[pivot]);
     }
 
     // finally divide by the pivot element
@@ -503,9 +501,9 @@ void eqnsys<nr_type_t>::solve_iterative (void) {
   nr_type_t f;
   int error, conv, i, c, r;
   int MaxIter = N; // -> less than N^3 operations
-  nr_double_t reltol = 1e-4;
-  nr_double_t abstol = NR_TINY;
-  nr_double_t diff, crit;
+  double reltol = 1e-4;
+  double abstol = NR_TINY;
+  double diff, crit;
 
   // ensure that all diagonal values are non-zero
   ensure_diagonal ();
@@ -592,9 +590,9 @@ void eqnsys<nr_type_t>::solve_sor (void) {
   nr_type_t f;
   int error, conv, i, c, r;
   int MaxIter = N; // -> less than N^3 operations
-  nr_double_t reltol = 1e-4;
-  nr_double_t abstol = NR_TINY;
-  nr_double_t diff, crit, l = 1, d, s;
+  double reltol = 1e-4;
+  double abstol = NR_TINY;
+  double diff, crit, l = 1, d, s;
 
   // ensure that all diagonal values are non-zero
   ensure_diagonal ();
@@ -682,8 +680,8 @@ void eqnsys<nr_type_t>::solve_sor (void) {
    methods like Jacobi or Gauss-Seidel as defined by Schmidt and
    v.Mises. */
 template <class nr_type_t>
-nr_double_t eqnsys<nr_type_t>::convergence_criteria (void) {
-  nr_double_t f = 0;
+double eqnsys<nr_type_t>::convergence_criteria (void) {
+  double f = 0;
   for (int r = 0; r < A->getCols (); r++) {
     for (int c = 0; c < A->getCols (); c++) {
       if (r != c) f += norm (A_(r, c) / A_(r, r));
@@ -769,7 +767,7 @@ int eqnsys<nr_type_t>::countPairs (int i, int& r1, int& r2) {
 template <class nr_type_t>
 void eqnsys<nr_type_t>::preconditioner (void) {
   int pivot, r;
-  nr_double_t MaxPivot;
+  double MaxPivot;
   for (int i = 0; i < N; i++) {
     // find maximum column value for pivoting
     for (MaxPivot = 0, pivot = i, r = 0; r < N; r++) {
@@ -818,8 +816,8 @@ void eqnsys<nr_type_t>::solve_qr_ls (void) {
 
 /*! Helper function for the euclidian norm calculators. */
 static inline void
-euclidian_update (nr_double_t a, nr_double_t& n, nr_double_t& scale) {
-  nr_double_t x, ax;
+euclidian_update (double a, double& n, double& scale) {
+  double x, ax;
   if ((x = a) != 0) {
     ax = fabs (x);
     if (scale < ax) {
@@ -837,8 +835,8 @@ euclidian_update (nr_double_t a, nr_double_t& n, nr_double_t& scale) {
 /*! The following function computes the euclidian norm of the given
    column vector of the matrix A starting from the given row. */
 template <class nr_type_t>
-nr_double_t eqnsys<nr_type_t>::euclidian_c (int c, int r) {
-  nr_double_t scale = 0, n = 1;
+double eqnsys<nr_type_t>::euclidian_c (int c, int r) {
+  double scale = 0, n = 1;
   for (int i = r; i < N; i++) {
     euclidian_update (real (A_(i, c)), n, scale);
     euclidian_update (imag (A_(i, c)), n, scale);
@@ -849,8 +847,8 @@ nr_double_t eqnsys<nr_type_t>::euclidian_c (int c, int r) {
 /*! The following function computes the euclidian norm of the given
    row vector of the matrix A starting from the given column. */
 template <class nr_type_t>
-nr_double_t eqnsys<nr_type_t>::euclidian_r (int r, int c) {
-  nr_double_t scale = 0, n = 1;
+double eqnsys<nr_type_t>::euclidian_r (int r, int c) {
+  double scale = 0, n = 1;
   for (int i = c; i < N; i++) {
     euclidian_update (real (A_(r, i)), n, scale);
     euclidian_update (imag (A_(r, i)), n, scale);
@@ -877,7 +875,7 @@ template <class nr_type_t>
 void eqnsys<nr_type_t>::factorize_qrh (void) {
   int c, r, k, pivot;
   nr_type_t f, t;
-  nr_double_t s, MaxPivot;
+  double s, MaxPivot;
 
   delete R; R = new tvector<nr_type_t> (N);
 
@@ -900,7 +898,7 @@ void eqnsys<nr_type_t>::factorize_qrh (void) {
     if (pivot != c) {
       A->exchangeCols (pivot, c);
       Swap (int, cMap[pivot], cMap[c]);
-      Swap (nr_double_t, nPvt[pivot], nPvt[c]);
+      Swap (double, nPvt[pivot], nPvt[c]);
     }
 
     // compute householder vector
@@ -941,7 +939,7 @@ void eqnsys<nr_type_t>::factorize_qrh (void) {
 template <class nr_type_t>
 void eqnsys<nr_type_t>::factorize_qr_householder (void) {
   int c, r, pivot;
-  nr_double_t s, MaxPivot;
+  double s, MaxPivot;
 
   delete T; T = new tvector<nr_type_t> (N);
 
@@ -963,7 +961,7 @@ void eqnsys<nr_type_t>::factorize_qr_householder (void) {
     if (pivot != c) {
       A->exchangeCols (pivot, c);
       Swap (int, cMap[pivot], cMap[c]);
-      Swap (nr_double_t, nPvt[pivot], nPvt[c]);
+      Swap (double, nPvt[pivot], nPvt[c]);
     }
 
     // compute and apply householder vector
@@ -972,8 +970,8 @@ void eqnsys<nr_type_t>::factorize_qr_householder (void) {
     // update norms of remaining columns too
     for (r = c + 1; r < N; r++) {
       if ((s = nPvt[r]) > 0) {
-	nr_double_t y = 0;
-	nr_double_t t = norm (A_(c, r) / s);
+	double y = 0;
+	double t = norm (A_(c, r) / s);
 	if (t < 1)
 	  y = s * sqrt (1 - t);
 	if (fabs (y / s) < NR_TINY)
@@ -1004,7 +1002,7 @@ void eqnsys<nr_type_t>::substitute_qrh (void) {
   for (r = N - 1; r >= 0; r--) {
     f = B_(r);
     for (c = r + 1; c < N; c++) f -= A_(r, c) * X_(cMap[c]);
-    if (abs (R_(r)) > std::numeric_limits<nr_double_t>::epsilon())
+    if (abs (R_(r)) > std::numeric_limits<double>::epsilon())
       X_(cMap[r]) = f / R_(r);
     else
       X_(cMap[r]) = 0;
@@ -1032,7 +1030,7 @@ void eqnsys<nr_type_t>::substitute_qr_householder (void) {
   // backward substitution in order to solve RX = Q'B
   for (r = N - 1; r >= 0; r--) {
     for (f = B_(r), c = r + 1; c < N; c++) f -= A_(r, c) * X_(cMap[c]);
-    if (abs (A_(r, r)) > std::numeric_limits<nr_double_t>::epsilon())
+    if (abs (A_(r, r)) > std::numeric_limits<double>::epsilon())
       X_(cMap[r]) = f / A_(r, r);
     else
       X_(cMap[r]) = 0;
@@ -1051,7 +1049,7 @@ void eqnsys<nr_type_t>::substitute_qr_householder_ls (void) {
   // forward substitution in order to solve R'X = B
   for (r = 0; r < N; r++) {
     for (f = B_(r), c = 0; c < r; c++) f -= A_(c, r) * B_(c);
-    if (abs (A_(r, r)) > std::numeric_limits<nr_double_t>::epsilon())
+    if (abs (A_(r, r)) > std::numeric_limits<double>::epsilon())
       B_(r) = f / A_(r, r);
     else
       B_(r) = 0;
@@ -1083,7 +1081,7 @@ void eqnsys<nr_type_t>::substitute_qr_householder_ls (void) {
 template <class nr_type_t>
 nr_type_t eqnsys<nr_type_t>::householder_create_left (int c) {
   nr_type_t a, b, t;
-  nr_double_t s, g;
+  double s, g;
   s = euclidian_c (c, c + 1);
   if (s == 0 && imag (A_(c, c)) == 0) {
     // no reflection necessary
@@ -1141,7 +1139,7 @@ nr_type_t eqnsys<nr_type_t>::householder_right (int r) {
 template <class nr_type_t>
 nr_type_t eqnsys<nr_type_t>::householder_create_right (int r) {
   nr_type_t a, b, t;
-  nr_double_t s, g;
+  double s, g;
   s = euclidian_r (r, r + 2);
   if (s == 0 && imag (A_(r, r + 1)) == 0) {
     // no reflection necessary
@@ -1231,10 +1229,10 @@ void eqnsys<nr_type_t>::solve_svd (void) {
 template <class nr_type_t>
 void eqnsys<nr_type_t>::chop_svd (void) {
   int c;
-  nr_double_t Max, Min;
+  double Max, Min;
   Max = 0.0;
   for (c = 0; c < N; c++) if (fabs (S_(c)) > Max) Max = fabs (S_(c));
-  Min = Max * std::numeric_limits<nr_double_t>::epsilon();
+  Min = Max * std::numeric_limits<double>::epsilon();
   for (c = 0; c < N; c++) if (fabs (S_(c)) < Min) S_(c) = 0.0;
 }
 
@@ -1276,8 +1274,8 @@ void eqnsys<nr_type_t>::factorize_svd (void) {
   delete R; R = new tvector<nr_type_t> (N);
   delete T; T = new tvector<nr_type_t> (N);
   delete V; V = new tmatrix<nr_type_t> (N);
-  delete S; S = new tvector<nr_double_t> (N);
-  delete E; E = new tvector<nr_double_t> (N);
+  delete S; S = new tvector<double> (N);
+  delete E; E = new tvector<double> (N);
 
   // bidiagonalization through householder transformations
   for (i = 0; i < N; i++) {
@@ -1322,9 +1320,9 @@ void eqnsys<nr_type_t>::factorize_svd (void) {
 }
 
 //! Helper function computes Givens rotation.
-static inline nr_double_t
-givens (nr_double_t a, nr_double_t b, nr_double_t& c, nr_double_t& s) {
-  nr_double_t z = xhypot (a, b);
+static inline double
+givens (double a, double b, double& c, double& s) {
+  double z = xhypot (a, b);
   c = a / z;
   s = b / z;
   return z;
@@ -1332,7 +1330,7 @@ givens (nr_double_t a, nr_double_t b, nr_double_t& c, nr_double_t& s) {
 
 template <class nr_type_t>
 void eqnsys<nr_type_t>::givens_apply_u (int c1, int c2,
-					nr_double_t c, nr_double_t s) {
+					double c, double s) {
   for (int i = 0; i < N; i++) {
     nr_type_t y = U_(i, c1);
     nr_type_t z = U_(i, c2);
@@ -1343,7 +1341,7 @@ void eqnsys<nr_type_t>::givens_apply_u (int c1, int c2,
 
 template <class nr_type_t>
 void eqnsys<nr_type_t>::givens_apply_v (int r1, int r2,
-					nr_double_t c, nr_double_t s) {
+					double c, double s) {
   for (int i = 0; i < N; i++) {
     nr_type_t y = V_(r1, i);
     nr_type_t z = V_(r2, i);
@@ -1361,7 +1359,7 @@ template <class nr_type_t>
 void eqnsys<nr_type_t>::diagonalize_svd (void) {
   bool split;
   int i, l, j, its, k, n, MaxIters = 30;
-  nr_double_t an, f, g, h, d, c, s, b, a;
+  double an, f, g, h, d, c, s, b, a;
 
   // find largest bidiagonal value
   for (an = 0, i = 0; i < N; i++)

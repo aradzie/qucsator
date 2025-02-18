@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vam.h"
 
@@ -46,8 +44,8 @@ void vam::initDC (void) {
 
 void vam::initAC (void) {
   initDC ();
-  nr_double_t a = getPropertyDouble ("U");
-  nr_double_t p = getPropertyDouble ("Phase");
+  double a = getPropertyDouble ("U");
+  double p = getPropertyDouble ("Phase");
   setE (VSRC_1, qucs::polar (a, deg2rad (p)));
 }
 
@@ -55,12 +53,12 @@ void vam::initTR (void) {
   initDC ();
 }
 
-void vam::calcTR (nr_double_t t) {
-  nr_double_t f = getPropertyDouble ("f");
-  nr_double_t p = getPropertyDouble ("Phase");
-  nr_double_t d = getPropertyDouble ("m");
-  nr_double_t a = getPropertyDouble ("U");
-  nr_double_t u = a * std::sin (2 * pi * f * t + deg2rad (p));
+void vam::calcTR (double t) {
+  double f = getPropertyDouble ("f");
+  double p = getPropertyDouble ("Phase");
+  double d = getPropertyDouble ("m");
+  double a = getPropertyDouble ("U");
+  double u = a * std::sin (2 * pi * f * t + deg2rad (p));
   setE (VSRC_1, u);
   setC (VSRC_1, NODE_3, -u * d);
 }

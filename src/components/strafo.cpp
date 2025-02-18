@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "strafo.h"
 
@@ -32,16 +30,16 @@ strafo::strafo () : circuit (6) {
 
 void strafo::initSP (void) {
 
-  nr_double_t t1 = getPropertyDouble ("T1");
-  nr_double_t t2 = getPropertyDouble ("T2");
+  double t1 = getPropertyDouble ("T1");
+  double t2 = getPropertyDouble ("T2");
 
-  nr_double_t  d = t1 * t1 + t2 * t2 + 1.0;
-  nr_double_t z1 = t1 * t1 / d;
-  nr_double_t z2 = t2 * t2 / d;
-  nr_double_t z3 = 1.0 / d;
-  nr_double_t z4 = t1 / d;
-  nr_double_t z5 = t2 / d;
-  nr_double_t z6 = t1 * t2 / d;
+  double  d = t1 * t1 + t2 * t2 + 1.0;
+  double z1 = t1 * t1 / d;
+  double z2 = t2 * t2 / d;
+  double z3 = 1.0 / d;
+  double z4 = t1 / d;
+  double z5 = t2 / d;
+  double z6 = t1 * t2 / d;
 
   allocMatrixS ();
 
@@ -74,8 +72,8 @@ void strafo::initDC (void) {
 }
 
 void strafo::initAC (void) {
-  nr_double_t t1 = getPropertyDouble ("T1");
-  nr_double_t t2 = getPropertyDouble ("T2");
+  double t1 = getPropertyDouble ("T1");
+  double t2 = getPropertyDouble ("T2");
 
   setVoltageSources (2);
   allocMatrixMNA ();

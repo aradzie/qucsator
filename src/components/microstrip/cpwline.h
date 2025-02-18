@@ -28,41 +28,41 @@ class cpwline : public qucs::circuit
  public:
   CREATOR (cpwline);
   void initSP (void);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void initDC (void);
   void initTR (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  void saveCharacteristics (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
+  void saveCharacteristics (double);
 
-  static void ellipke (nr_double_t, nr_double_t &, nr_double_t &);
-  static nr_double_t ellipk (nr_double_t);
-  static nr_double_t ellipa (nr_double_t);
-  static nr_double_t KoverKp(nr_double_t);
+  static void ellipke (double, double &, double &);
+  static double ellipk (double);
+  static double ellipa (double);
+  static double KoverKp(double);
 
-  static void analyseQuasiStatic (nr_double_t, nr_double_t, nr_double_t,
-				  nr_double_t, nr_double_t, int,
-				  nr_double_t&, nr_double_t&);
-  static void analyseDispersion (nr_double_t, nr_double_t, nr_double_t,
-				 nr_double_t, nr_double_t,
-				 nr_double_t, nr_double_t,
-				 nr_double_t&, nr_double_t&);
+  static void analyseQuasiStatic (double, double, double,
+				  double, double, int,
+				  double&, double&);
+  static void analyseDispersion (double, double, double,
+				 double, double,
+				 double, double,
+				 double&, double&);
 
  private:
-  void calcAB (nr_double_t, nr_double_t&, nr_double_t&, nr_double_t&);
+  void calcAB (double, double&, double&, double&);
   void initPropagation (void);
 
-  nr_double_t sr_er;
-  nr_double_t sr_er0;
-  nr_double_t zl_factor;
-  nr_double_t ac_factor;
-  nr_double_t ad_factor;
-  nr_double_t bt_factor;
-  nr_double_t fte, G;
-  nr_double_t len, tand, rho;
-  nr_double_t Zl, Er;
+  double sr_er;
+  double sr_er0;
+  double zl_factor;
+  double ac_factor;
+  double ad_factor;
+  double bt_factor;
+  double fte, G;
+  double len, tand, rho;
+  double Zl, Er;
 };
 
 #endif /* __CPWLINE_H__ */

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -56,7 +54,7 @@ void object::setProperty (const std::string &n, const char * const val) {
 
 /* This function adds a property consisting of a key and a double
    value to the object. */
-void object::addProperty (const std::string &n, const nr_double_t val, const bool def) {
+void object::addProperty (const std::string &n, const double val, const bool def) {
   property p;
   p.set(val);
   p.setDefault(def);
@@ -65,7 +63,7 @@ void object::addProperty (const std::string &n, const nr_double_t val, const boo
 
 /* This function sets the specified property consisting of a key and a
    double value in the object. */
-void object::setProperty (const std::string &n, const nr_double_t val) {
+void object::setProperty (const std::string &n, const double val) {
   auto it = props.find(n);
   if(it != props.end())
     (*it).second.set(val);
@@ -76,7 +74,7 @@ void object::setProperty (const std::string &n, const nr_double_t val) {
 /* Th function sets the specified property consisting of a key and a
    double value in the object.  The property is marked a scalability
    property. */
-void object::setScaledProperty (const std::string &n, const nr_double_t val) {
+void object::setScaledProperty (const std::string &n, const double val) {
   setProperty ("Scaled:"+n, val);
 }
 
@@ -124,7 +122,7 @@ const char * object::getPropertyReference (const std::string &n) const {
 /* Returns the requested property value which has been previously
    added as its double representation.  If there is no such property
    the function returns zero. */
-nr_double_t object::getPropertyDouble (const std::string &n) const {
+double object::getPropertyDouble (const std::string &n) const {
   const auto &it = props.find(n);
   if(it != props.end())
     return (*it).second.getDouble();
@@ -135,7 +133,7 @@ nr_double_t object::getPropertyDouble (const std::string &n) const {
 /* The functions returns the requested (scalability) property value
    which has been previously added.  If there is no such scaled
    property the function returns the standard property or zero. */
-nr_double_t object::getScaledProperty (const std::string &n) const{
+double object::getScaledProperty (const std::string &n) const{
   std::string txt = "Scaled:"+n;
   const auto &it = props.find(txt);
   if(it != props.end())

@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <limits>
 
 #include "component.h"
@@ -48,17 +46,17 @@ cpwline::cpwline () : circuit (2) {
    Note that the argument of the function here is the elliptic modulus k
    and not the parameter m=k^2 . */
 /* \todo move to common math */
-nr_double_t cpwline::ellipk (nr_double_t k) {
+double cpwline::ellipk (double k) {
   if ((k < 0.0) || (k >= 1.0))
     // we use only the range from 0 <= k < 1
-    return std::numeric_limits<nr_double_t>::quiet_NaN();
+    return std::numeric_limits<double>::quiet_NaN();
 
-  nr_double_t a = 1.0;
-  nr_double_t b = qucs::sqrt(1-k*k);
-  nr_double_t c = k;
+  double a = 1.0;
+  double b = qucs::sqrt(1-k*k);
+  double c = k;
 
-  while (c > std::numeric_limits<nr_double_t>::epsilon()) {
-    nr_double_t tmp = (a + b) / 2.0;
+  while (c > std::numeric_limits<double>::epsilon()) {
+    double tmp = (a + b) / 2.0;
     c = (a - b) / 2.0;
     b = qucs::sqrt(a * b);
     a = tmp;
@@ -66,9 +64,9 @@ nr_double_t cpwline::ellipk (nr_double_t k) {
   return (pi_over_2 / a);
 }
 
-nr_double_t cpwline::KoverKp(nr_double_t k) {
+double cpwline::KoverKp(double k) {
   if ((k < 0.0) || (k >= 1.0))
-    return std::numeric_limits<nr_double_t>::quiet_NaN();
+    return std::numeric_limits<double>::quiet_NaN();
 
   return (ellipk(k) / ellipk(qucs::sqrt(1-k*k)));
 }
@@ -84,8 +82,8 @@ nr_double_t cpwline::KoverKp(nr_double_t k) {
    The maximum relative error of the approximation implemented here is
    about 2 ppm, so good enough for any practical purpose.
  */
-nr_double_t cpwline::ellipa (nr_double_t k) {
-  nr_double_t r, kp;
+double cpwline::ellipa (double k) {
+  double r, kp;
   if (k < sqrt1_2) {
     kp = qucs::sqrt (1 - k * k);
     r = pi / qucs::log (2 * (1 + qucs::sqrt (kp)) / (1 - qucs::sqrt (kp)));
@@ -105,12 +103,12 @@ void cpwline::initSP (void) {
 
 void cpwline::initPropagation (void) {
   // get properties of substrate and coplanar line
-  nr_double_t W =  getPropertyDouble ("W");
-  nr_double_t s =  getPropertyDouble ("S");
+  double W =  getPropertyDouble ("W");
+  double s =  getPropertyDouble ("S");
   substrate * subst = getSubstrate ();
-  nr_double_t er = subst->getPropertyDouble ("er");
-  nr_double_t h  = subst->getPropertyDouble ("h");
-  nr_double_t t  = subst->getPropertyDouble ("t");
+  double er = subst->getPropertyDouble ("er");
+  double h  = subst->getPropertyDouble ("h");
+  double t  = subst->getPropertyDouble ("t");
   int backMetal  = !strcmp (getPropertyString ("Backside"), "Metal");
   int approx     = !strcmp (getPropertyString ("Approx"), "yes");
 
@@ -119,7 +117,7 @@ void cpwline::initPropagation (void) {
   len  = getPropertyDouble ("L");
 
   // other local variables (quasi-static constants)
-  nr_double_t k1, kk1, kpk1, k2, k3, q1, q2, q3 = 0, qz, er0 = 0;
+  double k1, kk1, kpk1, k2, k3, q1, q2, q3 = 0, qz, er0 = 0;
 
   // compute the necessary quasi-static approx. (K1, K3, er(0) and Z(0))
   k1   = W / (W + s + s);
@@ -157,7 +155,7 @@ void cpwline::initPropagation (void) {
 
   // adds effect of strip thickness
   if (t > 0) {
-    nr_double_t d, ke, qe;
+    double d, ke, qe;
     d  = (t * 1.25 / pi) * (1 + qucs::log (4 * pi * W / t));
 
     // modifies k1 accordingly (k1 = ke)
@@ -190,18 +188,18 @@ void cpwline::initPropagation (void) {
   fte = (C0 / 4) / (h * qucs::sqrt (er - 1));
 
   // dispersion factor G
-  nr_double_t p = qucs::log (W / h);
-  nr_double_t u = 0.54 - (0.64 - 0.015 * p) * p;
-  nr_double_t v = 0.43 - (0.86 - 0.54 * p) * p;
+  double p = qucs::log (W / h);
+  double u = 0.54 - (0.64 - 0.015 * p) * p;
+  double v = 0.43 - (0.86 - 0.54 * p) * p;
   G = qucs::exp (u * qucs::log (W / s) + v);
 
   // loss constant factors (computed only once for efficiency sake)
-  nr_double_t ac = 0;
+  double ac = 0;
   if (t > 0) {
     // equations by GHIONE
-    nr_double_t n  = (1 - k1) * 8 * pi / (t * (1 + k1));
-    nr_double_t a  = W / 2;
-    nr_double_t b  = a + s;
+    double n  = (1 - k1) * 8 * pi / (t * (1 + k1));
+    double a  = W / 2;
+    double b  = a + s;
     ac = (pi + qucs::log (n * a)) / a + (pi + qucs::log (n * b)) / b;
   }
   ac_factor  = ac / (4 * Z0 * kk1 * kpk1 * (1 - k1 * k1));
@@ -212,11 +210,11 @@ void cpwline::initPropagation (void) {
   bt_factor  = 2 * pi / C0;
 }
 
-void cpwline::calcAB (nr_double_t f, nr_double_t& zl, nr_double_t& al,
-		      nr_double_t& bt) {
-  nr_double_t sr_er_f = sr_er0;
-  nr_double_t ac = ac_factor;
-  nr_double_t ad = ad_factor;
+void cpwline::calcAB (double f, double& zl, double& al,
+		      double& bt) {
+  double sr_er_f = sr_er0;
+  double ac = ac_factor;
+  double ad = ad_factor;
 
   // by initializing as much as possible outside this function, the
   // overhead is minimal
@@ -239,22 +237,22 @@ void cpwline::calcAB (nr_double_t f, nr_double_t& zl, nr_double_t& al,
   Zl = zl;
 }
 
-void cpwline::saveCharacteristics (nr_double_t) {
+void cpwline::saveCharacteristics (double) {
   setCharacteristic ("Zl", Zl);
   setCharacteristic ("Er", Er);
 }
 
-void cpwline::calcSP (nr_double_t frequency) {
+void cpwline::calcSP (double frequency) {
 
-  nr_double_t zl = zl_factor;
-  nr_double_t beta = bt_factor;
-  nr_double_t alpha;
+  double zl = zl_factor;
+  double beta = bt_factor;
+  double alpha;
 
   calcAB (frequency, zl, alpha, beta);
 
   // calculate and set S-parameters
-  nr_double_t z = zl / z0;
-  nr_double_t y = 1 / z;
+  double z = zl / z0;
+  double y = 1 / z;
   nr_complex_t g = nr_complex_t (alpha, beta);
   nr_complex_t n = 2.0 * cosh (g * len) + (z + y) * sinh (g * len);
   nr_complex_t s11 = (z - y) * sinh (g * len) / n;
@@ -268,12 +266,12 @@ void cpwline::calcSP (nr_double_t frequency) {
 /* The function calculates the quasi-static impedance of a coplanar
    waveguide line and the value of the effective dielectric constant
    for the given coplanar line and substrate properties. */
-void cpwline::analyseQuasiStatic (nr_double_t W, nr_double_t s, nr_double_t h,
-				  nr_double_t t, nr_double_t er, int backMetal,
-				  nr_double_t& ZlEff, nr_double_t& ErEff) {
+void cpwline::analyseQuasiStatic (double W, double s, double h,
+				  double t, double er, int backMetal,
+				  double& ZlEff, double& ErEff) {
 
   // local variables (quasi-static constants)
-  nr_double_t k1, k2, k3, q1, q2, q3 = 0, qz;
+  double k1, k2, k3, q1, q2, q3 = 0, qz;
 
   ErEff = er;
   ZlEff = 0;
@@ -300,7 +298,7 @@ void cpwline::analyseQuasiStatic (nr_double_t W, nr_double_t s, nr_double_t h,
 
   // adds effect of strip thickness
   if (t > 0) {
-    nr_double_t d, ke, qe;
+    double d, ke, qe;
     d  = (t * 1.25 / pi) * (1 + qucs::log (4 * pi * W / t));
 
     // modifies k1 accordingly (k1 = ke)
@@ -329,13 +327,13 @@ void cpwline::analyseQuasiStatic (nr_double_t W, nr_double_t s, nr_double_t h,
 /* This function calculates the frequency dependent value of the
    effective dielectric constant and the coplanar line impedance for
    the given frequency. */
-void cpwline::analyseDispersion (nr_double_t W, nr_double_t s, nr_double_t h,
-				 nr_double_t er, nr_double_t ZlEff,
-				 nr_double_t ErEff, nr_double_t frequency,
-				 nr_double_t& ZlEffFreq,
-				 nr_double_t& ErEffFreq) {
+void cpwline::analyseDispersion (double W, double s, double h,
+				 double er, double ZlEff,
+				 double ErEff, double frequency,
+				 double& ZlEffFreq,
+				 double& ErEffFreq) {
   // local variables
-  nr_double_t fte, G;
+  double fte, G;
 
   ErEffFreq = ErEff;
   ZlEffFreq = ZlEff * ErEff;
@@ -344,9 +342,9 @@ void cpwline::analyseDispersion (nr_double_t W, nr_double_t s, nr_double_t h,
   fte = (C0 / 4) / (h * qucs::sqrt (er - 1));
 
   // dispersion factor G
-  nr_double_t p = qucs::log (W / h);
-  nr_double_t u = 0.54 - (0.64 - 0.015 * p) * p;
-  nr_double_t v = 0.43 - (0.86 - 0.54 * p) * p;
+  double p = qucs::log (W / h);
+  double u = 0.54 - (0.64 - 0.015 * p) * p;
+  double v = 0.43 - (0.86 - 0.54 * p) * p;
   G = qucs::exp (u * qucs::log (W / s) + v);
 
   // add the dispersive effects to er0
@@ -356,9 +354,9 @@ void cpwline::analyseDispersion (nr_double_t W, nr_double_t s, nr_double_t h,
   ZlEffFreq /= ErEffFreq;
 }
 
-void cpwline::calcNoiseSP (nr_double_t) {
+void cpwline::calcNoiseSP (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
@@ -383,11 +381,11 @@ void cpwline::initAC (void) {
   initPropagation ();
 }
 
-void cpwline::calcAC (nr_double_t frequency) {
+void cpwline::calcAC (double frequency) {
 
-  nr_double_t zl = zl_factor;
-  nr_double_t beta = bt_factor;
-  nr_double_t alpha;
+  double zl = zl_factor;
+  double beta = bt_factor;
+  double alpha;
 
   calcAB (frequency, zl, alpha, beta);
 
@@ -400,9 +398,9 @@ void cpwline::calcAC (nr_double_t frequency) {
   setY (NODE_1, NODE_2, y21); setY (NODE_2, NODE_1, y21);
 }
 
-void cpwline::calcNoiseAC (nr_double_t) {
+void cpwline::calcNoiseAC (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

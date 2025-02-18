@@ -21,8 +21,6 @@
  */
 
 
-#include "config.h"
-
 #include "component.h"
 #include "circularloop.h"
 #include "substrate.h"
@@ -38,17 +36,17 @@ circularloop::circularloop () : circuit (2) {
 }
 //------------------------------------------------------------------
 // This function calculates the ABCD matrix of the spiral inductance
-void circularloop::calcABCDparams(nr_double_t frequency)
+void circularloop::calcABCDparams(double frequency)
 {
- nr_double_t Z0, ere, F, eta = 120.*pi;
- nr_double_t W = getPropertyDouble ("W");//Width
- nr_double_t a = getPropertyDouble ("a");//Radius
+ double Z0, ere, F, eta = 120.*pi;
+ double W = getPropertyDouble ("W");//Width
+ double a = getPropertyDouble ("a");//Radius
  substrate * subst = getSubstrate ();
 
- nr_double_t h = subst->getPropertyDouble ("h");
- nr_double_t rho = subst->getPropertyDouble ("rho");
- nr_double_t t = subst->getPropertyDouble ("t");
- nr_double_t er = subst->getPropertyDouble ("er");
+ double h = subst->getPropertyDouble ("h");
+ double rho = subst->getPropertyDouble ("rho");
+ double t = subst->getPropertyDouble ("t");
+ double er = subst->getPropertyDouble ("er");
 
 
 // [1] Page 127
@@ -66,13 +64,13 @@ void circularloop::calcABCDparams(nr_double_t frequency)
  }
 
 // [1] Page 138
- nr_double_t Kg = 0.57 - 0.145*qucs::log(W/h);
- nr_double_t K = 1.4 + 0.217*qucs::log(W/(5.*t));// Correction factor to include the effect of the current bunching at the corners
+ double Kg = 0.57 - 0.145*qucs::log(W/h);
+ double K = 1.4 + 0.217*qucs::log(W/(5.*t));// Correction factor to include the effect of the current bunching at the corners
 
- nr_double_t L = 1.257e-12*(a*1e6)*(std::log(a/(W+t)) + 0.078)*Kg;
- nr_double_t Rs = rho/t;
+ double L = 1.257e-12*(a*1e6)*(std::log(a/(W+t)) + 0.078)*Kg;
+ double Rs = rho/t;
  R = pi*a*K*Rs/(W+t);//Global variable, it is used for DC analysis
- nr_double_t C = 33.33e-16*pi*a*1e6*qucs::sqrt(ere)/Z0;
+ double C = 33.33e-16*pi*a*1e6*qucs::sqrt(ere)/Z0;
 
  //ABCD matrix
  ABCD = eye(2);
@@ -82,15 +80,15 @@ void circularloop::calcABCDparams(nr_double_t frequency)
  ABCD.set(1,1, nr_complex_t(-4.*pi*pi*C*L*frequency*frequency+1., 2.*pi*C*R*frequency));
 }
 
-void circularloop::calcSP (nr_double_t frequency) {
+void circularloop::calcSP (double frequency) {
   calcABCDparams(frequency);
   matrix Stmp = qucs::atos(ABCD, z0, z0);
   setMatrixS(Stmp);
 }
 
-void circularloop::calcNoiseSP (nr_double_t) {
+void circularloop::calcNoiseSP (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
@@ -99,7 +97,7 @@ void circularloop::calcNoiseSP (nr_double_t) {
 void circularloop::initDC (void) {
   allocMatrixMNA ();
   if (R != 0.0) {
-    nr_double_t g = 1.0 / R;
+    double g = 1.0 / R;
     setVoltageSources (0);
     allocMatrixMNA ();
     setY (NODE_1, NODE_1, +g); setY (NODE_2, NODE_2, +g);
@@ -125,7 +123,7 @@ void circularloop::initSP(void)
   allocMatrixS ();
 }
 
-void circularloop::calcAC (nr_double_t frequency) {
+void circularloop::calcAC (double frequency) {
   calcABCDparams(frequency);
   nr_complex_t y11 = ABCD.get(1,1)/ABCD.get(0,1);
   nr_complex_t y12 = -det(ABCD)/ABCD.get(0,1);
@@ -135,9 +133,9 @@ void circularloop::calcAC (nr_double_t frequency) {
   setY (NODE_1, NODE_2, y12); setY (NODE_2, NODE_1, y21);
 }
 
-void circularloop::calcNoiseAC (nr_double_t) {
+void circularloop::calcNoiseAC (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "msvia.h"
@@ -33,10 +31,10 @@ msvia::msvia () : circuit (2) {
   type = CIR_MSVIA;
 }
 
-void msvia::calcNoiseSP (nr_double_t) {
+void msvia::calcNoiseSP (double) {
   // calculate noise correlation matrix
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t f = celsius2kelvin (T) * 4.0 * real (Z) * z0 / norm (4.0 * z0 + Z) / T0;
+  double T = getPropertyDouble ("Temp");
+  double f = celsius2kelvin (T) * 4.0 * real (Z) * z0 / norm (4.0 * z0 + Z) / T0;
   setN (NODE_1, NODE_1, +f); setN (NODE_2, NODE_2, +f);
   setN (NODE_1, NODE_2, -f); setN (NODE_2, NODE_1, -f);
 }
@@ -46,7 +44,7 @@ void msvia::initSP (void) {
   R = calcResistance ();
 }
 
-void msvia::calcSP (nr_double_t frequency) {
+void msvia::calcSP (double frequency) {
   // calculate s-parameters
   Z = calcImpedance (frequency);
   nr_complex_t z = Z / z0;
@@ -56,13 +54,13 @@ void msvia::calcSP (nr_double_t frequency) {
   setS (NODE_2, NODE_1, 2.0 / (z + 2.0));
 }
 
-nr_complex_t msvia::calcImpedance (nr_double_t frequency) {
+nr_complex_t msvia::calcImpedance (double frequency) {
   // fetch substrate and component properties
   substrate * subst = getSubstrate ();
-  nr_double_t h   = subst->getPropertyDouble ("h");
-  nr_double_t t   = subst->getPropertyDouble ("t");
-  nr_double_t rho = subst->getPropertyDouble ("rho");
-  nr_double_t r   = getPropertyDouble ("D") / 2;
+  double h   = subst->getPropertyDouble ("h");
+  double t   = subst->getPropertyDouble ("t");
+  double rho = subst->getPropertyDouble ("rho");
+  double r   = getPropertyDouble ("D") / 2;
 
   // check frequency validity
   if (frequency * h >= 0.03 * C0) {
@@ -71,30 +69,30 @@ nr_complex_t msvia::calcImpedance (nr_double_t frequency) {
   }
 
   // create Z-parameter
-  nr_double_t fs  = pi * MU0 * sqr (t) / rho;
-  nr_double_t res = R * std::sqrt (1 + frequency * fs);
-  nr_double_t a   = std::sqrt (sqr (r) + sqr (h));
-  nr_double_t ind = MU0 * (h * std::log ((h + a) / r) + 1.5 * (r - a));
+  double fs  = pi * MU0 * sqr (t) / rho;
+  double res = R * std::sqrt (1 + frequency * fs);
+  double a   = std::sqrt (sqr (r) + sqr (h));
+  double ind = MU0 * (h * std::log ((h + a) / r) + 1.5 * (r - a));
   return Z = nr_complex_t (res, frequency * ind);
 }
 
-nr_double_t msvia::calcResistance (void) {
+double msvia::calcResistance (void) {
   // fetch substrate and component properties
   substrate * subst = getSubstrate ();
-  nr_double_t h   = subst->getPropertyDouble ("h");
-  nr_double_t t   = subst->getPropertyDouble ("t");
-  nr_double_t rho = subst->getPropertyDouble ("rho");
-  nr_double_t r   = getPropertyDouble ("D") / 2;
-  nr_double_t v   = h / pi / (sqr (r) - sqr (r - t));
+  double h   = subst->getPropertyDouble ("h");
+  double t   = subst->getPropertyDouble ("t");
+  double rho = subst->getPropertyDouble ("rho");
+  double r   = getPropertyDouble ("D") / 2;
+  double v   = h / pi / (sqr (r) - sqr (r - t));
   return R = rho * v;
 }
 
 void msvia::initDC (void) {
-  nr_double_t r = calcResistance ();
+  double r = calcResistance ();
 
   // for non-zero resistances usual MNA entries
   if (r != 0.0) {
-    nr_double_t g = 1.0 / r;
+    double g = 1.0 / r;
     setVoltageSources (0);
     allocMatrixMNA ();
     setY (NODE_1, NODE_1, +g); setY (NODE_2, NODE_2, +g);
@@ -116,17 +114,17 @@ void msvia::initAC (void) {
   R = calcResistance ();
 }
 
-void msvia::calcAC (nr_double_t frequency) {
+void msvia::calcAC (double frequency) {
   nr_complex_t y = 1.0 / calcImpedance (frequency);
   setY (NODE_1, NODE_1, +y); setY (NODE_2, NODE_2, +y);
   setY (NODE_1, NODE_2, -y); setY (NODE_2, NODE_1, -y);
 }
 
-void msvia::calcNoiseAC (nr_double_t) {
+void msvia::calcNoiseAC (double) {
   // calculate noise current correlation matrix
-  nr_double_t y = real (1.0 / Z);
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t f = celsius2kelvin (T) / T0 * 4.0 * y;
+  double y = real (1.0 / Z);
+  double T = getPropertyDouble ("Temp");
+  double f = celsius2kelvin (T) / T0 * 4.0 * y;
   setN (NODE_1, NODE_1, +f); setN (NODE_2, NODE_2, +f);
   setN (NODE_1, NODE_2, -f); setN (NODE_2, NODE_1, -f);
 }

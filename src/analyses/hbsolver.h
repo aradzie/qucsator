@@ -48,7 +48,7 @@ class hbsolver : public analysis
   int  checkBalance (void);
 
   void splitCircuits (void);
-  void expandFrequencies (nr_double_t, int);
+  void expandFrequencies (double, int);
   bool isExcitation (circuit *);
   strlist * circuitNodes (ptrlist<circuit>);
   void getNodeLists (void);
@@ -84,12 +84,12 @@ class hbsolver : public analysis
   void saveNodeVoltages (circuit *, int);
 
  private:
-  std::vector<nr_double_t> negfreqs;    // full frequency set
-  std::vector<nr_double_t> posfreqs;    // full frequency set but positive
-  std::vector<nr_double_t> rfreqs;      // real positive frequency set
+  std::vector<double> negfreqs;    // full frequency set
+  std::vector<double> posfreqs;    // full frequency set but positive
+  std::vector<double> rfreqs;      // real positive frequency set
   int * ndfreqs;                    // number of frequencies for each dimension
-  std::vector<nr_double_t> dfreqs;      // base frequencies for each dimension
-  nr_double_t frequency;
+  std::vector<double> dfreqs;      // base frequencies for each dimension
+  double frequency;
   strlist * nlnodes, * lnnodes, * banodes, * nanodes, * exnodes;
   ptrlist<circuit> excitations;
   ptrlist<circuit> nolcircuits;

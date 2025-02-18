@@ -27,12 +27,12 @@ class msstep : public qucs::circuit
 {
  public:
   CREATOR (msstep);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initTR (void);
-  qucs::matrix calcMatrixZ (nr_double_t);
+  qucs::matrix calcMatrixZ (double);
 };
 
 #endif /* __MSSTEP_H__ */

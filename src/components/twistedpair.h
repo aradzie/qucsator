@@ -27,22 +27,22 @@ class twistedpair : public qucs::circuit
  public:
   CREATOR (twistedpair);
   void initSP (void);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
   void initTR (void);
-  void saveCharacteristics (nr_double_t);
+  void saveCharacteristics (double);
 
  private:
-  void calcPropagation (nr_double_t);
-  nr_double_t calcLoss (nr_double_t);
-  nr_double_t calcLength (void);
+  void calcPropagation (double);
+  double calcLoss (double);
+  double calcLength (void);
 
  private:
-  nr_double_t zl, ereff, alpha, beta, len, angle;
+  double zl, ereff, alpha, beta, len, angle;
 };
 
 #endif /* __TWISTEDPAIR_H__ */

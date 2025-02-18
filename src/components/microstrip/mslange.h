@@ -27,26 +27,26 @@ class mslange : public qucs::circuit
  public:
   CREATOR (mslange);
   void initDC (void);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
-  void calcPropagation (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
+  void calcPropagation (double);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  void saveCharacteristics (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
+  void saveCharacteristics (double);
 
-  static void analysQuasiStatic (nr_double_t, nr_double_t, nr_double_t,
-				 nr_double_t, nr_double_t, const char * const,
-				 nr_double_t&, nr_double_t&, nr_double_t&,
-				 nr_double_t&);
-  static void analyseDispersion (nr_double_t, nr_double_t, nr_double_t,
-				 nr_double_t, nr_double_t, nr_double_t,
-				 nr_double_t, nr_double_t, nr_double_t, const char * const,
-				 nr_double_t&, nr_double_t&, nr_double_t&,
-				 nr_double_t&);
+  static void analysQuasiStatic (double, double, double,
+				 double, double, const char * const,
+				 double&, double&, double&,
+				 double&);
+  static void analyseDispersion (double, double, double,
+				 double, double, double,
+				 double, double, double, const char * const,
+				 double&, double&, double&,
+				 double&);
 
  private:
-  nr_double_t ae, be, ze, ao, bo, zo, ee, eo;
+  double ae, be, ze, ao, bo, zo, ee, eo;
 };
 
 #endif /* __MSLANGE_H__ */

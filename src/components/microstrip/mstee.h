@@ -33,11 +33,11 @@ class mstee : public qucs::circuit
   CREATOR (mstee);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initNoiseAC (void);
   void initSP (void);
   void initNoiseSP (void);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initTR (void);
 
   friend qucs::circuit * splitMicrostrip (qucs::circuit *, qucs::circuit *, qucs::net *,
@@ -45,11 +45,11 @@ class mstee : public qucs::circuit
   friend void disableMicrostrip (qucs::circuit *, qucs::circuit *, qucs::net *, int);
 
  private:
-  void calcPropagation (nr_double_t);
+  void calcPropagation (double);
   void initLines (void);
 
  private:
-  nr_double_t Bt, La, Lb, L2, Ta2, Tb2;
+  double Bt, La, Lb, L2, Ta2, Tb2;
   qucs::circuit * lineA;
   qucs::circuit * lineB;
   qucs::circuit * line2;

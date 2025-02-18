@@ -25,20 +25,20 @@
 namespace fspecial {
 
 //#ifndef HAVE_ERF
-  nr_double_t     erf (nr_double_t);
+  double     erf (double);
 //#endif
 //#ifndef HAVE_ERFC
-  nr_double_t    erfc (nr_double_t);
+  double    erfc (double);
 //#endif
-  nr_double_t  erfinv (nr_double_t);
-  nr_double_t erfcinv (nr_double_t);
-  nr_double_t ltqnorm (nr_double_t);
-  nr_double_t      i0 (nr_double_t);
+  double  erfinv (double);
+  double erfcinv (double);
+  double ltqnorm (double);
+  double      i0 (double);
 
-  void        ellip_ke (nr_double_t, nr_double_t&, nr_double_t&);
-  nr_double_t ellip_rf (nr_double_t, nr_double_t, nr_double_t);
-  nr_double_t ellip_sncndn (nr_double_t, nr_double_t,
-			    nr_double_t&, nr_double_t&, nr_double_t&);
+  void        ellip_ke (double, double&, double&);
+  double ellip_rf (double, double, double);
+  double ellip_sncndn (double, double,
+			    double&, double&, double&);
 
 } // namespace
 

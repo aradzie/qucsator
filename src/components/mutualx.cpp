@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "mutualx.h"
 
@@ -31,11 +29,11 @@ mutualx::mutualx () : circuit () {
   setVariableSized (true);
 }
 
-void mutualx::calcSP (nr_double_t frequency) {
+void mutualx::calcSP (double frequency) {
   setMatrixS (ytos (calcMatrixY (frequency)));
 }
 
-matrix mutualx::calcMatrixY (nr_double_t frequency) {
+matrix mutualx::calcMatrixY (double frequency) {
 #if 1
   matrix ts = ztos (calcMatrixZ (frequency));
   matrix ty = stoy (ts);
@@ -57,20 +55,20 @@ matrix mutualx::calcMatrixY (nr_double_t frequency) {
   return y;
 }
 
-matrix mutualx::calcMatrixZ (nr_double_t frequency) {
+matrix mutualx::calcMatrixZ (double frequency) {
   int inductors = getSize () / 2;
   int r, c, state;
   qucs::vector * L = getPropertyVector ("L");
   qucs::vector * C = getPropertyVector ("k");
-  nr_double_t o = 2 * pi * frequency;
+  double o = 2 * pi * frequency;
   matrix z = matrix (inductors);
 
   // fill Z-Matrix entries
   for (state = 0, r = 0; r < inductors; r++) {
     for (c = 0; c < inductors; c++, state++) {
-      nr_double_t l1 = real (L->get (r));
-      nr_double_t l2 = real (L->get (c));
-      nr_double_t k = real (C->get (state)) * std::sqrt (l1 * l2);
+      double l1 = real (L->get (r));
+      double l2 = real (L->get (c));
+      double k = real (C->get (state)) * std::sqrt (l1 * l2);
       z.set (r, c, nr_complex_t (0.0, k * o));
     }
   }
@@ -81,19 +79,19 @@ void mutualx::initAC (void) {
   initDC ();
 }
 
-void mutualx::calcAC (nr_double_t frequency) {
+void mutualx::calcAC (double frequency) {
   int inductors = getSize () / 2;
   int r, c, state;
   qucs::vector * L = getPropertyVector ("L");
   qucs::vector * C = getPropertyVector ("k");
-  nr_double_t o = 2 * pi * frequency;
+  double o = 2 * pi * frequency;
 
   // fill D-Matrix
   for (state = 0, r = 0; r < inductors; r++) {
     for (c = 0; c < inductors; c++, state++) {
-      nr_double_t l1 = real (L->get (r));
-      nr_double_t l2 = real (L->get (c));
-      nr_double_t k = real (C->get (state)) * std::sqrt (l1 * l2);
+      double l1 = real (L->get (r));
+      double l2 = real (L->get (c));
+      double k = real (C->get (state)) * std::sqrt (l1 * l2);
       setD (VSRC_1 + r, VSRC_1 + c, nr_complex_t (0.0, - k * o));
     }
   }
@@ -114,22 +112,22 @@ void mutualx::initTR (void) {
   setStates (inductors * inductors * 2);
 }
 
-void mutualx::calcTR (nr_double_t) {
+void mutualx::calcTR (double) {
   int inductors = getSize () / 2;
   int r, c, state;
   qucs::vector * L = getPropertyVector ("L");
   qucs::vector * C = getPropertyVector ("k");
 
-  nr_double_t * veq = new nr_double_t[inductors * inductors];
-  nr_double_t * req = new nr_double_t[inductors * inductors];
+  double * veq = new double[inductors * inductors];
+  double * req = new double[inductors * inductors];
 
   // integration for self and mutual inductances
   for (state = 0, r = 0; r < inductors; r++) {
     for (c = 0; c < inductors; c++, state++) {
-      nr_double_t l1 = real (L->get (r));
-      nr_double_t l2 = real (L->get (c));
-      nr_double_t i = real (getJ (VSRC_1 + c));
-      nr_double_t k = real (C->get (state)) * std::sqrt (l1 * l2);
+      double l1 = real (L->get (r));
+      double l2 = real (L->get (c));
+      double i = real (getJ (VSRC_1 + c));
+      double k = real (C->get (state)) * std::sqrt (l1 * l2);
       setState  (2 * state, i * k);
       integrate (2 * state, k, req[state], veq[state]);
     }
@@ -137,7 +135,7 @@ void mutualx::calcTR (nr_double_t) {
 
   // fill D-Matrix entries and extended RHS
   for (state = 0, r = 0; r < inductors; r++) {
-    nr_double_t v = 0;
+    double v = 0;
     for (c = 0; c < inductors; c++, state++) {
       setD (VSRC_1 + r, VSRC_1 + c, -req[state]);
       v += veq[state];

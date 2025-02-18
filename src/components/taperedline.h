@@ -30,21 +30,21 @@ class taperedline : public qucs::circuit
 {
  public:
   CREATOR (taperedline);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
   void initSP (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
+  void calcNoiseSP (double);
 private:
-  void calcABCDparams(nr_double_t);
+  void calcABCDparams(double);
   void calcImpedanceProfile();
-  nr_double_t calcExponential(nr_double_t, nr_double_t, nr_double_t, nr_double_t);
-  nr_double_t calcLinear(nr_double_t, nr_double_t, nr_double_t, nr_double_t);
-  nr_double_t calcTriangular(nr_double_t, nr_double_t, nr_double_t, nr_double_t);
-  nr_double_t calcKlopfenstein(nr_double_t, nr_double_t, nr_double_t, nr_double_t, nr_double_t);
-  nr_double_t phi(nr_double_t, nr_double_t);
+  double calcExponential(double, double, double, double);
+  double calcLinear(double, double, double, double);
+  double calcTriangular(double, double, double, double);
+  double calcKlopfenstein(double, double, double, double, double);
+  double phi(double, double);
   qucs::matrix ABCD;
   double Zprofile[Nsteps];
 };

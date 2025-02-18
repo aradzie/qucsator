@@ -22,6 +22,7 @@
 
 #include <limits>
 
+#define NR_DOUBLE_SIZE 8
 
 #if NR_DOUBLE_SIZE == 4  /* S 23bit MAN | S 7bit EXP */
   /* single precision */

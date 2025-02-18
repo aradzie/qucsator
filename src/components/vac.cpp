@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vac.h"
 
@@ -47,8 +45,8 @@ void vac::initDC (void) {
 
 void vac::initAC (void) {
   initDC ();
-  nr_double_t a = getPropertyDouble ("U");
-  nr_double_t p = getPropertyDouble ("Phase");
+  double a = getPropertyDouble ("U");
+  double p = getPropertyDouble ("Phase");
   setE (VSRC_1, qucs::polar (a, deg2rad (p)));
 }
 
@@ -56,15 +54,15 @@ void vac::initTR (void) {
   initDC ();
 }
 
-void vac::calcTR (nr_double_t t) {
-  nr_double_t f = getPropertyDouble ("f");
-  nr_double_t p = getPropertyDouble ("Phase");
-  nr_double_t d = getPropertyDouble ("Theta");
-  nr_double_t a = getPropertyDouble ("U");
-  nr_double_t s = getNet()->getSrcFactor ();
-  nr_double_t o = 2 * pi * f;
-  nr_double_t T = p / f / 360;
-  nr_double_t u = s * a * std::exp (-(t + T) * d * f) * std::sin (o * t + deg2rad (p));
+void vac::calcTR (double t) {
+  double f = getPropertyDouble ("f");
+  double p = getPropertyDouble ("Phase");
+  double d = getPropertyDouble ("Theta");
+  double a = getPropertyDouble ("U");
+  double s = getNet()->getSrcFactor ();
+  double o = 2 * pi * f;
+  double T = p / f / 360;
+  double u = s * a * std::exp (-(t + T) * d * f) * std::sin (o * t + deg2rad (p));
   setE (VSRC_1, u);
 }
 
@@ -74,11 +72,11 @@ void vac::initHB (void) {
   voltageSource (VSRC_1, NODE_1, NODE_2);
 }
 
-void vac::calcHB (nr_double_t frequency) {
-  nr_double_t f = getPropertyDouble ("f");
+void vac::calcHB (double frequency) {
+  double f = getPropertyDouble ("f");
   if (f == frequency) {
-    nr_double_t a = getPropertyDouble ("U");
-    nr_double_t p = getPropertyDouble ("Phase");
+    double a = getPropertyDouble ("U");
+    double p = getPropertyDouble ("Phase");
     setE (VSRC_1, qucs::polar (a, deg2rad (p)));
   }
   else {

@@ -28,27 +28,27 @@ class digital : public qucs::circuit
   digital ();
   ~digital ();
   void initSP (void);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void calcDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
   void calcOperatingPoints (void);
 
  protected:
   virtual void calcOutput (void) { }
   virtual void calcDerivatives (void) { }
-  nr_double_t getVin (int);
-  nr_double_t calcTransfer (int);
-  nr_double_t calcTransferX (int);
-  nr_double_t calcDerivative (int);
-  nr_double_t calcDerivativeX (int);
+  double getVin (int);
+  double calcTransfer (int);
+  double calcTransferX (int);
+  double calcDerivative (int);
+  double calcDerivativeX (int);
 
  protected:
-  nr_double_t * g;
-  nr_double_t Vout, Veq, Tdelay;
+  double * g;
+  double Vout, Veq, Tdelay;
   int i;
   bool delay;
 

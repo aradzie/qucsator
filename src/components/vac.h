@@ -30,9 +30,9 @@ class vac : public qucs::circuit
   void initDC (void);
   void initAC (void);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
   void initHB (void);
-  void calcHB (nr_double_t);
+  void calcHB (double);
 };
 
 #endif /* __VAC_H__ */

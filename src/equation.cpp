@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1117,7 +1115,7 @@ constant * node::getResult (int pos)
 
 /* Returns a double value depending on the type of the equation nodes
    result type. */
-nr_double_t node::getResultDouble (void)
+double node::getResultDouble (void)
 {
     constant * c = getResult ();
     if (c != NULL)
@@ -2430,7 +2428,7 @@ bool checker::containsVariable (const char * const ident) const
 struct pconstant
 {
     const char * ident;
-    nr_double_t value;
+    double value;
 };
 
 // List of global constant variables.
@@ -2474,7 +2472,7 @@ node * checker::addReference (const char * type, const char * ident,
 /* The function adds a new equation to the equation checker consisting
    of an assignment of a double variable. */
 node * checker::addDouble (const char * type, const char * ident,
-                           nr_double_t value)
+                           double value)
 {
     node * eqn = createDouble (type, ident, value);
     addEquation (eqn);
@@ -2512,7 +2510,7 @@ void checker::appendEquation (node * eqn)
 /* This function creates a equation consisting of an assignment of a
    double variable. */
 node * checker::createDouble (const char * type, const char * ident,
-                              nr_double_t value)
+                              double value)
 {
     // create constant double value
     constant * c = new constant (TAG_DOUBLE);
@@ -2569,7 +2567,7 @@ node * checker::createReference (const char * type, const char * ident,
 /* The functions looks through the set of equations for a real valued
    result and returns it.  If there is no such assignment, zero is
    returned. */
-nr_double_t checker::getDouble (const char * const ident) const
+double checker::getDouble (const char * const ident) const
 {
     foreach_equation (eqn)
     {
@@ -2583,7 +2581,7 @@ nr_double_t checker::getDouble (const char * const ident) const
 
 /* The function goes through the equation set and looks for the
    specified assignment.  If found the given value is set. */
-void checker::setDouble (const char * const ident, nr_double_t val)
+void checker::setDouble (const char * const ident, double val)
 {
     foreach_equation (eqn)
     {

@@ -22,8 +22,6 @@
 #ifndef __NASOLVER_H__
 #define __NASOLVER_H__
 
-#include "config.h"
-
 #include "tvector.h"
 #include "tmatrix.h"
 #include "eqnsys.h"
@@ -112,7 +110,7 @@ private:
     void saveNodeVoltages (void);
     void saveBranchCurrents (void);
     nr_type_t MatValX (nr_complex_t, nr_complex_t *);
-    nr_type_t MatValX (nr_complex_t, nr_double_t *);
+    nr_type_t MatValX (nr_complex_t, double *);
 
 protected:
     tvector<nr_type_t> * z;
@@ -126,15 +124,15 @@ protected:
     int fixpoint;
     int eqnAlgo;
     int updateMatrix;
-    nr_double_t gMin, srcFactor;
+    double gMin, srcFactor;
     std::string desc;
     nodelist * nlist;
 
 private:
     eqnsys<nr_type_t> * eqns;
-    nr_double_t reltol;
-    nr_double_t abstol;
-    nr_double_t vntol;
+    double reltol;
+    double abstol;
+    double vntol;
     nasolution<nr_type_t> solution;
 
 private:

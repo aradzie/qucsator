@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "gyrator.h"
 
@@ -34,11 +32,11 @@ gyrator::gyrator () : circuit (4) {
 }
 
 void gyrator::initSP (void) {
-  nr_double_t R = getPropertyDouble ("R");
-  nr_double_t z = getPropertyDouble ("Zref");
-  nr_double_t r = R / z;
-  nr_double_t s1 = r * r / (r * r + 4.0);
-  nr_double_t s2 = 2.0 * r / (r * r + 4.0);
+  double R = getPropertyDouble ("R");
+  double z = getPropertyDouble ("Zref");
+  double r = R / z;
+  double s1 = r * r / (r * r + 4.0);
+  double s2 = 2.0 * r / (r * r + 4.0);
   allocMatrixS ();
   setS (NODE_1, NODE_1, s1); setS (NODE_2, NODE_2, s1);
   setS (NODE_3, NODE_3, s1); setS (NODE_4, NODE_4, s1);
@@ -53,7 +51,7 @@ void gyrator::initSP (void) {
 }
 
 void gyrator::initDC (void) {
-  nr_double_t r = getPropertyDouble ("R");
+  double r = getPropertyDouble ("R");
   allocMatrixMNA ();
 #if AUGMENTED
   setB (NODE_1, VSRC_1, +1.0); setB (NODE_2, VSRC_1, +0.0);

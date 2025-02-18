@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -65,7 +63,7 @@ spline::spline (qucs::vector y, qucs::vector t) {
 }
 
 // Constructor creates an instance of the spline class with tvector data given.
-spline::spline (std::vector<nr_double_t> y, std::vector<nr_double_t> t) {
+spline::spline (std::vector<double> y, std::vector<double> t) {
   x = f0 = f1 = f2 = f3 = NULL;
   d0 = dn = 0;
   n = 0;
@@ -75,7 +73,7 @@ spline::spline (std::vector<nr_double_t> y, std::vector<nr_double_t> t) {
 }
 
 // Constructor creates an instance of the spline class with tvector data given.
-spline::spline (tvector<nr_double_t> y, tvector<nr_double_t> t) {
+spline::spline (tvector<double> y, tvector<double> t) {
   x = f0 = f1 = f2 = f3 = NULL;
   d0 = dn = 0;
   n = 0;
@@ -100,7 +98,7 @@ void spline::vectors (qucs::vector y, qucs::vector t) {
 }
 
 // Pass interpolation datapoints as tvectors.
-void spline::vectors (std::vector<nr_double_t> y, std::vector<nr_double_t> t) {
+void spline::vectors (std::vector<double> y, std::vector<double> t) {
   int i = (int)t.size ();
   assert ((int)y.size () == i && i >= 3);
 
@@ -112,7 +110,7 @@ void spline::vectors (std::vector<nr_double_t> y, std::vector<nr_double_t> t) {
 }
 
 // Pass interpolation datapoints as tvectors.
-void spline::vectors (tvector<nr_double_t> y, tvector<nr_double_t> t) {
+void spline::vectors (tvector<double> y, tvector<double> t) {
   int i = t.size ();
   assert (y.size () == i && i >= 3);
 
@@ -124,7 +122,7 @@ void spline::vectors (tvector<nr_double_t> y, tvector<nr_double_t> t) {
 }
 
 // Pass interpolation datapoints as pointers.
-void spline::vectors (nr_double_t * y, nr_double_t * t, int len) {
+void spline::vectors (double * y, double * t, int len) {
   int i = len;
   assert (i >= 3);
 
@@ -140,9 +138,9 @@ void spline::realloc (int size) {
   if (n != size - 1) {
     n = size - 1;
     delete[] f0;
-    f0 = new nr_double_t[n+1];
+    f0 = new double[n+1];
     delete[] x;
-    x  = new nr_double_t[n+1];
+    x  = new double[n+1];
   }
   delete[] f1;
   delete[] f2;
@@ -154,7 +152,7 @@ void spline::construct (void) {
 
   // calculate first derivative h = f'(x)
   int i;
-  nr_double_t * h  = new nr_double_t[n+1];
+  double * h  = new double[n+1];
   for (i = 0; i < n; i++) {
     h[i] = x[i+1] - x[i];
     if (h[i] == 0.0) {
@@ -167,11 +165,11 @@ void spline::construct (void) {
   if (boundary == SPLINE_BC_NATURAL || boundary == SPLINE_BC_CLAMPED) {
 
     // setup right hand side
-    nr_double_t * b = new nr_double_t[n+1]; // b as in Ax = b
+    double * b = new double[n+1]; // b as in Ax = b
     for (i = 1; i < n; i++) {
-      nr_double_t _n = f0[i+1] * h[i-1] - f0[i] * (h[i] + h[i-1]) +
+      double _n = f0[i+1] * h[i-1] - f0[i] * (h[i] + h[i-1]) +
 	f0[i-1] * h[i];
-      nr_double_t _d = h[i-1] * h[i];
+      double _d = h[i-1] * h[i];
       b[i] = 3 * _n / _d;
     }
     if (boundary == SPLINE_BC_NATURAL) {
@@ -184,8 +182,8 @@ void spline::construct (void) {
       b[n] = 3 * (dn - (f0[n] - f0[n-1]) / h[n-1]);
     }
 
-    nr_double_t * u = new nr_double_t[n+1];
-    nr_double_t * z = b; // reuse storage
+    double * u = new double[n+1];
+    double * z = b; // reuse storage
     if (boundary == SPLINE_BC_NATURAL) {
       u[0] = 0;
       z[0] = 0;
@@ -195,14 +193,14 @@ void spline::construct (void) {
     }
 
     for (i = 1; i < n; i++) {
-      nr_double_t p = 2 * (h[i] + h[i-1]) - h[i-1] * u[i-1]; // pivot
+      double p = 2 * (h[i] + h[i-1]) - h[i-1] * u[i-1]; // pivot
       u[i] = h[i] / p;
       z[i] = (b[i] - z[i-1] * h[i-1]) / p;
     }
     if (boundary == SPLINE_BC_NATURAL) {
       z[n] = 0;
     } else if (boundary == SPLINE_BC_CLAMPED) {
-      nr_double_t p = h[n-1] * (2 - u[n-1]);
+      double p = h[n-1] * (2 - u[n-1]);
       z[n] = (b[n] - z[n-1] * h[n-1]) / p;
     }
 
@@ -231,12 +229,12 @@ void spline::construct (void) {
   // second kind of cubic splines
   else if (boundary == SPLINE_BC_PERIODIC) {
     // non-trigdiagonal equations - periodic boundary condition
-    //std::vector<nr_double_t> z (n+1);
-    nr_double_t *z = new nr_double_t[n+1];
+    //std::vector<double> z (n+1);
+    double *z = new double[n+1];
     if (n == 2) {
-      nr_double_t B = h[0] + h[1];
-      nr_double_t A = 2 * B;
-      nr_double_t b[2], det;
+      double B = h[0] + h[1];
+      double A = 2 * B;
+      double b[2], det;
       b[0] = 3 * ((f0[2] - f0[1]) / h[1] - (f0[1] - f0[0]) / h[0]);
       b[1] = 3 * ((f0[1] - f0[2]) / h[0] - (f0[2] - f0[1]) / h[1]);
       det = 3 * B * B;
@@ -245,10 +243,10 @@ void spline::construct (void) {
       z[0] = z[2];
     }
     else {
-      tridiag<nr_double_t> sys;
-      std::vector<nr_double_t> o (n);
-      std::vector<nr_double_t> d (n);
-      std::vector<nr_double_t> b(&z[1],&z[n]);
+      tridiag<double> sys;
+      std::vector<double> o (n);
+      std::vector<double> d (n);
+      std::vector<double> b(&z[1],&z[n]);
       //b.setData (&z[1], n);
       for (i = 0; i < n - 1; i++) {
         o[i] = h[i+1];
@@ -268,7 +266,7 @@ void spline::construct (void) {
       z[0] = z[n];
     }
 
-    f1 = new nr_double_t[n+1];
+    f1 = new double[n+1];
     //f2 = &z.front (); // reuse storage
     f2 = z;
     f3 = h;
@@ -283,10 +281,10 @@ void spline::construct (void) {
 }
 
 // Returns pointer to the first value greater than the given one.
-nr_double_t * spline::upper_bound (nr_double_t * first, nr_double_t * last,
-				   nr_double_t value) {
+double * spline::upper_bound (double * first, double * last,
+				   double value) {
   int half, len = last - first;
-  nr_double_t * centre;
+  double * centre;
 
   while (len > 0) {
     half = len >> 1;
@@ -304,28 +302,28 @@ nr_double_t * spline::upper_bound (nr_double_t * first, nr_double_t * last,
 }
 
 // Evaluates the spline at the given position.
-poly spline::evaluate (nr_double_t t) {
+poly spline::evaluate (double t) {
 
 #ifndef PERIOD_DISABLED
   if (boundary == SPLINE_BC_PERIODIC) {
     // extrapolation easy: periodically
-    nr_double_t period = x[n] - x[0];
+    double period = x[n] - x[0];
     while (t > x[n]) t -= period;
     while (t < x[0]) t += period;
   }
 #endif /* PERIOD_DISABLED */
 
-  nr_double_t * here = upper_bound (x, x+n+1, t);
-  nr_double_t y0, y1, y2;
+  double * here = upper_bound (x, x+n+1, t);
+  double y0, y1, y2;
   if (here == x) {
-    nr_double_t dx = t - x[0];
+    double dx = t - x[0];
     y0 = f0[0] + dx * f1[0];
     y1 = f1[0];
     return poly (t, y0, y1);
   }
   else {
     int i = here - x - 1;
-    nr_double_t dx = t - x[i];
+    double dx = t - x[i];
     // value
     y0 = f0[i] + dx * (f1[i] + dx * (f2[i] + dx * f3[i]));
     // first derivative

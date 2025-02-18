@@ -26,8 +26,8 @@ class bjt : public qucs::circuit
 {
  public:
   CREATOR (bjt);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void initSP (void);
   void calcDC (void);
   void initDC (void);
@@ -36,27 +36,27 @@ class bjt : public qucs::circuit
   void loadOperatingPoints (void);
   void calcOperatingPoints (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 
  private:
   void initModel (void);
   void processCbcx (void);
-  qucs::matrix calcMatrixY (nr_double_t);
-  qucs::matrix calcMatrixCy (nr_double_t);
-  void excessPhase (int, nr_double_t&, nr_double_t&);
+  qucs::matrix calcMatrixY (double);
+  qucs::matrix calcMatrixCy (double);
+  void excessPhase (int, double&, double&);
 
  private:
-  nr_double_t Ucs, Ubx, Ube, Ubc, Uce, UbePrev, UbcPrev;
+  double Ucs, Ubx, Ube, Ubc, Uce, UbePrev, UbcPrev;
   qucs::circuit * re;
   qucs::circuit * rc;
   qucs::circuit * rb;
   qucs::circuit * cbcx;
-  nr_double_t dQbedUbc, dQbdUbe, dQbdUbc, If, Qb, Ir, It;
-  nr_double_t gbei, gben, gbci, gbcn, gitf, gitr, gif, gir, Rbb, Ibe;
-  nr_double_t Qbe, Qbci, Qbcx, Qcs;
+  double dQbedUbc, dQbdUbe, dQbdUbc, If, Qb, Ir, It;
+  double gbei, gben, gbci, gbcn, gitf, gitr, gif, gir, Rbb, Ibe;
+  double Qbe, Qbci, Qbcx, Qcs;
   bool doTR;
 };
 

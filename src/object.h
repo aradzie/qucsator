@@ -61,17 +61,17 @@ class object
   //! Get the name of the object.
   const char * getName (void) const { return this->name.c_str(); };
   void addProperty (const std::string &n, const char * const val, const bool def = false);
-  void addProperty (const std::string &n, const nr_double_t, const bool def = false);
+  void addProperty (const std::string &n, const double, const bool def = false);
   void addProperty (const std::string &n, variable * const, const bool def = false);
   void setProperty (const std::string &n, const char * const);
-  void setProperty (const std::string &n, nr_double_t);
-  void setScaledProperty (const std::string &n, const nr_double_t);
+  void setProperty (const std::string &n, double);
+  void setScaledProperty (const std::string &n, const double);
   void setProperty (const std::string &n, variable * const);
   vector * getPropertyVector (const std::string &n) const;
   const char * getPropertyString (const std::string &n) const;
   const char * getPropertyReference (const std::string &n) const;
-  nr_double_t getPropertyDouble (const std::string &n) const;
-  nr_double_t getScaledProperty (const std::string &n) const;
+  double getPropertyDouble (const std::string &n) const;
+  double getScaledProperty (const std::string &n) const;
   int  getPropertyInteger (const std::string &n) const;
   bool hasProperty (const std::string &n) const ;
   bool isPropertyGiven (const std::string &n) const;

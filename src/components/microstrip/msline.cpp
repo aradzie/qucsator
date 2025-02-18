@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "msline.h"
@@ -32,35 +30,35 @@ msline::msline () : circuit (2) {
   type = CIR_MSLINE;
 }
 
-void msline::calcNoiseSP (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void msline::calcNoiseSP (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
 }
 
-void msline::calcPropagation (nr_double_t frequency) {
+void msline::calcPropagation (double frequency) {
 
   /* how to get properties of this component, e.g. L, W */
-  nr_double_t W = getPropertyDouble ("W");
+  double W = getPropertyDouble ("W");
   const char * SModel = getPropertyString ("Model");
   const char * DModel = getPropertyString ("DispModel");
 
   /* how to get properties of the substrate, e.g. Er, H */
   substrate * subst = getSubstrate ();
-  nr_double_t er    = subst->getPropertyDouble ("er");
-  nr_double_t h     = subst->getPropertyDouble ("h");
-  nr_double_t t     = subst->getPropertyDouble ("t");
-  nr_double_t tand  = subst->getPropertyDouble ("tand");
-  nr_double_t rho   = subst->getPropertyDouble ("rho");
-  nr_double_t D     = subst->getPropertyDouble ("D");
+  double er    = subst->getPropertyDouble ("er");
+  double h     = subst->getPropertyDouble ("h");
+  double t     = subst->getPropertyDouble ("t");
+  double tand  = subst->getPropertyDouble ("tand");
+  double rho   = subst->getPropertyDouble ("rho");
+  double D     = subst->getPropertyDouble ("D");
 
   /* local variables */
-  nr_double_t ac, ad;
-  nr_double_t ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
+  double ac, ad;
+  double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
 
   // quasi-static effective dielectric constant of substrate + line and
   // the impedance of the microstrip line
@@ -81,15 +79,15 @@ void msline::calcPropagation (nr_double_t frequency) {
   beta  = qucs::sqrt (ErEffFreq) * 2 * pi * frequency / C0;
 }
 
-void msline::calcSP (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
+void msline::calcSP (double frequency) {
+  double l = getPropertyDouble ("L");
 
   // calculate propagation constants
   calcPropagation (frequency);
 
   // calculate S-parameters
-  nr_double_t z = zl / z0;
-  nr_double_t y = 1 / z;
+  double z = zl / z0;
+  double y = 1 / z;
   nr_complex_t g = nr_complex_t (alpha, beta);
   nr_complex_t n = 2.0 * cosh (g * l) + (z + y) * qucs::sinh (g * l);
   nr_complex_t s11 = (z - y) * qucs::sinh (g * l) / n;
@@ -98,7 +96,7 @@ void msline::calcSP (nr_double_t frequency) {
   setS (NODE_1, NODE_2, s21); setS (NODE_2, NODE_1, s21);
 }
 
-void msline::saveCharacteristics (nr_double_t) {
+void msline::saveCharacteristics (double) {
   setCharacteristic ("Zl", zl);
   setCharacteristic ("Er", ereff);
 }
@@ -107,12 +105,12 @@ void msline::saveCharacteristics (nr_double_t) {
    line, the value of the effective dielectric constant and the
    effective width due to the finite conductor thickness for the given
    microstrip line and substrate properties. */
-void msline::analyseQuasiStatic (nr_double_t W, nr_double_t h, nr_double_t t,
-				 nr_double_t er, const char * const Model,
-				 nr_double_t& ZlEff, nr_double_t& ErEff,
-				 nr_double_t& WEff) {
+void msline::analyseQuasiStatic (double W, double h, double t,
+				 double er, const char * const Model,
+				 double& ZlEff, double& ErEff,
+				 double& WEff) {
 
-  nr_double_t z, e;
+  double z, e;
 
   // default values
   e = er;
@@ -121,7 +119,7 @@ void msline::analyseQuasiStatic (nr_double_t W, nr_double_t h, nr_double_t t,
 
   // WHEELER
   if (!strcmp (Model, "Wheeler")) {
-    nr_double_t a, b, c, d, x, dW1, dWr, Wr;
+    double a, b, c, d, x, dW1, dWr, Wr;
 
     // compute strip thickness effect
     if (t != 0) {
@@ -161,11 +159,11 @@ void msline::analyseQuasiStatic (nr_double_t W, nr_double_t h, nr_double_t t,
   // SCHNEIDER
   else if (!strcmp (Model, "Schneider")) {
 
-    nr_double_t dW = 0, u = W / h;
+    double dW = 0, u = W / h;
 
     // consider strip thickness equations
     if (t != 0 && t < W / 2) {
-      nr_double_t arg = (u < one_over_pi / 2) ? 2 * pi * W / t : h / t;
+      double arg = (u < one_over_pi / 2) ? 2 * pi * W / t : h / t;
       dW = t / pi * (1 + qucs::log (2 * arg));
       if (t / dW >= 0.75) dW = 0;
     }
@@ -185,7 +183,7 @@ void msline::analyseQuasiStatic (nr_double_t W, nr_double_t h, nr_double_t t,
   }
   // HAMMERSTAD and JENSEN
   else if (!strcmp (Model, "Hammerstad")) {
-    nr_double_t a, b, du1, du, u, ur, u1, zr, z1;
+    double a, b, du1, du, u, ur, u1, zr, z1;
 
     u = W / h; // normalized width
     t = t / h; // normalized thickness
@@ -221,13 +219,13 @@ void msline::analyseQuasiStatic (nr_double_t W, nr_double_t h, nr_double_t t,
 /* This function calculates the frequency dependent value of the
    effective dielectric constant and the microstrip line impedance for
    the given frequency. */
-void msline::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t er,
-				nr_double_t ZlEff, nr_double_t ErEff,
-				nr_double_t frequency, const char * const Model,
-				nr_double_t& ZlEffFreq,
-				nr_double_t& ErEffFreq) {
+void msline::analyseDispersion (double W, double h, double er,
+				double ZlEff, double ErEff,
+				double frequency, const char * const Model,
+				double& ZlEffFreq,
+				double& ErEffFreq) {
 
-  nr_double_t e, z;
+  double e, z;
 
   // default values
   z = ZlEffFreq = ZlEff;
@@ -239,7 +237,7 @@ void msline::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t er,
   }
   // SCHNEIDER
   else if (!strcmp (Model, "Schneider")) {
-    nr_double_t k, f;
+    double k, f;
     k = qucs::sqrt (ErEff / er);
     f = 4 * h * frequency / C0 * qucs::sqrt (er - 1);
     f = sqr (f);
@@ -248,7 +246,7 @@ void msline::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t er,
   }
   // YAMASHITA
   else if (!strcmp (Model, "Yamashita")) {
-    nr_double_t k, f;
+    double k, f;
     k = qucs::sqrt (er / ErEff);
     f = 4 * h * frequency / C0 * qucs::sqrt (er - 1) *
       (0.5 + sqr (1 + 2 * qucs::log10 (1 + W / h)));
@@ -256,7 +254,7 @@ void msline::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t er,
   }
   // KOBAYASHI
   else if (!strcmp (Model, "Kobayashi")) {
-    nr_double_t n, no, nc, fh, fk;
+    double n, no, nc, fh, fk;
     fk = C0 * qucs::atan (er * qucs::sqrt ((ErEff - 1) / (er - ErEff))) /
       (2 * pi * h * qucs::sqrt (er - ErEff));
     fh = fk / (0.75 + (0.75 - 0.332 / qucs::pow (er, 1.73)) * W / h);
@@ -271,7 +269,7 @@ void msline::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t er,
   }
   // PRAMANICK and BHARTIA
   else if (!strcmp (Model, "Pramanick")) {
-    nr_double_t Weff, We, f;
+    double Weff, We, f;
     f = 2 * MU0 * h * frequency * qucs::sqrt (ErEff / er) / ZlEff;
     e = er - (er - ErEff) / (1 + sqr (f));
     Weff = Z0 * h / ZlEff / qucs::sqrt (ErEff);
@@ -280,7 +278,7 @@ void msline::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t er,
   }
   // HAMMERSTAD and JENSEN
   else if (!strcmp (Model, "Hammerstad")) {
-    nr_double_t f, g;
+    double f, g;
     g = sqr (pi) / 12 * (er - 1) / ErEff * qucs::sqrt (2 * pi * ZlEff / Z0);
     f = 2 * MU0 * h * frequency / ZlEff;
     e = er - (er - ErEff) / (1 + g * sqr (f));
@@ -288,7 +286,7 @@ void msline::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t er,
   }
   // KIRSCHNING and JANSEN
   else if (!strcmp (Model, "Kirschning")) {
-    nr_double_t r17, u  = W / h, fn = frequency * h / 1e6;
+    double r17, u  = W / h, fn = frequency * h / 1e6;
 
     // dispersion of dielectric constant
     Kirschning_er (u, fn, er, ErEff, e);
@@ -304,8 +302,8 @@ void msline::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t er,
 /* Computes the exponent factors a(u) and b(er) used within the
    effective relative dielectric constant calculations for single and
    coupled microstrip lines by Hammerstad and Jensen. */
-void msline::Hammerstad_ab (nr_double_t u, nr_double_t er, nr_double_t& a,
-			    nr_double_t& b) {
+void msline::Hammerstad_ab (double u, double er, double& a,
+			    double& b) {
   a = 1 + qucs::log ((quadr (u) + sqr (u / 52)) / (quadr (u) + 0.432)) / 49 +
     qucs::log (1 + cubic (u / 18.1)) / 18.7;
   b = 0.564 * qucs::pow ((er - 0.9) / (er + 3), 0.053);
@@ -314,8 +312,8 @@ void msline::Hammerstad_ab (nr_double_t u, nr_double_t er, nr_double_t& a,
 /* The function computes the effective dielectric constant of a single
    microstrip.  The equation is used in single and coupled microstrip
    calculations. */
-void msline::Hammerstad_er (nr_double_t u, nr_double_t er, nr_double_t a,
-			    nr_double_t b, nr_double_t& e) {
+void msline::Hammerstad_er (double u, double er, double a,
+			    double b, double& e) {
   e = (er + 1) / 2 + (er - 1) / 2 * qucs::pow (1 + 10 / u, -a * b);
 }
 
@@ -323,18 +321,18 @@ void msline::Hammerstad_er (nr_double_t u, nr_double_t er, nr_double_t a,
    microstrip line based upon the given width-height ratio.  The
    equation is used in single and coupled microstrip calculations as
    well. */
-void msline::Hammerstad_zl (nr_double_t u, nr_double_t& zl) {
-  nr_double_t fu = 6 + (2 * pi - 6) * qucs::exp (- qucs::pow (30.666 / u, 0.7528));
+void msline::Hammerstad_zl (double u, double& zl) {
+  double fu = 6 + (2 * pi - 6) * qucs::exp (- qucs::pow (30.666 / u, 0.7528));
   zl = Z0 / 2 / pi * qucs::log (fu / u + qucs::sqrt (1 + sqr (2 / u)));
 }
 
 /* Calculates dispersion effects for effective dielectric constant and
    characteristic impedance as defined by Getsinger (for single and
    coupled microstrips). */
-void msline::Getsinger_disp (nr_double_t h, nr_double_t er, nr_double_t ErEff,
-			     nr_double_t ZlEff, nr_double_t frequency,
-			     nr_double_t& e, nr_double_t& z) {
-  nr_double_t g, f, d;
+void msline::Getsinger_disp (double h, double er, double ErEff,
+			     double ZlEff, double frequency,
+			     double& e, double& z) {
+  double g, f, d;
   g = 0.6 + 0.009 * ZlEff;
   f = frequency * 2 * MU0 * h / ZlEff;
   e = er - (er - ErEff) / (1 + g * sqr (f));
@@ -346,9 +344,9 @@ void msline::Getsinger_disp (nr_double_t h, nr_double_t er, nr_double_t ErEff,
    constant of a single microstrip line.  It is defined in a separate
    function because it is used within the coupled microstrip lines as
    well. */
-void msline::Kirschning_er (nr_double_t u, nr_double_t fn, nr_double_t er,
-			    nr_double_t ErEff, nr_double_t& ErEffFreq) {
-  nr_double_t p, p1, p2, p3, p4;
+void msline::Kirschning_er (double u, double fn, double er,
+			    double ErEff, double& ErEffFreq) {
+  double p, p1, p2, p3, p4;
   p1 = 0.27488 + (0.6315 + 0.525 / qucs::pow (1. + 0.0157 * fn, 20.)) * u -
     0.065683 * qucs::exp (-8.7513 * u);
   p2 = 0.33622 * (1 - qucs::exp (-0.03442 * er));
@@ -361,12 +359,12 @@ void msline::Kirschning_er (nr_double_t u, nr_double_t fn, nr_double_t er,
 /* Computes dispersion effects of characteristic impedance of a single
    microstrip line according to Kirschning and Jansen.  Also used in
    coupled microstrip lines calculations. */
-void msline::Kirschning_zl (nr_double_t u, nr_double_t fn, nr_double_t er,
-			    nr_double_t ErEff, nr_double_t ErEffFreq,
-			    nr_double_t ZlEff, nr_double_t& r17,
-			    nr_double_t& ZlEffFreq) {
-  nr_double_t r1, r2, r3, r4, r5, r6, r7, r8, r9, r10;
-  nr_double_t r11, r12, r13, r14, r15, r16;
+void msline::Kirschning_zl (double u, double fn, double er,
+			    double ErEff, double ErEffFreq,
+			    double ZlEff, double& r17,
+			    double& ZlEffFreq) {
+  double r1, r2, r3, r4, r5, r6, r7, r8, r9, r10;
+  double r11, r12, r13, r14, r15, r16;
   r1 = 0.03891 * qucs::pow (er, 1.4);
   r2 = 0.267 * qucs::pow (u, 7.);
   r3 = 4.766 * qucs::exp (-3.228 * qucs::pow (u, 0.641));
@@ -393,17 +391,17 @@ void msline::Kirschning_zl (nr_double_t u, nr_double_t fn, nr_double_t er,
 
 /* The function calculates the conductor and dielectric losses of a
    single microstrip line. */
-void msline::analyseLoss (nr_double_t W, nr_double_t t, nr_double_t er,
-			  nr_double_t rho, nr_double_t D, nr_double_t tand,
-			  nr_double_t ZlEff1, nr_double_t ZlEff2,
-			  nr_double_t ErEff,
-			  nr_double_t frequency, const char * Model,
-			  nr_double_t& ac, nr_double_t& ad) {
+void msline::analyseLoss (double W, double t, double er,
+			  double rho, double D, double tand,
+			  double ZlEff1, double ZlEff2,
+			  double ErEff,
+			  double frequency, const char * Model,
+			  double& ac, double& ad) {
   ac = ad = 0;
 
   // HAMMERSTAD and JENSEN
   if (!strcmp (Model, "Hammerstad")) {
-    nr_double_t Rs, ds, l0, Kr, Ki;
+    double Rs, ds, l0, Kr, Ki;
 
     // conductor losses
     if (t != 0.0) {
@@ -429,15 +427,15 @@ void msline::analyseLoss (nr_double_t W, nr_double_t t, nr_double_t er,
 }
 
 void msline::initDC (void) {
-  nr_double_t l     = getPropertyDouble ("L");
-  nr_double_t W     = getPropertyDouble ("W");
+  double l     = getPropertyDouble ("L");
+  double W     = getPropertyDouble ("W");
   substrate * subst = getSubstrate ();
-  nr_double_t t     = subst->getPropertyDouble ("t");
-  nr_double_t rho   = subst->getPropertyDouble ("rho");
+  double t     = subst->getPropertyDouble ("t");
+  double rho   = subst->getPropertyDouble ("rho");
 
   if (t != 0.0 && rho != 0.0 && l != 0.0) {
     // tiny resistance
-    nr_double_t g = t * W / rho / l;
+    double g = t * W / rho / l;
     setVoltageSources (0);
     allocMatrixMNA ();
     setY (NODE_1, NODE_1, +g); setY (NODE_2, NODE_2, +g);
@@ -458,8 +456,8 @@ void msline::initAC (void) {
   allocMatrixMNA ();
 }
 
-void msline::calcAC (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
+void msline::calcAC (double frequency) {
+  double l = getPropertyDouble ("L");
 
   // calculate propagation constants
   calcPropagation (frequency);
@@ -472,11 +470,11 @@ void msline::calcAC (nr_double_t frequency) {
   setY (NODE_1, NODE_2, y21); setY (NODE_2, NODE_1, y21);
 }
 
-void msline::calcNoiseAC (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void msline::calcNoiseAC (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

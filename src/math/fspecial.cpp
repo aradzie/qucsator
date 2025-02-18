@@ -19,13 +19,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <cmath>
-#include <float.h>
 #include <algorithm>
 
 #include "constants.h"
@@ -40,18 +36,18 @@ using qucs::sqrt2;
 /* The function computes the complete elliptic integral of first kind
    K() and the second kind E() using the arithmetic-geometric mean
    algorithm (AGM) by Abramowitz and Stegun. */
-void fspecial::ellip_ke (nr_double_t arg, nr_double_t &k, nr_double_t &e) {
+void fspecial::ellip_ke (double arg, double &k, double &e) {
   int iMax = 16;
   if (arg == 1.0) {
-    k = std::numeric_limits<nr_double_t>::infinity();
+    k = std::numeric_limits<double>::infinity();
     e = 0;
   }
   else if (std::isinf (arg) && arg < 0) {
     k = 0;
-    e = std::numeric_limits<nr_double_t>::infinity();
+    e = std::numeric_limits<double>::infinity();
   }
   else {
-    nr_double_t a, b, c, f, s, fk = 1, fe = 1, t, da = arg;
+    double a, b, c, f, s, fk = 1, fe = 1, t, da = arg;
     int i;
     if (arg < 0) {
       fk = 1 / sqrt (1 - arg);
@@ -70,7 +66,7 @@ void fspecial::ellip_ke (nr_double_t arg, nr_double_t &k, nr_double_t &e) {
       a = t;
       f *= 2;
       s += f * c * c;
-      if (c / a < std::numeric_limits<nr_double_t>::epsilon()) break;
+      if (c / a < std::numeric_limits<double>::epsilon()) break;
     }
     if (i >= iMax) {
       k = 0; e = 0;
@@ -86,19 +82,19 @@ void fspecial::ellip_ke (nr_double_t arg, nr_double_t &k, nr_double_t &e) {
   }
 }
 
-const nr_double_t SN_ACC = 1e-5;	// Accuracy of sn(x) is SN_ACC^2
-const nr_double_t K_ERR  = 1e-8;	// Accuracy of K(k)
+const double SN_ACC = 1e-5;	// Accuracy of sn(x) is SN_ACC^2
+const double K_ERR  = 1e-8;	// Accuracy of K(k)
 
 // Computes Carlson's elliptic integral of the first kind.
-nr_double_t fspecial::ellip_rf (nr_double_t x, nr_double_t y, nr_double_t z) {
-  nr_double_t al, av, dx, dy, dz, e2, e3;
-  nr_double_t sx, sy, sz, xt, yt, zt;
+double fspecial::ellip_rf (double x, double y, double z) {
+  double al, av, dx, dy, dz, e2, e3;
+  double sx, sy, sz, xt, yt, zt;
 
   // constants
-  const nr_double_t c1 = 1.0 / 24.0;
-  const nr_double_t c2 = 0.1;
-  const nr_double_t c3 = 3.0 / 44.0;
-  const nr_double_t c4 = 1.0 / 14.0;
+  const double c1 = 1.0 / 24.0;
+  const double c2 = 0.1;
+  const double c3 = 3.0 / 44.0;
+  const double c4 = 1.0 / 14.0;
 
   xt = x;
   yt = y;
@@ -124,10 +120,10 @@ nr_double_t fspecial::ellip_rf (nr_double_t x, nr_double_t y, nr_double_t z) {
 }
 
 // Compute the Jacobian elliptic functions sn (u,k), cn (u,k) and dn (u,k).
-nr_double_t fspecial::ellip_sncndn (nr_double_t u, nr_double_t k,
-		      nr_double_t& sn, nr_double_t& cn, nr_double_t& dn) {
-  nr_double_t a, b, c, d;
-  nr_double_t fn[14], en[14];
+double fspecial::ellip_sncndn (double u, double k,
+		      double& sn, double& cn, double& dn) {
+  double a, b, c, d;
+  double fn[14], en[14];
   int l;
   bool bo;
 
@@ -184,20 +180,20 @@ nr_double_t fspecial::ellip_sncndn (nr_double_t u, nr_double_t k,
 
 /* data for a Chebyshev series over a given interval */
 struct cheb_series_t {
-  nr_double_t * c;   /* coefficients                */
+  double * c;   /* coefficients                */
   int order;         /* order of expansion          */
-  nr_double_t a;     /* lower interval point        */
-  nr_double_t b;     /* upper interval point        */
+  double a;     /* lower interval point        */
+  double b;     /* upper interval point        */
 };
 typedef struct cheb_series_t cheb_series;
 
-static nr_double_t cheb_eval (const cheb_series * cs, const nr_double_t x) {
-  nr_double_t d  = 0.0;
-  nr_double_t dd = 0.0;
-  nr_double_t y  = (2.0 * x - cs->a - cs->b) / (cs->b - cs->a);
-  nr_double_t y2 = 2.0 * y;
+static double cheb_eval (const cheb_series * cs, const double x) {
+  double d  = 0.0;
+  double dd = 0.0;
+  double y  = (2.0 * x - cs->a - cs->b) / (cs->b - cs->a);
+  double y2 = 2.0 * y;
   for (int i = cs->order; i >= 1; i--) {
-    nr_double_t t = d;
+    double t = d;
     d = y2 * d - dd + cs->c[i];
     dd = t;
   }
@@ -208,7 +204,7 @@ static nr_double_t cheb_eval (const cheb_series * cs, const nr_double_t x) {
 #if !defined (HAVE_ERF) || !defined (HAVE_ERFC)
 
 /* Chebyshev fit for erfc ((t+1)/2), -1 < t < 1 */
-static nr_double_t erfc_xlt1_data[20] = {
+static double erfc_xlt1_data[20] = {
   1.06073416421769980345174155056,
  -0.42582445804381043569204735291,
   0.04955262679620434040357683080,
@@ -235,7 +231,7 @@ static cheb_series erfc_xlt1_cs = {
 };
 
 /* Chebyshev fit for erfc (x) * exp (x^2), 1 < x < 5, x = 2t + 3, -1 < t < 1 */
-static nr_double_t erfc_x15_data[25] = {
+static double erfc_x15_data[25] = {
   0.44045832024338111077637466616,
  -0.143958836762168335790826895326,
   0.044786499817939267247056666937,
@@ -268,7 +264,7 @@ static cheb_series erfc_x15_cs = {
 
 /* Chebyshev fit for erfc(x) * exp(x^2),
    5 < x < 10, x = (5t + 15)/2, -1 < t <  */
-static nr_double_t erfc_x510_data[20] = {
+static double erfc_x510_data[20] = {
   1.11684990123545698684297865808,
   0.003736240359381998520654927536,
  -0.000916623948045470238763619870,
@@ -296,8 +292,8 @@ static cheb_series erfc_x510_cs = {
 
 /* Estimates erfc (x) valid for 8 < x < 100, this is based on index 5725
    in Hart et al. */
-static nr_double_t erfc8 (nr_double_t x) {
-  static nr_double_t p[] = {
+static double erfc8 (double x) {
+  static double p[] = {
     2.97886562639399288862,
     7.409740605964741794425,
     6.1602098531096305440906,
@@ -305,7 +301,7 @@ static nr_double_t erfc8 (nr_double_t x) {
     1.275366644729965952479585264,
     0.5641895835477550741253201704
   };
-  static nr_double_t q[] = {
+  static double q[] = {
     3.3690752069827527677,
     9.608965327192787870698,
     17.08144074746600431571095,
@@ -314,7 +310,7 @@ static nr_double_t erfc8 (nr_double_t x) {
     2.260528520767326969591866945,
     1.0
   };
-  nr_double_t n = 0.0, d = 0.0;
+  double n = 0.0, d = 0.0;
   int i;
   n = p[5];
   for (i = 4; i >= 0; --i) n = x * n + p[i];
@@ -328,22 +324,22 @@ static nr_double_t erfc8 (nr_double_t x) {
 
 #ifndef HAVE_ERFC
 
-nr_double_t fspecial::erfc (nr_double_t x) {
-  const nr_double_t ax = fabs (x);
-  nr_double_t val;
+double fspecial::erfc (double x) {
+  const double ax = fabs (x);
+  double val;
 
   if (ax <= 1.0) {
-    nr_double_t t = 2.0 * ax - 1.0;
+    double t = 2.0 * ax - 1.0;
     val = cheb_eval (&erfc_xlt1_cs, t);
   }
   else if (ax <= 5.0) {
-    nr_double_t ex2 = exp (-x * x);
-    nr_double_t t = 0.5 * (ax - 3.0);
+    double ex2 = exp (-x * x);
+    double t = 0.5 * (ax - 3.0);
     val = ex2 * cheb_eval (&erfc_x15_cs, t);
   }
   else if (ax < 10.0) {
-    nr_double_t ex = exp(-x * x) / ax;
-    nr_double_t t = (2.0 * ax - 15.0) / 5.0;
+    double ex = exp(-x * x) / ax;
+    double t = (2.0 * ax - 15.0) / 5.0;
     val = ex * cheb_eval (&erfc_x510_cs, t);
   }
   else {
@@ -352,7 +348,7 @@ nr_double_t fspecial::erfc (nr_double_t x) {
   return (x < 0.0) ? 2.0 - val : val;
 }
 #else
-nr_double_t  fspecial::erfc (nr_double_t d) {
+double  fspecial::erfc (double d) {
   return ::erfc (d);
 }
 #endif /* HAVE_ERFC */
@@ -360,10 +356,10 @@ nr_double_t  fspecial::erfc (nr_double_t d) {
 #ifndef HAVE_ERF
 
 /* Abramowitz + Stegun, 7.1.5 */
-static nr_double_t erfseries (nr_double_t x) {
-  nr_double_t c = x;
-  nr_double_t e = c;
-  nr_double_t d;
+static double erfseries (double x) {
+  double c = x;
+  double e = c;
+  double d;
   for (int k = 1; k < 30; ++k) {
     c *= -x * x / k;
     d  = c / (2.0 * k + 1.0);
@@ -372,7 +368,7 @@ static nr_double_t erfseries (nr_double_t x) {
   return 2.0 / sqrt_pi * e;
 }
 
-nr_double_t fspecial::erf (nr_double_t x) {
+double fspecial::erf (double x) {
   if (fabs (x) < 1.0) {
     return erfseries (x);
   }
@@ -380,22 +376,22 @@ nr_double_t fspecial::erf (nr_double_t x) {
 }
 
 #else
-nr_double_t  fspecial::erf (nr_double_t d) {
+double  fspecial::erf (double d) {
   return ::erf (d);
 }
 #endif /* HAVE_ERF */
 
 // Inverse of the error function erf().
-nr_double_t fspecial::erfinv (nr_double_t y) {
-  nr_double_t x = 0.0;  // The output
-  nr_double_t z = 0.0;  // Intermediate variable
-  nr_double_t y0 = 0.7; // Central range variable
+double fspecial::erfinv (double y) {
+  double x = 0.0;  // The output
+  double z = 0.0;  // Intermediate variable
+  double y0 = 0.7; // Central range variable
 
   // Coefficients in rational approximations.
-  nr_double_t a[4] = { 0.886226899, -1.645349621,  0.914624893, -0.140543331};
-  nr_double_t b[4] = {-2.118377725,  1.442710462, -0.329097515,  0.012229801};
-  nr_double_t c[4] = {-1.970840454, -1.624906493,  3.429567803,  1.641345311};
-  nr_double_t d[2] = { 3.543889200,  1.637067800};
+  double a[4] = { 0.886226899, -1.645349621,  0.914624893, -0.140543331};
+  double b[4] = {-2.118377725,  1.442710462, -0.329097515,  0.012229801};
+  double c[4] = {-1.970840454, -1.624906493,  3.429567803,  1.641345311};
+  double d[2] = { 3.543889200,  1.637067800};
 
   if (y < -1.0 || 1.0 < y) {
     x = log (-1.0);
@@ -425,7 +421,7 @@ nr_double_t fspecial::erfinv (nr_double_t y) {
   return x;
 }
 
-static nr_double_t bi0_data[12] = {
+static double bi0_data[12] = {
   -.07660547252839144951,
   1.92733795399380827000,
    .22826445869203013390,
@@ -443,7 +439,7 @@ static cheb_series bi0_cs = {
   bi0_data, 11, -1, 1
 };
 
-static nr_double_t ai0_data[21] = {
+static double ai0_data[21] = {
    .07575994494023796,
    .00759138081082334,
    .00041531313389237,
@@ -470,7 +466,7 @@ static cheb_series ai0_cs = {
   ai0_data, 20, -1, 1
 };
 
-static nr_double_t ai02_data[22] = {
+static double ai02_data[22] = {
    .05449041101410882,
    .00336911647825569,
    .00006889758346918,
@@ -499,11 +495,11 @@ static cheb_series ai02_cs = {
 };
 
 // Modified Bessel function of order zero.
-nr_double_t fspecial::i0 (nr_double_t x) {
-  nr_double_t y = fabs (x);
-  nr_double_t val;
+double fspecial::i0 (double x) {
+  double y = fabs (x);
+  double val;
 
-  if (y < 2.0 * sqrt (std::numeric_limits<nr_double_t>::epsilon())) {
+  if (y < 2.0 * sqrt (std::numeric_limits<double>::epsilon())) {
     val = 1.0;
   }
   else if (y <= 3.0) {
@@ -521,27 +517,27 @@ nr_double_t fspecial::i0 (nr_double_t x) {
 }
 
 // Lower tail quantile for the standard normal distribution function.
-nr_double_t fspecial::ltqnorm (nr_double_t x) {
-  nr_double_t q, r, e, u, z = 0.0;
-  static nr_double_t a[] = {
+double fspecial::ltqnorm (double x) {
+  double q, r, e, u, z = 0.0;
+  static double a[] = {
     -3.969683028665376e+01,  2.209460984245205e+02,
     -2.759285104469687e+02,  1.383577518672690e+02,
     -3.066479806614716e+01,  2.506628277459239e+00 };
-  static nr_double_t b[] = {
+  static double b[] = {
     -5.447609879822406e+01,  1.615858368580409e+02,
     -1.556989798598866e+02,  6.680131188771972e+01,
     -1.328068155288572e+01 };
-  static nr_double_t c[] = {
+  static double c[] = {
     -7.784894002430293e-03, -3.223964580411365e-01,
     -2.400758277161838e+00, -2.549732539343734e+00,
      4.374664141464968e+00,  2.938163982698783e+00 };
-  static nr_double_t d[] = {
+  static double d[] = {
      7.784695709041462e-03,  3.224671290700398e-01,
      2.445134137142996e+00,  3.754408661907416e+00 };
 
   // Define break-points.
-  nr_double_t pl = 0.02425;
-  nr_double_t ph = 1.0 - pl;
+  double pl = 0.02425;
+  double ph = 1.0 - pl;
 
   // Rational approximation for central region:
   if (pl <= x && x <= ph) {
@@ -564,15 +560,15 @@ nr_double_t fspecial::ltqnorm (nr_double_t x) {
   }
   // Case when X = 0:
   else if (x == 0.0) {
-    z = -std::numeric_limits<nr_double_t>::infinity();
+    z = -std::numeric_limits<double>::infinity();
   }
   // Case when X = 1:
   else if (x == 1.0) {
-    z = +std::numeric_limits<nr_double_t>::infinity();
+    z = +std::numeric_limits<double>::infinity();
   }
   // Cases when output will be NaN:
   else if (x < 0.0 || x > 1.0 || std::isnan (x)) {
-    z = +std::numeric_limits<nr_double_t>::quiet_NaN();
+    z = +std::numeric_limits<double>::quiet_NaN();
   }
 
   // The relative error of the approximation has absolute value less
@@ -587,6 +583,6 @@ nr_double_t fspecial::ltqnorm (nr_double_t x) {
 }
 
 // Inverse of the error function erfc().
-nr_double_t fspecial::erfcinv (nr_double_t x) {
+double fspecial::erfcinv (double x) {
   return -ltqnorm (x / 2.0) / sqrt2;
 }

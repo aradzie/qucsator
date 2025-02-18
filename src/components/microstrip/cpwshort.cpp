@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "cpwline.h"
@@ -33,22 +31,22 @@ cpwshort::cpwshort () : circuit (1) {
 }
 
 // Returns the coplanar short inductance.
-nr_double_t cpwshort::calcLend (nr_double_t frequency) {
+double cpwshort::calcLend (double frequency) {
 
   // get properties of substrate and coplanar open
-  nr_double_t W =  getPropertyDouble ("W");
-  nr_double_t s =  getPropertyDouble ("S");
+  double W =  getPropertyDouble ("W");
+  double s =  getPropertyDouble ("S");
   substrate * subst = getSubstrate ();
-  nr_double_t er = subst->getPropertyDouble ("er");
-  nr_double_t h  = subst->getPropertyDouble ("h");
-  nr_double_t t  = subst->getPropertyDouble ("t");
+  double er = subst->getPropertyDouble ("er");
+  double h  = subst->getPropertyDouble ("h");
+  double t  = subst->getPropertyDouble ("t");
   int backMetal  = !strcmp (getPropertyString ("Backside"), "Metal");
 
-  nr_double_t ZlEff, ErEff, ZlEffFreq, ErEffFreq;
+  double ZlEff, ErEff, ZlEffFreq, ErEffFreq;
   cpwline::analyseQuasiStatic (W, s, h, t, er, backMetal, ZlEff, ErEff);
   cpwline::analyseDispersion  (W, s, h, er, ZlEff, ErEff, frequency,
 			       ZlEffFreq, ErEffFreq);
-  nr_double_t dl = (W / 2 + s) / 4;
+  double dl = (W / 2 + s) / 4;
   return dl * ErEffFreq / C0 * ZlEffFreq;
 }
 
@@ -57,23 +55,23 @@ void cpwshort::initSP (void) {
   checkProperties ();
 }
 
-void cpwshort::calcSP (nr_double_t frequency) {
+void cpwshort::calcSP (double frequency) {
   setS (NODE_1, NODE_1, ztor (calcZ (frequency)));
 }
 
 void cpwshort::checkProperties (void) {
-  nr_double_t s = getPropertyDouble ("S");
+  double s = getPropertyDouble ("S");
   substrate * subst = getSubstrate ();
-  nr_double_t t = subst->getPropertyDouble ("t");
+  double t = subst->getPropertyDouble ("t");
   if (t >= s / 3) {
     logprint (LOG_ERROR, "WARNING: Model for coplanar short valid for "
 	      "t < s/3 (s/3 = %g)\n", s / 3);
   }
 }
 
-nr_complex_t cpwshort::calcZ (nr_double_t frequency) {
-  nr_double_t o = 2 * pi * frequency;
-  nr_double_t l = calcLend (frequency);
+nr_complex_t cpwshort::calcZ (double frequency) {
+  double o = 2 * pi * frequency;
+  double l = calcLend (frequency);
   return nr_complex_t (0, l * o);
 }
 
@@ -94,7 +92,7 @@ void cpwshort::initAC (void) {
   checkProperties ();
 }
 
-void cpwshort::calcAC (nr_double_t frequency) {
+void cpwshort::calcAC (double frequency) {
   setY (NODE_1, NODE_1, 1.0 / calcZ (frequency));
 }
 

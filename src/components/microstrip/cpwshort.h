@@ -27,14 +27,14 @@ class cpwshort : public qucs::circuit
  public:
   CREATOR (cpwshort);
   void initSP (void);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
 
   void checkProperties (void);
-  nr_double_t calcLend (nr_double_t);
-  nr_complex_t calcZ (nr_double_t);
+  double calcLend (double);
+  nr_complex_t calcZ (double);
 };
 
 #endif /* __CPWSHORT_H__ */

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "iac.h"
 
@@ -45,22 +43,22 @@ void iac::initDC (void) {
 }
 
 void iac::initAC (void) {
-  nr_double_t a = getPropertyDouble ("I");
-  nr_double_t p = getPropertyDouble ("Phase");
+  double a = getPropertyDouble ("I");
+  double p = getPropertyDouble ("Phase");
   nr_complex_t i = qucs::polar (a, deg2rad (p));
   allocMatrixMNA ();
   setI (NODE_1, +i); setI (NODE_2, -i);
 }
 
-void iac::calcTR (nr_double_t t) {
-  nr_double_t f = getPropertyDouble ("f");
-  nr_double_t p = getPropertyDouble ("Phase");
-  nr_double_t d = getPropertyDouble ("Theta");
-  nr_double_t a = getPropertyDouble ("I");
-  nr_double_t s = getNet()->getSrcFactor ();
-  nr_double_t o = 2 * pi * f;
-  nr_double_t T = p / f / 360;
-  nr_double_t i = s * a * std::exp (-(t + T) * d * f) * std::sin (o * t + deg2rad (p));
+void iac::calcTR (double t) {
+  double f = getPropertyDouble ("f");
+  double p = getPropertyDouble ("Phase");
+  double d = getPropertyDouble ("Theta");
+  double a = getPropertyDouble ("I");
+  double s = getNet()->getSrcFactor ();
+  double o = 2 * pi * f;
+  double T = p / f / 360;
+  double i = s * a * std::exp (-(t + T) * d * f) * std::sin (o * t + deg2rad (p));
   setI (NODE_1, +i); setI (NODE_2, -i);
 }
 

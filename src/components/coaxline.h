@@ -27,18 +27,18 @@ class coaxline : public qucs::circuit
  public:
   CREATOR (coaxline);
   void initSP (void);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  void saveCharacteristics (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
+  void saveCharacteristics (double);
 
  private:
-  void calcPropagation (nr_double_t);
+  void calcPropagation (double);
   void initCheck (void);
-  nr_double_t alpha, beta, zl, fc;
+  double alpha, beta, zl, fc;
 };
 
 #endif /* __COAXLINE_H__ */

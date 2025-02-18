@@ -28,17 +28,17 @@ class mscross : public qucs::circuit
   CREATOR (mscross);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initSP (void);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initTR (void);
 
  private:
   void initModel (void);
-  qucs::matrix calcMatrixY (nr_double_t);
-  nr_double_t capCorrection (nr_double_t, nr_double_t);
-  nr_double_t calcCap (nr_double_t, nr_double_t, nr_double_t);
-  nr_double_t calcInd (nr_double_t, nr_double_t, nr_double_t);
+  qucs::matrix calcMatrixY (double);
+  double capCorrection (double, double);
+  double calcCap (double, double, double);
+  double calcInd (double, double, double);
 };
 
 #endif /* __MSCROSS_H__ */

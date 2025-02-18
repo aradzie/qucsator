@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <cmath>
@@ -53,7 +51,7 @@ digital::~digital () {
 // Reserve space for derivatives.
 void digital::initDigital (void) {
   if (g == NULL) {
-    g = (nr_double_t *) malloc ((getSize () - 1) * sizeof (nr_double_t));
+    g = (double *) malloc ((getSize () - 1) * sizeof (double));
   }
 }
 
@@ -66,7 +64,7 @@ void digital::freeDigital (void) {
 }
 
 // Returns voltage at given input node.
-nr_double_t digital::getVin (int input) {
+double digital::getVin (int input) {
   if (delay) {
     return real (getV (NODE_IN1 + input, Tdelay));
   } else {
@@ -75,27 +73,27 @@ nr_double_t digital::getVin (int input) {
 }
 
 // Computes the transfer function for the given input node.
-nr_double_t digital::calcTransferX (int input) {
-  nr_double_t v = getPropertyDouble ("V");
-  nr_double_t t = getPropertyDouble ("TR");
+double digital::calcTransferX (int input) {
+  double v = getPropertyDouble ("V");
+  double t = getPropertyDouble ("TR");
   return std::tanh (t * (getVin (input) / v - 0.5));
 }
 
 // Computes a slightly modified transfer function.
-nr_double_t digital::calcTransfer (int input) {
+double digital::calcTransfer (int input) {
   return (1 - GMin) * calcTransferX (input);
 }
 
 // Computes the transfer functions derivative for the given input node.
-nr_double_t digital::calcDerivativeX (int input) {
-  nr_double_t v = getPropertyDouble ("V");
-  nr_double_t t = getPropertyDouble ("TR");
-  nr_double_t x = std::tanh (t * (getVin (input) / v - 0.5));
+double digital::calcDerivativeX (int input) {
+  double v = getPropertyDouble ("V");
+  double t = getPropertyDouble ("TR");
+  double x = std::tanh (t * (getVin (input) / v - 0.5));
   return t * (1 - x * x);
 }
 
 // Computes  a slightly modified transfer functions derivative.
-nr_double_t digital::calcDerivative (int input) {
+double digital::calcDerivative (int input) {
   return (1 - GMin) * calcDerivativeX (input);
 }
 
@@ -109,8 +107,8 @@ void digital::initSP (void) {
 }
 
 // Setup frequency dependent S-parameter entries.
-void digital::calcSP (nr_double_t frequency) {
-  nr_double_t t = getPropertyDouble ("t");
+void digital::calcSP (double frequency) {
+  double t = getPropertyDouble ("t");
   for (i = 0; i < getSize () - 1; i++) {
     setS (NODE_OUT, NODE_IN1 + i,
 	  4.0 * std::polar (g[i], - 2.0 * pi * frequency * t));
@@ -148,8 +146,8 @@ void digital::initAC (void) {
 }
 
 // Computes frequency dependent MNA entries during AC analysis.
-void digital::calcAC (nr_double_t frequency) {
-  nr_double_t t = getPropertyDouble ("t");
+void digital::calcAC (double frequency) {
+  double t = getPropertyDouble ("t");
   for (i = 0; i < getSize () - 1; i++) {
     setC (VSRC_1, NODE_IN1 + i, std::polar (g[i], - 2.0 * pi * frequency * t));
   }
@@ -157,7 +155,7 @@ void digital::calcAC (nr_double_t frequency) {
 
 // Initialize transient analysis.
 void digital::initTR (void) {
-  nr_double_t t = getPropertyDouble ("t");
+  double t = getPropertyDouble ("t");
   initDC ();
   deleteHistory ();
   if (t > 0.0) {
@@ -169,7 +167,7 @@ void digital::initTR (void) {
 }
 
 // Computes MNA entries during transient analysis.
-void digital::calcTR (nr_double_t t) {
+void digital::calcTR (double t) {
   if (delay) {
     Tdelay = t - getPropertyDouble ("t");
     calcOutput ();

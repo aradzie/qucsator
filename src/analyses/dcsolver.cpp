@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <cstring>
 
@@ -39,14 +37,14 @@
 namespace qucs {
 
 // Constructor creates an unnamed instance of the dcsolver class.
-dcsolver::dcsolver () : nasolver<nr_double_t> () {
+dcsolver::dcsolver () : nasolver<double> () {
   saveOPs = 0;
   type = ANALYSIS_DC;
   setDescription ("DC");
 }
 
 // Constructor creates a named instance of the dcsolver class.
-dcsolver::dcsolver (char * n) : nasolver<nr_double_t> (n) {
+dcsolver::dcsolver (char * n) : nasolver<double> (n) {
   saveOPs = 0;
   type = ANALYSIS_DC;
   setDescription ("DC");
@@ -58,7 +56,7 @@ dcsolver::~dcsolver () {
 
 /* The copy constructor creates a new instance of the dcsolver class
    based on the given dcsolver object. */
-dcsolver::dcsolver (dcsolver & o) : nasolver<nr_double_t> (o) {
+dcsolver::dcsolver (dcsolver & o) : nasolver<double> (o) {
   saveOPs = o.saveOPs;
 }
 

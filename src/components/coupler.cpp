@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "coupler.h"
 
@@ -32,12 +30,12 @@ coupler::coupler () : circuit (4) {
 
 void coupler::initSP (void) {
   allocMatrixS ();
-  nr_double_t k = getPropertyDouble ("k");
-  nr_double_t z = getPropertyDouble ("Z");
-  nr_double_t p = deg2rad (getPropertyDouble ("phi"));
-  nr_double_t r = (z0 - z) / (z0 + z);
-  nr_double_t k2 = k * k;
-  nr_double_t r2 = r * r;
+  double k = getPropertyDouble ("k");
+  double z = getPropertyDouble ("Z");
+  double p = deg2rad (getPropertyDouble ("phi"));
+  double r = (z0 - z) / (z0 + z);
+  double k2 = k * k;
+  double r2 = r * r;
   nr_complex_t a = k2 * (qucs::polar (1.0, 2 * p) + 1.0);
   nr_complex_t b = r2 * (1.0 - a);
   nr_complex_t c = k2 * (qucs::polar (1.0, 2 * p) - 1.0);
@@ -67,10 +65,10 @@ void coupler::initDC (void) {
 void coupler::initAC (void) {
   setVoltageSources (0);
   allocMatrixMNA ();
-  nr_double_t k = getPropertyDouble ("k");
-  nr_double_t z = getPropertyDouble ("Z");
-  nr_double_t p = deg2rad (getPropertyDouble ("phi"));
-  nr_double_t b = 2 * std::sqrt (1 - k * k);
+  double k = getPropertyDouble ("k");
+  double z = getPropertyDouble ("Z");
+  double p = deg2rad (getPropertyDouble ("phi"));
+  double b = 2 * std::sqrt (1 - k * k);
   nr_complex_t a = k * k * (qucs::polar (1.0, 2 * p) + 1.0);
   nr_complex_t c = qucs::polar (2 * k, p);
   nr_complex_t d = z * (a * a - c * c);

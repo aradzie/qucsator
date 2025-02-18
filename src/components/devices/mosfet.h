@@ -26,8 +26,8 @@ class mosfet : public qucs::circuit
 {
  public:
   CREATOR (mosfet);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void calcDC (void);
   void initDC (void);
   void restartDC (void);
@@ -36,23 +36,23 @@ class mosfet : public qucs::circuit
   void calcOperatingPoints (void);
   void loadOperatingPoints (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 
  private:
-  nr_double_t transientChargeTR (int, nr_double_t&, nr_double_t, nr_double_t);
-  nr_double_t transientChargeSR (int, nr_double_t&, nr_double_t, nr_double_t);
-  qucs::matrix calcMatrixY (nr_double_t);
-  qucs::matrix calcMatrixCy (nr_double_t);
+  double transientChargeTR (int, double&, double, double);
+  double transientChargeSR (int, double&, double, double);
+  qucs::matrix calcMatrixY (double);
+  qucs::matrix calcMatrixCy (double);
 
  private:
-  nr_double_t UbsPrev, UbdPrev, UgsPrev, UgdPrev, UdsPrev, Udsat, Uon;
-  nr_double_t gbs, gbd, gm, gds, gmb, Ids, DrainControl, SourceControl;
-  nr_double_t Leff, MOSdir, beta, Cox, Phi, Ga, Vto, Rs, Rd;
-  nr_double_t Qgd, Qgs, Qbd, Qbs, Qgb, Ibs, Ibd;
-  nr_double_t Ugd, Ugs, Ubs, Ubd, Uds, Ugb;
+  double UbsPrev, UbdPrev, UgsPrev, UgdPrev, UdsPrev, Udsat, Uon;
+  double gbs, gbd, gm, gds, gmb, Ids, DrainControl, SourceControl;
+  double Leff, MOSdir, beta, Cox, Phi, Ga, Vto, Rs, Rd;
+  double Qgd, Qgs, Qbd, Qbs, Qgb, Ibs, Ibd;
+  double Ugd, Ugs, Ubs, Ubd, Uds, Ugb;
   int transientMode;
   qucs::circuit * rs;
   qucs::circuit * rd;

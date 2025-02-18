@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -71,7 +69,7 @@ using namespace fspecial;
 #define _ARES(idx) args->getResult(idx)
 #define _ARG(idx) args->get(idx)
 
-#define _D(var,idx) nr_double_t (var) = D (_ARES (idx));
+#define _D(var,idx) double (var) = D (_ARES (idx));
 #define _BO(var,idx) bool (var) = B (_ARES (idx));
 #define _CX(var,idx) nr_complex_t * (var) = C (_ARES (idx));
 #define _V(var,idx) qucs::vector * (var) = V (_ARES (idx));
@@ -1899,8 +1897,8 @@ constant * evaluate::max_d_c (constant * args) {
   _ARD0 (d1);
   _ARC1 (c2);
   _DEFC ();
-  nr_double_t a = d1;
-  nr_double_t b = fabs (arg (*c2)) < pi_over_2 ? abs (*c2) : -abs (*c2);
+  double a = d1;
+  double b = fabs (arg (*c2)) < pi_over_2 ? abs (*c2) : -abs (*c2);
   nr_complex_t r = a > b ? d1 : *c2;
   _RETC (r);
 }
@@ -1909,8 +1907,8 @@ constant * evaluate::max_c_c (constant * args) {
   _ARC0 (c1);
   _ARC1 (c2);
   _DEFC ();
-  nr_double_t a = fabs (arg (*c1)) < pi_over_2 ? abs (*c1) : -abs (*c1);
-  nr_double_t b = fabs (arg (*c2)) < pi_over_2 ? abs (*c2) : -abs (*c2);
+  double a = fabs (arg (*c1)) < pi_over_2 ? abs (*c1) : -abs (*c1);
+  double b = fabs (arg (*c2)) < pi_over_2 ? abs (*c2) : -abs (*c2);
   nr_complex_t r = a > b ? *c1 : *c2;
   _RETC (r);
 }
@@ -1919,8 +1917,8 @@ constant * evaluate::max_c_d (constant * args) {
   _ARC0 (c1);
   _ARD1 (d2);
   _DEFC ();
-  nr_double_t a = fabs (arg (*c1)) < pi_over_2 ? abs (*c1) : -abs (*c1);
-  nr_double_t b = d2;
+  double a = fabs (arg (*c1)) < pi_over_2 ? abs (*c1) : -abs (*c1);
+  double b = d2;
   nr_complex_t r = a > b ? *c1 : d2;
   _RETC (r);
 }
@@ -1959,8 +1957,8 @@ constant * evaluate::min_d_c (constant * args) {
   _ARD0 (d1);
   _ARC1 (c2);
   _DEFC ();
-  nr_double_t a = d1;
-  nr_double_t b = fabs (arg (*c2)) < pi_over_2 ? abs (*c2) : -abs (*c2);
+  double a = d1;
+  double b = fabs (arg (*c2)) < pi_over_2 ? abs (*c2) : -abs (*c2);
   nr_complex_t r = a < b ? d1 : *c2;
   _RETC (r);
 }
@@ -1969,8 +1967,8 @@ constant * evaluate::min_c_c (constant * args) {
   _ARC0 (c1);
   _ARC1 (c2);
   _DEFC ();
-  nr_double_t a = fabs (arg (*c1)) < pi_over_2 ? abs (*c1) : -abs (*c1);
-  nr_double_t b = fabs (arg (*c2)) < pi_over_2 ? abs (*c2) : -abs (*c2);
+  double a = fabs (arg (*c1)) < pi_over_2 ? abs (*c1) : -abs (*c1);
+  double b = fabs (arg (*c2)) < pi_over_2 ? abs (*c2) : -abs (*c2);
   nr_complex_t r = a < b ? *c1 : *c2;
   _RETC (r);
 }
@@ -1979,8 +1977,8 @@ constant * evaluate::min_c_d (constant * args) {
   _ARC0 (c1);
   _ARD1 (d2);
   _DEFC ();
-  nr_double_t a = fabs (arg (*c1)) < pi_over_2 ? abs (*c1) : -abs (*c1);
-  nr_double_t b = d2;
+  double a = fabs (arg (*c1)) < pi_over_2 ? abs (*c1) : -abs (*c1);
+  double b = d2;
   nr_complex_t r = a < b ? *c1 : d2;
   _RETC (r);
 }
@@ -2255,8 +2253,8 @@ constant * evaluate::interpolate_v_v_d (constant * args) {
     res->v = new qucs::vector ();
     return res;
   }
-  nr_double_t last  = real (v2->get (v2->getSize () - 1));
-  nr_double_t first = real (v2->get (0));
+  double last  = real (v2->get (v2->getSize () - 1));
+  double first = real (v2->get (0));
   constant * arg = new constant (TAG_VECTOR);
   arg->v = new qucs::vector (qucs::linspace (first, last, n));
   arg->solvee = args->getResult(0)->solvee;
@@ -2290,9 +2288,9 @@ constant * evaluate:: QUCS_CONCAT2 (efunc,_v_v) (constant * args) { \
   if (k != n) {                                                     \
     THROW_MATH_EXCEPTION ("nonconformant vector lengths");          \
     return res; }                                                   \
-  nr_double_t last  = real (t->get (n - 1));			    \
-  nr_double_t first = real (t->get (0));			    \
-  nr_double_t delta = (last - first) / (n - 1);			    \
+  double last  = real (t->get (n - 1));			    \
+  double first = real (t->get (0));			    \
+  double delta = (last - first) / (n - 1);			    \
   constant * arg = new constant (TAG_VECTOR);			    \
   arg->v = new qucs::vector (qucs::linspace (0, 1.0 / delta, n));	    \
   arg->solvee = args->getResult(0)->solvee;			    \
@@ -2696,7 +2694,7 @@ constant * evaluate::rollet_mv (constant * args) {
 constant * evaluate::mu1_m (constant * args) {
   _ARM0 (m);
   _DEFD ();
-  nr_double_t k;
+  double k;
   k = (1 - norm (m->get (0, 0))) /
     (abs (m->get (1, 1) - conj (m->get (0, 0)) * det (*m)) +
      abs (m->get (0, 1) * m->get (1, 0)));
@@ -2716,7 +2714,7 @@ constant * evaluate::mu1_mv (constant * args) {
 constant * evaluate::mu2_m (constant * args) {
   _ARM0 (m);
   _DEFD ();
-  nr_double_t k;
+  double k;
   k = (1 - norm (m->get (1, 1))) /
     (abs (m->get (0, 0) - conj (m->get (1, 1)) * det (*m)) +
      abs (m->get (0, 1) * m->get (1, 0)));
@@ -2807,7 +2805,7 @@ constant * evaluate::noise_circle_d_v (constant * args) {
   qucs::vector * Sopt = V (_ARES(0));
   qucs::vector * Fmin = V (_ARES(1));
   qucs::vector * Rn   = V (_ARES(2));
-  nr_double_t F = D (_ARES(3));
+  double F = D (_ARES(3));
   qucs::vector * arc  = V (_ARES(4));
 
   _DEFV ();
@@ -3156,7 +3154,7 @@ constant * evaluate::xvalue_d (constant * args) {
   }
   qucs::vector * indep = SOLVEE(0)->getDataVector (deps->get (0));
   int idx, i;
-  nr_double_t t, diff = std::numeric_limits<nr_double_t>::max();
+  double t, diff = std::numeric_limits<double>::max();
   for (idx = i = 0; i < v->getSize (); i++) {
     t = abs (v->get (i) - d);
     if (t < diff) {
@@ -3178,7 +3176,7 @@ constant * evaluate::xvalue_c (constant * args) {
   }
   qucs::vector * indep = SOLVEE(0)->getDataVector (deps->get (0));
   int idx, i;
-  nr_double_t t, diff = std::numeric_limits<nr_double_t>::max();
+  double t, diff = std::numeric_limits<double>::max();
   for (idx = i = 0; i < v->getSize (); i++) {
     t = abs (v->get (i) - *c);
     if (t < diff) {
@@ -3201,7 +3199,7 @@ constant * evaluate::yvalue_d (constant * args) {
   }
   qucs::vector * indep = SOLVEE(0)->getDataVector (deps->get (0));
   int idx, i;
-  nr_double_t t, diff = std::numeric_limits<nr_double_t>::max();
+  double t, diff = std::numeric_limits<double>::max();
   for (idx = i = 0; i < indep->getSize (); i++) {
     t = abs (indep->get (i) - d);
     if (t < diff) {
@@ -3223,7 +3221,7 @@ constant * evaluate::yvalue_c (constant * args) {
   }
   qucs::vector * indep = SOLVEE(0)->getDataVector (deps->get (0));
   int idx, i;
-  nr_double_t t, diff = std::numeric_limits<nr_double_t>::max();
+  double t, diff = std::numeric_limits<double>::max();
   for (idx = i = 0; i < indep->getSize (); i++) {
     t = abs (indep->get (i) - *c);
     if (t < diff) {
@@ -3246,7 +3244,7 @@ constant * evaluate::max_r (constant * args) {
   }
   qucs::vector * indep = SOLVEE(0)->getDataVector (deps->get (0));
   nr_complex_t c;
-  nr_double_t d, M = -std::numeric_limits<nr_double_t>::max();
+  double d, M = -std::numeric_limits<double>::max();
   for (int i = 0; i < indep->getSize (); i++) {
     if (r->inside (real (indep->get (i)))) {
       c = v->get (i);
@@ -3268,7 +3266,7 @@ constant * evaluate::min_r (constant * args) {
   }
   qucs::vector * indep = SOLVEE(0)->getDataVector (deps->get (0));
   nr_complex_t c;
-  nr_double_t d, M = +std::numeric_limits<nr_double_t>::max();
+  double d, M = +std::numeric_limits<double>::max();
   for (int i = 0; i < indep->getSize (); i++) {
     if (r->inside (real (indep->get (i)))) {
       c = v->get (i);
@@ -3297,7 +3295,7 @@ constant * evaluate::avg_r (constant * args) {
       k++;
     }
   }
-  _RETC (c / (nr_double_t) k);
+  _RETC (c / (double) k);
 }
 
 // *************** range functionality *****************
@@ -3910,7 +3908,7 @@ constant * evaluate::kbd_d_d (constant * args) {
   _ARI1 (size);
   _DEFV ();
   int i;
-  nr_double_t sval = 0.0;
+  double sval = 0.0;
   if (size <= 0) {
     THROW_MATH_EXCEPTION ("kbd: vector length must be greater than zero");
     __RETV ();
@@ -4664,7 +4662,7 @@ constant * evaluate::and_b_b (constant * args) {
 // ******************* random numbers **********************
 constant * evaluate::rand (constant *) {
   _DEFD ();
-  _RETD (((nr_double_t) ::rand ()) / (nr_double_t) RAND_MAX);
+  _RETD (((double) ::rand ()) / (double) RAND_MAX);
 }
 
 constant * evaluate::srand_d (constant * args) {

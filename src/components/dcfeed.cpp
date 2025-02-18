@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "dcfeed.h"
 
@@ -57,10 +55,10 @@ void dcfeed::initTR (void) {
   setStates (2);
 }
 
-void dcfeed::calcTR (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
-  nr_double_t r, v;
-  nr_double_t i = real (getJ (VSRC_1));
+void dcfeed::calcTR (double) {
+  double l = getPropertyDouble ("L");
+  double r, v;
+  double i = real (getJ (VSRC_1));
 
   setState (fState, i * l);
   integrate (fState, l, r, v);

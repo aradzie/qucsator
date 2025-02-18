@@ -27,14 +27,14 @@ class cpwstep : public qucs::circuit
  public:
   CREATOR (cpwstep);
   void initSP (void);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
 
   void checkProperties (void);
-  void calcCends (nr_double_t, nr_double_t&, nr_double_t&);
-  nr_complex_t calcY (nr_double_t);
+  void calcCends (double, double&, double&);
+  nr_complex_t calcY (double);
 };
 
 #endif /* __CPWSTEP_H__ */

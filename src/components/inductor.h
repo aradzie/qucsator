@@ -26,15 +26,15 @@ class inductor : public qucs::circuit
 {
  public:
   CREATOR (inductor);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void calcDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
   void initHB (void);
-  void calcHB (nr_double_t);
+  void calcHB (double);
 };
 
 #endif /* __INDUCTOR_H__ */

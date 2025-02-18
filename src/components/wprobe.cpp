@@ -23,8 +23,6 @@
 
 //Taking iprobe as basis
 
-#include "config.h"
-
 #include "component.h"
 #include "wprobe.h"
 
@@ -52,8 +50,8 @@ void wprobe::initAC (void) {
 }
 
 void wprobe::saveOperatingPoints (void) {
-  nr_double_t Vr = real (getV (NODE_3) - getV (NODE_4));
-  nr_double_t Vi = imag (getV (NODE_3) - getV (NODE_4));
+  double Vr = real (getV (NODE_3) - getV (NODE_4));
+  double Vi = imag (getV (NODE_3) - getV (NODE_4));
   setOperatingPoint ("Vr", Vr);
   setOperatingPoint ("Vi", Vi); //This section works just like a voltmeter
 }
@@ -63,15 +61,15 @@ void wprobe::saveOperatingPoints (void) {
 
 void wprobe::calcOperatingPoints (void) {
 //Reading the current and voltage values to calculate power values
-  nr_double_t VAr = real  ((getV (NODE_3) - getV (NODE_4)) * getJ (NODE_1));
-  nr_double_t VAi = -imag ((getV (NODE_3) - getV (NODE_4)) * getJ (NODE_1));
+  double VAr = real  ((getV (NODE_3) - getV (NODE_4)) * getJ (NODE_1));
+  double VAi = -imag ((getV (NODE_3) - getV (NODE_4)) * getJ (NODE_1));
   setOperatingPoint ("VAr", VAr);
   setOperatingPoint ("VAi", VAi);
 
-  nr_double_t P = VAr;
+  double P = VAr;
   setOperatingPoint ("P", P);
 
-  nr_double_t Q = VAi;
+  double Q = VAi;
   setOperatingPoint ("Q", Q);
 //Power Factor calculation
   setOperatingPoint ("PF", P/std::sqrt(P*P+VAi*VAi));

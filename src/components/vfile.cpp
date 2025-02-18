@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "dataset.h"
 #include "poly.h"
@@ -117,10 +115,10 @@ void vfile::initTR (void) {
   initDC ();
 }
 
-void vfile::calcTR (nr_double_t t) {
-  nr_double_t G = getPropertyDouble ("G");
-  nr_double_t T = getPropertyDouble ("T");
-  nr_double_t u = inter->rinterpolate (t - T);
+void vfile::calcTR (double t) {
+  double G = getPropertyDouble ("G");
+  double T = getPropertyDouble ("T");
+  double u = inter->rinterpolate (t - T);
   setE (VSRC_1, G * u);
 }
 

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "hybrid.h"
 
@@ -37,8 +35,8 @@ hybrid::hybrid () : circuit (4) {
 void hybrid::initSP (void) {
 
   nr_complex_t p = qucs::polar (1.0, deg2rad (getPropertyDouble ("phi")));
-  //nr_double_t  k = std::sqrt(1-pow((1/sqrt2),2));
-  nr_double_t  k = (1/sqrt2); //last line reduces to this for 1/std::sqrt(2)
+  //double  k = std::sqrt(1-pow((1/sqrt2),2));
+  double  k = (1/sqrt2); //last line reduces to this for 1/std::sqrt(2)
 
   allocMatrixS ();
 //S11 = S22 = S33 = S44 = 0
@@ -65,10 +63,10 @@ void hybrid::initDC (void) {
 
 void hybrid::initAC (void) {
 
-    nr_double_t  k = 1 / sqrt2;
+    double  k = 1 / sqrt2;
     nr_complex_t y;
     nr_complex_t A = k*k*(nr_complex_t(1,0)+qucs::polar(1.0, 2.0*deg2rad (getPropertyDouble ("phi"))));
-    nr_double_t B  = 2 * std::sqrt(1-(k*k));
+    double B  = 2 * std::sqrt(1-(k*k));
     nr_complex_t C = qucs::polar (2*k, deg2rad (getPropertyDouble ("phi")));
     nr_complex_t D = getPropertyDouble ("Zref") * ((A*A)-(C*C));
 

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "digisource.h"
 
@@ -39,7 +37,7 @@ void digisource::initSP (void) {
 
 void digisource::initDC (void) {
   const char * const init = getPropertyString ("init");
-  nr_double_t v = getPropertyDouble ("V");
+  double v = getPropertyDouble ("V");
   bool lo = !strcmp (init, "low");
   allocMatrixMNA ();
   setC (VSRC_1, NODE_1, 1.0);
@@ -59,12 +57,12 @@ void digisource::initTR (void) {
   initDC ();
 }
 
-void digisource::calcTR (nr_double_t t) {
+void digisource::calcTR (double t) {
   const char * const init = getPropertyString ("init");
-  nr_double_t v = getPropertyDouble ("V");
+  double v = getPropertyDouble ("V");
   qucs::vector * values = getPropertyVector ("times");
   bool lo = !strcmp (init, "low");
-  nr_double_t ti = 0;
+  double ti = 0;
 
   t = t - T * qucs::floor (t / T);
   for (int i = 0; i < values->getSize (); i++) {

@@ -24,11 +24,8 @@
    Implements complex number class and functions
 */
 
-#include "config.h"
-
 #include <cmath>
 #include <assert.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -81,8 +78,8 @@ nr_complex_t acos (const nr_complex_t z) {
     return std::acos (z);
 #else
     // missing on OSX 10.6
-    nr_double_t r = real (z);
-    nr_double_t i = imag (z);
+    double r = real (z);
+    double i = imag (z);
     nr_complex_t y = sqrt (z * z - 1.0);
     if (r * i < 0.0) y = -y;
     return nr_complex_t (0, -1.0) * log (z + y);
@@ -99,8 +96,8 @@ nr_complex_t asin (const nr_complex_t z) {
     return std::asin (z);
 #else
     // missing on OSX 10.6
-    nr_double_t r = real (z);
-    nr_double_t i = imag (z);
+    double r = real (z);
+    double i = imag (z);
     return nr_complex_t (0.0, -1.0) * log (nr_complex_t (-i, r) + sqrt (1.0 - z * z));
 #endif
 }
@@ -199,7 +196,7 @@ nr_complex_t atanh (const nr_complex_t z) {
 */
 nr_complex_t exp (const nr_complex_t z)
 {
-    nr_double_t mag = exp (real (z));
+    double mag = exp (real (z));
     return nr_complex_t (mag * cos (imag (z)), mag * sin (imag (z)));
 }
 
@@ -209,7 +206,7 @@ nr_complex_t exp (const nr_complex_t z)
 */
 nr_complex_t log (const nr_complex_t z)
 {
-    nr_double_t phi = arg (z);
+    double phi = arg (z);
     return nr_complex_t (log (abs (z)), phi);
 }
 
@@ -219,7 +216,7 @@ nr_complex_t log (const nr_complex_t z)
 */
 nr_complex_t log10 (const nr_complex_t z)
 {
-    nr_double_t phi = arg (z);
+    double phi = arg (z);
     return nr_complex_t (log10 (abs (z)), phi * log10e);
 }
 
@@ -230,7 +227,7 @@ nr_complex_t log10 (const nr_complex_t z)
    \param[in] d real exponent
    \return z power d (\f$z^d\f$)
 */
-nr_complex_t pow (const nr_complex_t z, const nr_double_t d) {
+nr_complex_t pow (const nr_complex_t z, const double d) {
     return std::pow (z, d);
 }
 
@@ -240,7 +237,7 @@ nr_complex_t pow (const nr_complex_t z, const nr_double_t d) {
    \param[in] z complex exponent
    \return d power z (\f$d^z\f$)
 */
-nr_complex_t pow (const nr_double_t d, const nr_complex_t z) {
+nr_complex_t pow (const double d, const nr_complex_t z) {
     return std::pow (d, z);
 }
 
@@ -275,7 +272,7 @@ nr_complex_t sqrt (const nr_complex_t z)
    \param[in] z Complex number
    \return Euclidean norm of z
 */
-nr_double_t norm (const nr_complex_t z)
+double norm (const nr_complex_t z)
 {
     return std::norm (z);
 }
@@ -292,8 +289,8 @@ nr_double_t norm (const nr_complex_t z)
 */
 nr_complex_t cot (const nr_complex_t z)
 {
-    nr_double_t r = 2.0 * std::real (z);
-    nr_double_t i = 2.0 * std::imag (z);
+    double r = 2.0 * std::real (z);
+    double i = 2.0 * std::imag (z);
     return nr_complex_t (0.0, 1.0) + nr_complex_t (0.0, 2.0) / (std::polar (std::exp (-i), r) - 1.0);
 }
 
@@ -314,8 +311,8 @@ nr_complex_t acot (const nr_complex_t z)
 */
 nr_complex_t coth (const nr_complex_t z)
 {
-    nr_double_t r = 2.0 * std::real (z);
-    nr_double_t i = 2.0 * std::imag (z);
+    double r = 2.0 * std::real (z);
+    double i = 2.0 * std::imag (z);
     return 1.0 + 2.0 / (std::polar (std::exp (r), i) - 1.0);
 }
 
@@ -388,7 +385,7 @@ nr_complex_t atan2 (const nr_complex_t y, const nr_complex_t x)
 nr_complex_t log2 (const nr_complex_t z)
 {
 #ifndef HAVE_CXX_COMPLEX_LOG2
-    nr_double_t phi = std::arg (z);
+    double phi = std::arg (z);
     return nr_complex_t (std::log (std::abs (z)) * log2e, phi * log2e);
 #else
     return std::log2 (z);
@@ -457,10 +454,10 @@ nr_complex_t    sinc (const nr_complex_t z)
    \param[in] b second length
    \return Euclidean distance from (0,0) to (a,b): \f$\sqrt{a^2+b^2}\f$
 */
-nr_double_t xhypot (const nr_complex_t a, const nr_complex_t b)
+double xhypot (const nr_complex_t a, const nr_complex_t b)
 {
-    nr_double_t c = norm (a);
-    nr_double_t d = norm (b);
+    double c = norm (a);
+    double d = norm (b);
     if (c > d)
         return abs (a) * std::sqrt (1.0 + d / c);
     else if (d == 0.0)
@@ -470,13 +467,13 @@ nr_double_t xhypot (const nr_complex_t a, const nr_complex_t b)
 }
 
 /*!\brief Euclidean distance function for a double b complex */
-nr_double_t xhypot (nr_double_t a, nr_complex_t b)
+double xhypot (double a, nr_complex_t b)
 {
     return xhypot (nr_complex_t (a), b);
 }
 
 /*!\brief Euclidean distance function for b double a complex */
-nr_double_t xhypot (nr_complex_t a, nr_double_t b)
+double xhypot (nr_complex_t a, double b)
 {
     return xhypot (a, nr_complex_t (b));
 }
@@ -490,8 +487,8 @@ nr_double_t xhypot (nr_complex_t a, nr_double_t b)
 */
 nr_complex_t round (const nr_complex_t z)
 {
-    nr_double_t zreal = real (z);
-    nr_double_t zimag = imag (z);
+    double zreal = real (z);
+    double zimag = imag (z);
     // qucs::round resolved for double
     zreal = qucs::round (zreal);
     zimag = qucs::round (zimag);
@@ -506,8 +503,8 @@ nr_complex_t round (const nr_complex_t z)
 */
 nr_complex_t trunc (const nr_complex_t z)
 {
-  nr_double_t zreal = real (z);
-  nr_double_t zimag = imag (z);
+  double zreal = real (z);
+  double zimag = imag (z);
   // qucs::round resolved for double
   zreal = qucs::trunc (zreal);
   zimag = qucs::trunc (zimag);
@@ -520,7 +517,7 @@ nr_complex_t trunc (const nr_complex_t z)
   \param[in] z complex number
   \return Magnitude in dB
 */
-nr_double_t dB (const nr_complex_t z)
+double dB (const nr_complex_t z)
 {
   return 10.0 * std::log10 (std::norm (z));
 }
@@ -533,7 +530,7 @@ nr_double_t dB (const nr_complex_t z)
 */
 nr_complex_t limexp (const nr_complex_t z)
 {
-  nr_double_t mag = qucs::limexp (real (z));
+  double mag = qucs::limexp (real (z));
   return nr_complex_t (mag * cos (imag (z)), mag * sin (imag (z)));
 }
 
@@ -543,7 +540,7 @@ nr_complex_t limexp (const nr_complex_t z)
    \param[in] ang Angle
    \return complex number in rectangular form
 */
-nr_complex_t polar (const nr_double_t mag, const nr_double_t ang )
+nr_complex_t polar (const double mag, const double ang )
 {
 #ifdef HAVE_CXX_COMPLEX_POLAR
     return std::polar (mag, ang);
@@ -638,8 +635,8 @@ nr_complex_t ceil (const nr_complex_t z) {
     \todo why not using real fix
 */
 nr_complex_t fix (const nr_complex_t z) {
-  nr_double_t x = real (z);
-  nr_double_t y = imag (z);
+  double x = real (z);
+  double y = imag (z);
   x = (x > 0) ? std::floor (x) : std::ceil (x);
   y = (y > 0) ? std::floor (y) : std::ceil (y);
   return nr_complex_t (x, y);
@@ -666,8 +663,8 @@ nr_complex_t    fmod (const nr_complex_t x, const nr_complex_t y) {
     \return squared complex number
 */
 nr_complex_t sqr (const nr_complex_t z) {
-  nr_double_t r = real (z);
-  nr_double_t i = imag (z);
+  double r = real (z);
+  double i = imag (z);
   return nr_complex_t (r * r - i * i, 2 * r * i);
 }
 
@@ -685,8 +682,8 @@ nr_complex_t sqr (const nr_complex_t z) {
 */
 nr_complex_t step (const nr_complex_t z)
 {
-    nr_double_t x = real (z);
-    nr_double_t y = imag (z);
+    double x = real (z);
+    double y = imag (z);
     if (x < 0.0)
         x = 0.0;
     else if (x > 0.0)
@@ -761,11 +758,11 @@ nr_complex_t i0 (const nr_complex_t z)
 nr_complex_t erf (const nr_complex_t z)
 {
 #ifdef HAVE_STD_ERF
-  nr_double_t zerf = std::erf (std::real (z)); // c++11
+  double zerf = std::erf (std::real (z)); // c++11
 #elif HAVE_ERF
-  nr_double_t zerf = ::erf (std::real (z));
+  double zerf = ::erf (std::real (z));
 #else
-  nr_double_t zerf = fspecial::erf (std::real (z));
+  double zerf = fspecial::erf (std::real (z));
 #endif
   return nr_complex_t (zerf, 0);
 }
@@ -779,11 +776,11 @@ nr_complex_t erf (const nr_complex_t z)
 nr_complex_t erfc (const nr_complex_t z)
 {
 #ifdef HAVE_STD_ERF
-  nr_double_t zerfc = std::erfc (std::real (z)); // c++11
+  double zerfc = std::erfc (std::real (z)); // c++11
 #elif HAVE_ERFC
-  nr_double_t zerfc = ::erfc (std::real (z));
+  double zerfc = ::erfc (std::real (z));
 #else
-  nr_double_t zerfc = fspecial::erfc (std::real (z));
+  double zerfc = fspecial::erfc (std::real (z));
 #endif
   return nr_complex_t (zerfc, 0);
 }
@@ -826,7 +823,7 @@ nr_complex_t operator%(const nr_complex_t z1, const nr_complex_t z2)
 /*!\brief Modulo
    \todo Why not inline
 */
-nr_complex_t operator%(const nr_complex_t z1, const nr_double_t r2)
+nr_complex_t operator%(const nr_complex_t z1, const double r2)
 {
     return z1 - r2 * floor (z1 / r2);
 }
@@ -834,7 +831,7 @@ nr_complex_t operator%(const nr_complex_t z1, const nr_double_t r2)
 /*!\brief Modulo
    \todo Why not inline
 */
-nr_complex_t operator%(const nr_double_t r1, const nr_complex_t z2)
+nr_complex_t operator%(const double r1, const nr_complex_t z2)
 {
     return r1 - z2 * floor (r1 / z2);
 }
@@ -899,7 +896,7 @@ bool operator<(const nr_complex_t z1, const nr_complex_t z2)
  * \param x input
  * \return real(x)*180/pi
  */
-nr_double_t rad2deg (const nr_complex_t x) {
+double rad2deg (const nr_complex_t x) {
   return rad2deg (real(x));
 }
 
@@ -908,7 +905,7 @@ nr_double_t rad2deg (const nr_complex_t x) {
  * \param x input
  * \return real(x)*pi/180
  */
-nr_double_t deg2rad (const nr_complex_t x) {
+double deg2rad (const nr_complex_t x) {
   return deg2rad (real(x));
 }
 

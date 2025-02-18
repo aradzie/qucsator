@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "msline.h"
@@ -33,45 +31,45 @@ msstep::msstep () : circuit (2) {
   type = CIR_MSSTEP;
 }
 
-void msstep::calcSP (nr_double_t frequency) {
+void msstep::calcSP (double frequency) {
   setMatrixS (ztos (calcMatrixZ (frequency)));
 }
 
-matrix msstep::calcMatrixZ (nr_double_t frequency) {
+matrix msstep::calcMatrixZ (double frequency) {
 
   /* how to get properties of this component, e.g. W */
-  nr_double_t W1 = getPropertyDouble ("W1");
-  nr_double_t W2 = getPropertyDouble ("W2");
+  double W1 = getPropertyDouble ("W1");
+  double W2 = getPropertyDouble ("W2");
   const char * SModel = getPropertyString ("MSModel");
   const char * DModel = getPropertyString ("MSDispModel");
 
   /* how to get properties of the substrate, e.g. Er, H */
   substrate * subst = getSubstrate ();
-  nr_double_t er    = subst->getPropertyDouble ("er");
-  nr_double_t h     = subst->getPropertyDouble ("h");
-  nr_double_t t     = subst->getPropertyDouble ("t");
+  double er    = subst->getPropertyDouble ("er");
+  double h     = subst->getPropertyDouble ("h");
+  double t     = subst->getPropertyDouble ("t");
 
   // compute parallel capacitance
-  nr_double_t t1 = std::log10 (er);
-  nr_double_t t2 = W1 / W2;
-  nr_double_t Cs = std::sqrt (W1 * W2) *
+  double t1 = std::log10 (er);
+  double t2 = W1 / W2;
+  double Cs = std::sqrt (W1 * W2) *
     (t2 * (10.1 * t1 + 2.33) - 12.6 * t1 - 3.17);
 
   // compute series inductance
   t1 = std::log10 (t2);
   t2 = t2 - 1;
-  nr_double_t Ls = h * (t2 * (40.5 + 0.2 * t2) - 75 * t1);
+  double Ls = h * (t2 * (40.5 + 0.2 * t2) - 75 * t1);
 
-  nr_double_t ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
+  double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
   msline::analyseQuasiStatic (W1, h, t, er, SModel, ZlEff, ErEff, WEff);
   msline::analyseDispersion  (W1, h, er, ZlEff, ErEff, frequency, DModel,
 			      ZlEffFreq, ErEffFreq);
-  nr_double_t L1 = ZlEffFreq * std::sqrt (ErEffFreq) / C0;
+  double L1 = ZlEffFreq * std::sqrt (ErEffFreq) / C0;
 
   msline::analyseQuasiStatic (W2, h, t, er, SModel, ZlEff, ErEff, WEff);
   msline::analyseDispersion  (W2, h, er, ZlEff, ErEff, frequency, DModel,
 			      ZlEffFreq, ErEffFreq);
-  nr_double_t L2 = ZlEffFreq * std::sqrt (ErEffFreq) / C0;
+  double L2 = ZlEffFreq * std::sqrt (ErEffFreq) / C0;
 
   Ls /= (L1 + L2);
   L1 *= Ls;
@@ -103,7 +101,7 @@ void msstep::initAC (void) {
   allocMatrixMNA ();
 }
 
-void msstep::calcAC (nr_double_t frequency) {
+void msstep::calcAC (double frequency) {
   setMatrixY (ztoy (calcMatrixZ (frequency)));
 }
 

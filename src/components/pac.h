@@ -26,14 +26,14 @@ class pac : public qucs::circuit
 {
  public:
   CREATOR (pac);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void calcDC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  void calcTR (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
+  void calcTR (double);
   void initHB (void);
-  void calcHB (nr_double_t);
+  void calcHB (double);
 };
 
 #endif /* __PAC_H__ */

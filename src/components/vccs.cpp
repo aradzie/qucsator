@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vccs.h"
 
@@ -30,9 +28,9 @@ vccs::vccs () : circuit (4) {
   type = CIR_VCCS;
 }
 
-void vccs::calcSP (nr_double_t frequency) {
-  nr_double_t g = getPropertyDouble ("G") * z0;
-  nr_double_t t = getPropertyDouble ("T");
+void vccs::calcSP (double frequency) {
+  double g = getPropertyDouble ("G") * z0;
+  double t = getPropertyDouble ("T");
 
   nr_complex_t z1 = qucs::polar (2.0 * g, pi - 2.0 * pi * frequency * t);
   nr_complex_t z2 = qucs::polar (2.0 * g, - 2.0 * pi * frequency * t);
@@ -50,7 +48,7 @@ void vccs::calcSP (nr_double_t frequency) {
 void vccs::initDC (void) {
   setISource (false);
   allocMatrixMNA ();
-  nr_double_t g = getPropertyDouble ("G");
+  double g = getPropertyDouble ("G");
   setY (NODE_2, NODE_1, +g); setY (NODE_3, NODE_4, +g);
   setY (NODE_3, NODE_1, -g); setY (NODE_2, NODE_4, -g);
 }
@@ -59,8 +57,8 @@ void vccs::initAC (void) {
   initDC ();
 }
 
-void vccs::calcAC (nr_double_t frequency) {
-  nr_double_t t = getPropertyDouble ("T");
+void vccs::calcAC (double frequency) {
+  double t = getPropertyDouble ("T");
   nr_complex_t g = qucs::polar (getPropertyDouble ("G"),
 			  - 2.0 * pi * frequency * t);
   setY (NODE_2, NODE_1, +g); setY (NODE_3, NODE_4, +g);
@@ -68,7 +66,7 @@ void vccs::calcAC (nr_double_t frequency) {
 }
 
 void vccs::initTR (void) {
-  nr_double_t t = getPropertyDouble ("T");
+  double t = getPropertyDouble ("T");
   initDC ();
   deleteHistory ();
   if (t > 0.0) {
@@ -79,12 +77,12 @@ void vccs::initTR (void) {
   }
 }
 
-void vccs::calcTR (nr_double_t t) {
-  nr_double_t T = getPropertyDouble ("T");
+void vccs::calcTR (double t) {
+  double T = getPropertyDouble ("T");
   if (T > 0.0) {
     T = t - T;
-    nr_double_t g = getPropertyDouble ("G");
-    nr_double_t v = getV (NODE_1, T) - getV (NODE_4, T);
+    double g = getPropertyDouble ("G");
+    double v = getV (NODE_1, T) - getV (NODE_4, T);
     setI (NODE_2, -g * v);
     setI (NODE_3, +g * v);
   }

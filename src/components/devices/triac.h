@@ -28,25 +28,25 @@ class triac : public qucs::circuit, public qucs::devstates
 {
  public:
   CREATOR (triac);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void calcDC (void);
   void saveOperatingPoints (void);
   void loadOperatingPoints (void);
   void calcOperatingPoints (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 
  private:
-  nr_double_t Ud, gd, Id, Qi, gi, Ui;
+  double Ud, gd, Id, Qi, gi, Ui;
 
-  nr_double_t time_prev, Ud_last;
+  double time_prev, Ud_last;
   void calcTheModel (bool);
 
  private:
-  qucs::matrix calcMatrixY (nr_double_t);
+  qucs::matrix calcMatrixY (double);
 };
 
 #endif /* __TRIAC_H__ */

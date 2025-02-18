@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +33,7 @@
 namespace qucs {
 
 // Constructor creates an unnamed instance of the integrator class.
-integrator::integrator () : states<nr_double_t> () {
+integrator::integrator () : states<double> () {
   coefficients = NULL;
   order = 0;
   state = 0;
@@ -45,7 +43,7 @@ integrator::integrator () : states<nr_double_t> () {
 
 /* The copy constructor creates a new instance based on the given
    integrator object. */
-integrator::integrator (const integrator & c) : states<nr_double_t> (c) {
+integrator::integrator (const integrator & c) : states<double> (c) {
   coefficients = c.coefficients;
   order = c.order;
   state = c.state;
@@ -59,8 +57,8 @@ integrator::~integrator () {
 
 /* The function evaluates the state of the integration-using component
    and runs the appropriate integrator function. */
-void integrator::integrate (int qstate, nr_double_t cap, nr_double_t& geq,
-			    nr_double_t& ceq) {
+void integrator::integrate (int qstate, double cap, double& geq,
+			    double& ceq) {
   int cstate = qstate + 1;
   if (state & MODE_INIT) fillState (qstate, getState (qstate));
   (*integrate_func) (this, qstate, cap, geq, ceq);
@@ -68,7 +66,7 @@ void integrator::integrate (int qstate, nr_double_t cap, nr_double_t& geq,
 }
 
 /* This function runs the appropriate conductor function. */
-void integrator::conductor (nr_double_t cap, nr_double_t& geq) {
+void integrator::conductor (double cap, double& geq) {
   (*conductor_func) (this, cap, geq);
 }
 

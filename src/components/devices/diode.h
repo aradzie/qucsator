@@ -28,8 +28,8 @@ class diode : public qucs::circuit, public qucs::devstates
 {
  public:
   CREATOR (diode);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void initDC (void);
   void calcDC (void);
   void restartDC (void);
@@ -37,20 +37,20 @@ class diode : public qucs::circuit, public qucs::devstates
   void loadOperatingPoints (void);
   void calcOperatingPoints (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
   void initHB (int);
   void calcHB (int);
 
  private:
-  nr_double_t Ud, gd, Id, Qd, Bv;
+  double Ud, gd, Id, Qd, Bv;
   qucs::circuit * rs;
   bool doHB;
 
  private:
-  qucs::matrix calcMatrixCy (nr_double_t);
+  qucs::matrix calcMatrixCy (double);
   void prepareDC (void);
   void initModel (void);
 };

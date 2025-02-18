@@ -27,8 +27,8 @@ class inoise : public qucs::circuit
  public:
   CREATOR (inoise);
   void initSP (void);
-  void calcNoiseSP (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcNoiseSP (double);
+  void calcNoiseAC (double);
 };
 
 #endif /* __INOISE_H__ */

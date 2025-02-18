@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <cmath>
@@ -111,9 +109,9 @@ int device::deviceEnabled (circuit * c) {
 /* The function limits the forward pn-voltage for each DC iteration in
    order to avoid numerical overflows and thereby improve the
    convergence. */
-nr_double_t device::pnVoltage (nr_double_t Ud, nr_double_t Uold,
-			       nr_double_t Ut, nr_double_t Ucrit) {
-  nr_double_t arg;
+double device::pnVoltage (double Ud, double Uold,
+			       double Ut, double Ucrit) {
+  double arg;
   if (Ud > Ucrit && fabs (Ud - Uold) > 2 * Ut) {
     if (Uold > 0) {
       arg = (Ud - Uold) / Ut;
@@ -134,52 +132,52 @@ nr_double_t device::pnVoltage (nr_double_t Ud, nr_double_t Uold,
 }
 
 // Computes current and its derivative for a MOS pn-junction.
-void device::pnJunctionMOS (nr_double_t Upn, nr_double_t Iss, nr_double_t Ute,
-			    nr_double_t& I, nr_double_t& g) {
+void device::pnJunctionMOS (double Upn, double Iss, double Ute,
+			    double& I, double& g) {
   if (Upn <= 0) {
     g = Iss / Ute;
     I = g * Upn;
   }
   else {
-    nr_double_t e = exp (std::min (Upn / Ute, 709.0));
+    double e = exp (std::min (Upn / Ute, 709.0));
     I = Iss * (e - 1);
     g = Iss * e / Ute;
   }
 }
 
 // Computes current and its derivative for a bipolar pn-junction.
-void device::pnJunctionBIP (nr_double_t Upn, nr_double_t Iss, nr_double_t Ute,
-			    nr_double_t& I, nr_double_t& g) {
+void device::pnJunctionBIP (double Upn, double Iss, double Ute,
+			    double& I, double& g) {
   if (Upn < -3 * Ute) {
-    nr_double_t a = 3 * Ute / (Upn * euler);
+    double a = 3 * Ute / (Upn * euler);
     a = cubic (a);
     I = -Iss * (1 + a);
     g = +Iss * 3 * a / Upn;
   }
   else {
-    nr_double_t e = exp (std::min (Upn / Ute, 709.0));
+    double e = exp (std::min (Upn / Ute, 709.0));
     I = Iss * (e - 1);
     g = Iss * e / Ute;
   }
 }
 
 // The function computes the exponential pn-junction current.
-nr_double_t
-device::pnCurrent (nr_double_t Upn, nr_double_t Iss, nr_double_t Ute) {
+double
+device::pnCurrent (double Upn, double Iss, double Ute) {
   return Iss * (exp (std::min (Upn / Ute, 709.0)) - 1);
 }
 
 // The function computes the exponential pn-junction current's derivative.
-nr_double_t
-device::pnConductance (nr_double_t Upn, nr_double_t Iss, nr_double_t Ute) {
+double
+device::pnConductance (double Upn, double Iss, double Ute) {
   return Iss * exp (std::min (Upn / Ute, 709.0)) / Ute;
 }
 
 // Computes pn-junction depletion capacitance.
-nr_double_t
-device::pnCapacitance (nr_double_t Uj, nr_double_t Cj, nr_double_t Vj,
-		       nr_double_t Mj, nr_double_t Fc) {
-  nr_double_t c;
+double
+device::pnCapacitance (double Uj, double Cj, double Vj,
+		       double Mj, double Fc) {
+  double c;
   if (Uj <= Fc * Vj)
     c = Cj * exp (-Mj * log (1 - Uj / Vj));
   else
@@ -189,9 +187,9 @@ device::pnCapacitance (nr_double_t Uj, nr_double_t Cj, nr_double_t Vj,
 }
 
 // Computes pn-junction depletion charge.
-nr_double_t device::pnCharge (nr_double_t Uj, nr_double_t Cj, nr_double_t Vj,
-			      nr_double_t Mj, nr_double_t Fc) {
-  nr_double_t q, a, b;
+double device::pnCharge (double Uj, double Cj, double Vj,
+			      double Mj, double Fc) {
+  double q, a, b;
   if (Uj <= Fc * Vj) {
     a = 1 - Uj / Vj;
     b = exp ((1 - Mj) * log (a));
@@ -202,17 +200,17 @@ nr_double_t device::pnCharge (nr_double_t Uj, nr_double_t Cj, nr_double_t Vj,
     a = 1 - Fc;
     b = exp ((1 - Mj) * log (a));
     a = exp ((1 + Mj) * log (a));
-    nr_double_t c = 1 - Fc * (1 + Mj);
-    nr_double_t d = Fc * Vj;
-    nr_double_t e = Vj * (1 - b) / (1 - Mj);
+    double c = 1 - Fc * (1 + Mj);
+    double d = Fc * Vj;
+    double e = Vj * (1 - b) / (1 - Mj);
     q = Cj * (e + (c * (Uj - d) + Mj / 2 / Vj * (sqr (Uj) - sqr (d))) / a);
 #else /* this variant is numerically more stable */
     a = 1 - Fc;
     b = exp (-Mj * log (a));
-    nr_double_t f = Fc * Vj;
-    nr_double_t c = Cj * (1 - Fc * (1 + Mj)) * b / a;
-    nr_double_t d = Cj * Mj * b / a / Vj;
-    nr_double_t e = Cj * Vj * (1 - a * b) / (1 - Mj) - d / 2 * f * f - f * c;
+    double f = Fc * Vj;
+    double c = Cj * (1 - Fc * (1 + Mj)) * b / a;
+    double d = Cj * Mj * b / a / Vj;
+    double e = Cj * Vj * (1 - a * b) / (1 - Mj) - d / 2 * f * f - f * c;
     q = e + Uj * (c + Uj * d / 2);
 #endif
   }
@@ -221,10 +219,10 @@ nr_double_t device::pnCharge (nr_double_t Uj, nr_double_t Cj, nr_double_t Vj,
 
 /* This function computes the pn-junction depletion capacitance with
    no linearization factor given. */
-nr_double_t
-device::pnCapacitance (nr_double_t Uj, nr_double_t Cj, nr_double_t Vj,
-		       nr_double_t Mj) {
-  nr_double_t c;
+double
+device::pnCapacitance (double Uj, double Cj, double Vj,
+		       double Mj) {
+  double c;
   if (Uj <= 0)
     c = Cj * exp (-Mj * log (1 - Uj / Vj));
   else
@@ -234,9 +232,9 @@ device::pnCapacitance (nr_double_t Uj, nr_double_t Cj, nr_double_t Vj,
 
 /* This function computes the pn-junction depletion charge with no
    linearization factor given. */
-nr_double_t device::pnCharge (nr_double_t Uj, nr_double_t Cj, nr_double_t Vj,
-			      nr_double_t Mj) {
-  nr_double_t q;
+double device::pnCharge (double Uj, double Cj, double Vj,
+			      double Mj) {
+  double q;
   if (Uj <= 0)
     q = Cj * Vj / (1 - Mj) * (1 - exp ((1 - Mj) * log (1 - Uj / Vj)));
   else
@@ -245,19 +243,19 @@ nr_double_t device::pnCharge (nr_double_t Uj, nr_double_t Cj, nr_double_t Vj,
 }
 
 // Compute critical voltage of pn-junction.
-nr_double_t device::pnCriticalVoltage (nr_double_t Iss, nr_double_t Ute) {
+double device::pnCriticalVoltage (double Iss, double Ute) {
   return Ute * log (Ute / sqrt2 / Iss);
 }
 
 /* The function limits the forward fet-voltage for each DC iteration
    in order to avoid numerical overflows and thereby improve the
    convergence. */
-nr_double_t
-device::fetVoltage (nr_double_t Ufet, nr_double_t Uold, nr_double_t Uth) {
-  nr_double_t Utsthi = fabs (2 * (Uold - Uth)) + 2.0;
-  nr_double_t Utstlo = Utsthi / 2;
-  nr_double_t Utox   = Uth + 3.5;
-  nr_double_t DeltaU = Ufet - Uold;
+double
+device::fetVoltage (double Ufet, double Uold, double Uth) {
+  double Utsthi = fabs (2 * (Uold - Uth)) + 2.0;
+  double Utstlo = Utsthi / 2;
+  double Utox   = Uth + 3.5;
+  double DeltaU = Ufet - Uold;
 
   if (Uold >= Uth) { /* FET is on */
     if (Uold >= Utox) {
@@ -302,7 +300,7 @@ device::fetVoltage (nr_double_t Ufet, nr_double_t Uold, nr_double_t Uth) {
 /* The function limits the drain-source voltage for each DC iteration
    in order to avoid numerical overflows and thereby improve the
    convergence. */
-nr_double_t device::fetVoltageDS (nr_double_t Ufet, nr_double_t Uold) {
+double device::fetVoltageDS (double Ufet, double Uold) {
   if (Uold >= 3.5) {
     if (Ufet > Uold) {
       Ufet = std::min (Ufet, 3 * Uold + 2);
@@ -323,12 +321,12 @@ nr_double_t device::fetVoltageDS (nr_double_t Ufet, nr_double_t Uold) {
    the given voltages, surface potential and the zero-bias oxide
    capacitance. */
 void
-device::fetCapacitanceMeyer (nr_double_t Ugs, nr_double_t Ugd, nr_double_t Uth,
-			     nr_double_t Udsat, nr_double_t Phi,
-			     nr_double_t Cox, nr_double_t& Cgs,
-			     nr_double_t& Cgd, nr_double_t& Cgb) {
+device::fetCapacitanceMeyer (double Ugs, double Ugd, double Uth,
+			     double Udsat, double Phi,
+			     double Cox, double& Cgs,
+			     double& Cgd, double& Cgb) {
 
-  nr_double_t Utst = Ugs - Uth;
+  double Utst = Ugs - Uth;
   if (Utst <= -Phi) { // cutoff regions
     Cgb = Cox;
     Cgs = 0;
@@ -343,13 +341,13 @@ device::fetCapacitanceMeyer (nr_double_t Ugs, nr_double_t Ugd, nr_double_t Uth,
     Cgd = 0;
   } else {
     Cgb = 0;
-    nr_double_t Uds = Ugs - Ugd;
+    double Uds = Ugs - Ugd;
     if (Udsat <= Uds) { // saturation region
       Cgs = 2 * Cox / 3;
       Cgd = 0;
     } else { // linear region
-      nr_double_t Sqr1 = sqr (Udsat - Uds);
-      nr_double_t Sqr2 = sqr (2 * Udsat - Uds);
+      double Sqr1 = sqr (Udsat - Uds);
+      double Sqr2 = sqr (2 * Udsat - Uds);
       Cgs = Cox * (1 - Sqr1 / Sqr2) * 2 / 3;
       Cgd = Cox * (1 - Udsat * Udsat / Sqr2) * 2 / 3;
     }
@@ -357,36 +355,36 @@ device::fetCapacitanceMeyer (nr_double_t Ugs, nr_double_t Ugd, nr_double_t Uth,
 }
 
 // Computes temperature dependency of energy bandgap.
-nr_double_t device::Egap (nr_double_t T, nr_double_t Eg0) {
-  nr_double_t a = 7.02e-4;
-  nr_double_t b = 1108;
+double device::Egap (double T, double Eg0) {
+  double a = 7.02e-4;
+  double b = 1108;
   return Eg0 - (a * sqr (T)) / (T + b);
 }
 
 // Computes temperature dependency of intrinsic density.
-nr_double_t device::intrinsicDensity (nr_double_t T, nr_double_t Eg0) {
-  nr_double_t TR = 300.00;
-  nr_double_t E1 = Egap (TR, Eg0);
-  nr_double_t E2 = Egap (T, Eg0);
-  nr_double_t NI = NiSi / 1e6;
+double device::intrinsicDensity (double T, double Eg0) {
+  double TR = 300.00;
+  double E1 = Egap (TR, Eg0);
+  double E2 = Egap (T, Eg0);
+  double NI = NiSi / 1e6;
   return  NI * exp (1.5 * log (T / TR) + (E1 / TR - E2 / T) / kBoverQ / 2);
 }
 
 // Calculates temperature dependence for saturation current.
-nr_double_t
-device::pnCurrent_T (nr_double_t T1, nr_double_t T2, nr_double_t Is,
-		     nr_double_t Eg, nr_double_t N,  nr_double_t Xti) {
-  nr_double_t Vt, TR;
+double
+device::pnCurrent_T (double T1, double T2, double Is,
+		     double Eg, double N,  double Xti) {
+  double Vt, TR;
   TR = T2 / T1;
   Vt = T2 * kBoverQ;
   return Is * exp (Xti / N * log (TR) - Eg / N / Vt * (1 - TR));
 }
 
 // Calculates temperature dependence for junction potential.
-nr_double_t
-device::pnPotential_T (nr_double_t T1, nr_double_t T2, nr_double_t Vj,
-		       nr_double_t Eg0) {
-  nr_double_t Vt, TR, E1, E2;
+double
+device::pnPotential_T (double T1, double T2, double Vj,
+		       double Eg0) {
+  double Vt, TR, E1, E2;
   TR = T2 / T1;
   E1 = Egap (T1, Eg0);
   E2 = Egap (T2, Eg0);
@@ -395,16 +393,16 @@ device::pnPotential_T (nr_double_t T1, nr_double_t T2, nr_double_t Vj,
 }
 
 // Calculates temperature dependence for junction capacitance.
-nr_double_t
-device::pnCapacitance_T (nr_double_t T1, nr_double_t T2, nr_double_t M,
-			 nr_double_t VR, nr_double_t Cj) {
+double
+device::pnCapacitance_T (double T1, double T2, double M,
+			 double VR, double Cj) {
   return Cj * pnCapacitance_F (T1, T2, M, VR);
 }
 
 // Calculates temperature dependence for junction capacitance.
-nr_double_t
-device::pnCapacitance_F (nr_double_t T1, nr_double_t T2, nr_double_t M,
-			 nr_double_t VR) {
-  nr_double_t DT = T2 - T1;
+double
+device::pnCapacitance_F (double T1, double T2, double M,
+			 double VR) {
+  double DT = T2 - T1;
   return 1 + M * (4e-4 * DT - VR + 1);
 }

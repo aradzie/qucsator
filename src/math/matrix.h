@@ -53,7 +53,7 @@ matrix inverseLaplace (matrix);
 matrix inverseGaussJordan (matrix);
 matrix inverse (matrix);
 matrix stos (matrix, nr_complex_t, nr_complex_t z0 = 50.0);
-matrix stos (matrix, nr_double_t, nr_double_t z0 = 50.0);
+matrix stos (matrix, double, double z0 = 50.0);
 matrix stos (matrix, vector, nr_complex_t z0 = 50.0);
 matrix stos (matrix, nr_complex_t, vector);
 matrix stos (matrix, vector, vector);
@@ -80,8 +80,8 @@ matrix cstocy (matrix, matrix);
 matrix cytocz (matrix, matrix);
 matrix cstocz (matrix, matrix);
 matrix twoport (matrix, char, char);
-nr_double_t rollet (matrix);
-nr_double_t b1 (matrix);
+double rollet (matrix);
+double b1 (matrix);
 matrix rad2deg     (matrix);
 matrix deg2rad     (matrix);
 
@@ -112,19 +112,19 @@ class matrix
   friend matrix operator + (matrix, matrix);
   friend matrix operator + (nr_complex_t, matrix);
   friend matrix operator + (matrix, nr_complex_t);
-  friend matrix operator + (nr_double_t, matrix);
-  friend matrix operator + (matrix, nr_double_t);
+  friend matrix operator + (double, matrix);
+  friend matrix operator + (matrix, double);
   friend matrix operator - (matrix, matrix);
   friend matrix operator - (nr_complex_t, matrix);
   friend matrix operator - (matrix, nr_complex_t);
-  friend matrix operator - (nr_double_t, matrix);
-  friend matrix operator - (matrix, nr_double_t);
+  friend matrix operator - (double, matrix);
+  friend matrix operator - (matrix, double);
   friend matrix operator / (matrix, nr_complex_t);
-  friend matrix operator / (matrix, nr_double_t);
+  friend matrix operator / (matrix, double);
   friend matrix operator * (nr_complex_t, matrix);
   friend matrix operator * (matrix, nr_complex_t);
-  friend matrix operator * (nr_double_t, matrix);
-  friend matrix operator * (matrix, nr_double_t);
+  friend matrix operator * (double, matrix);
+  friend matrix operator * (matrix, double);
   friend matrix operator * (matrix, matrix);
 
   // intrinsic operator functions
@@ -165,7 +165,7 @@ class matrix
   friend matrix inverseGaussJordan (matrix);
   friend matrix inverse (matrix);
   friend matrix stos (matrix, nr_complex_t, nr_complex_t);
-  friend matrix stos (matrix, nr_double_t, nr_double_t);
+  friend matrix stos (matrix, double, double);
   friend matrix stos (matrix, qucs::vector, nr_complex_t);
   friend matrix stos (matrix, nr_complex_t, qucs::vector);
   friend matrix stos (matrix, qucs::vector, qucs::vector);
@@ -193,8 +193,8 @@ class matrix
   friend matrix cstocz (matrix, matrix);
 
   friend matrix twoport (matrix, char, char);
-  friend nr_double_t rollet (matrix);
-  friend nr_double_t b1 (matrix);
+  friend double rollet (matrix);
+  friend double b1 (matrix);
 
   friend matrix rad2deg    (matrix);
   friend matrix deg2rad    (matrix);

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -104,7 +102,7 @@ int parasweep::initialize (void) {
   }
 
   // initialize first sweep value in environment and equation checker
-  nr_double_t v = swp->get (0);
+  double v = swp->get (0);
   env->setDoubleConstant (n, v);
   env->setDouble (n, v);
 
@@ -148,7 +146,7 @@ int parasweep::solve (void) {
   swp->reset ();
   for (int i = 0; i < swp->getSize (); i++) {
     // obtain next sweep point
-    nr_double_t v = swp->next ();
+    double v = swp->next ();
     // update environment and equation checker, then run solver
     env->setDoubleConstant (n, v);
     env->setDouble (n, v);

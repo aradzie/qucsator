@@ -38,8 +38,8 @@ namespace qucs {
 class strlist;
 class vector;
 
-qucs::vector linspace (nr_double_t, nr_double_t, int);
-qucs::vector logspace (nr_double_t, nr_double_t, int);
+qucs::vector linspace (double, double, int);
+qucs::vector logspace (double, double, int);
 qucs::vector runavg (qucs::vector, const int);
 qucs::vector runavg (const nr_complex_t, const int);
 
@@ -66,7 +66,7 @@ class vector : public object
   void add (nr_complex_t);
   void add (vector *);
   nr_complex_t get (int);
-  void set (nr_double_t, int);
+  void set (double, int);
   void set (const nr_complex_t, int);
   int getSize (void) const;
   int checkSizes (vector, vector);
@@ -77,15 +77,15 @@ class vector : public object
   void setDependencies (strlist *);
   void setOrigin (const char *);
   char * getOrigin (void);
-  int contains (nr_complex_t, nr_double_t eps = std::numeric_limits<nr_double_t>::epsilon());
+  int contains (nr_complex_t, double eps = std::numeric_limits<double>::epsilon());
   void sort (bool ascending = true);
   void print (void);
 
-  nr_double_t maximum  (void);
-  nr_double_t minimum  (void);
-  nr_double_t rms      (void);
-  nr_double_t variance (void);
-  nr_double_t stddev   (void);
+  double maximum  (void);
+  double minimum  (void);
+  double rms      (void);
+  double variance (void);
+  double stddev   (void);
 
   friend nr_complex_t sum     (vector);
   friend nr_complex_t prod    (vector);
@@ -93,11 +93,11 @@ class vector : public object
   friend vector  cumsum  (vector);
   friend vector  cumprod (vector);
   friend vector  cumavg  (vector);
-  friend vector  smooth  (vector, const nr_double_t);
+  friend vector  smooth  (vector, const double);
   friend vector  groupdelay  (vector, vector);
   friend vector  dbm     (vector, const nr_complex_t);
   friend nr_complex_t integrate (vector v, const nr_complex_t);
-  friend nr_double_t integrate (vector v, const nr_double_t);
+  friend double integrate (vector v, const double);
 
   // vector manipulations
   friend vector real   (vector);  // the real part
@@ -109,30 +109,30 @@ class vector : public object
   friend vector log    (vector);
   friend vector log2   (vector);
   friend vector pow    (vector, const nr_complex_t);
-  friend vector pow    (vector, const nr_double_t);
+  friend vector pow    (vector, const double);
   friend vector pow    (const nr_complex_t, vector);
-  friend vector pow    (const nr_double_t, vector);
+  friend vector pow    (const double, vector);
   friend vector pow    (vector, vector);
   friend vector ztor   (vector, nr_complex_t);
   friend vector rtoz   (vector, nr_complex_t);
   friend vector ytor   (vector, nr_complex_t);
   friend vector rtoy   (vector, nr_complex_t);
   friend vector diff   (vector, vector, int);
-  friend vector unwrap (vector, nr_double_t, nr_double_t);
+  friend vector unwrap (vector, double, double);
 
   friend vector polar   (vector, const nr_complex_t);
   friend vector polar   (const nr_complex_t, vector);
   friend vector polar   (vector, vector);
-  friend vector atan2   (vector, const nr_double_t);
-  friend vector atan2   (const nr_double_t, vector);
+  friend vector atan2   (vector, const double);
+  friend vector atan2   (const double, vector);
   friend vector atan2   (vector, vector);
   friend vector dbm2w   (vector);
   friend vector w2dbm   (vector);
   friend vector xhypot  (vector, vector);
   friend vector xhypot  (vector, const nr_complex_t);
-  friend vector xhypot  (vector, const nr_double_t);
+  friend vector xhypot  (vector, const double);
   friend vector xhypot  (const nr_complex_t, vector);
-  friend vector xhypot  (const nr_double_t, vector);
+  friend vector xhypot  (const double, vector);
 
   // overloaded math functions
   friend vector abs     (vector);
@@ -181,29 +181,29 @@ class vector : public object
   // operator functions
   friend vector operator + (vector, vector);
   friend vector operator + (vector, const nr_complex_t);
-  friend vector operator + (vector, const nr_double_t);
+  friend vector operator + (vector, const double);
   friend vector operator + (const nr_complex_t, vector);
-  friend vector operator + (const nr_double_t, vector);
+  friend vector operator + (const double, vector);
   friend vector operator - (vector, vector);
   friend vector operator - (vector, const nr_complex_t);
-  friend vector operator - (vector, const nr_double_t);
+  friend vector operator - (vector, const double);
   friend vector operator - (const nr_complex_t, vector);
-  friend vector operator - (const nr_double_t, vector);
+  friend vector operator - (const double, vector);
   friend vector operator * (vector, vector);
   friend vector operator * (vector, const nr_complex_t);
-  friend vector operator * (vector, const nr_double_t);
+  friend vector operator * (vector, const double);
   friend vector operator * (const nr_complex_t, vector);
-  friend vector operator * (const nr_double_t, vector);
+  friend vector operator * (const double, vector);
   friend vector operator / (vector, vector);
   friend vector operator / (vector, const nr_complex_t);
-  friend vector operator / (vector, const nr_double_t);
+  friend vector operator / (vector, const double);
   friend vector operator / (const nr_complex_t, vector);
-  friend vector operator / (const nr_double_t, vector);
+  friend vector operator / (const double, vector);
   friend vector operator % (vector, vector);
   friend vector operator % (vector, const nr_complex_t);
-  friend vector operator % (vector, const nr_double_t);
+  friend vector operator % (vector, const double);
   friend vector operator % (const nr_complex_t, vector);
-  friend vector operator % (const nr_double_t, vector);
+  friend vector operator % (const double, vector);
 
   // comparisons
   //  friend int      operator == (const vector *, const vector *);
@@ -212,19 +212,19 @@ class vector : public object
   // assignment operations
   vector operator  - ();
   vector operator  = (const nr_complex_t);
-  vector operator  = (const nr_double_t);
+  vector operator  = (const double);
   vector operator += (vector);
   vector operator += (const nr_complex_t);
-  vector operator += (const nr_double_t);
+  vector operator += (const double);
   vector operator -= (vector);
   vector operator -= (const nr_complex_t);
-  vector operator -= (const nr_double_t);
+  vector operator -= (const double);
   vector operator *= (vector);
   vector operator *= (const nr_complex_t);
-  vector operator *= (const nr_double_t);
+  vector operator *= (const double);
   vector operator /= (vector);
   vector operator /= (const nr_complex_t);
-  vector operator /= (const nr_double_t);
+  vector operator /= (const double);
 
   // easy accessor operators
   nr_complex_t  operator () (int i) const { return data[i]; }
@@ -252,10 +252,10 @@ nr_complex_t avg     (vector);
 vector  cumsum  (vector);
 vector  cumprod (vector);
 vector  cumavg  (vector);
-vector  smooth  (vector, const nr_double_t);
+vector  smooth  (vector, const double);
 vector  dbm     (vector, const nr_complex_t z = 50.0);
 nr_complex_t integrate (vector v, const nr_complex_t);
-nr_double_t integrate (vector v, const nr_double_t);
+double integrate (vector v, const double);
 vector real   (vector);  // the real part
 vector imag   (vector);  // the imaginary part
 vector conj   (vector);  // the complex conjugate
@@ -265,29 +265,29 @@ vector dB     (vector);
 vector log    (vector);
 vector log2   (vector);
 vector pow    (vector, const nr_complex_t);
-vector pow    (vector, const nr_double_t);
+vector pow    (vector, const double);
 vector pow    (const nr_complex_t, vector);
-vector pow    (const nr_double_t, vector);
+vector pow    (const double, vector);
 vector pow    (vector, vector);
 vector ztor   (vector, nr_complex_t zref = 50.0);
 vector rtoz   (vector, nr_complex_t zref = 50.0);
 vector ytor   (vector, nr_complex_t zref = 50.0);
 vector rtoy   (vector, nr_complex_t zref = 50.0);
 vector diff   (vector, vector, int n = 1);
-vector unwrap (vector, nr_double_t tol = pi, nr_double_t step = 2 * pi);
+vector unwrap (vector, double tol = pi, double step = 2 * pi);
 vector polar   (vector, const nr_complex_t);
 vector polar   (const nr_complex_t, vector);
 vector polar   (vector, vector);
-vector atan2   (vector, const nr_double_t);
-vector atan2   (const nr_double_t, vector);
+vector atan2   (vector, const double);
+vector atan2   (const double, vector);
 vector atan2   (vector, vector);
 vector dbm2w   (vector);
 vector w2dbm   (vector);
 vector xhypot  (vector, vector);
 vector xhypot  (vector, const nr_complex_t);
-vector xhypot  (vector, const nr_double_t);
+vector xhypot  (vector, const double);
 vector xhypot  (const nr_complex_t, vector);
-vector xhypot  (const nr_double_t, vector);
+vector xhypot  (const double, vector);
 vector abs     (vector);
 vector log10   (vector);
 vector exp     (vector);

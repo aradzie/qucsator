@@ -27,11 +27,11 @@ class msmbend : public qucs::circuit
 {
  public:
   CREATOR (msmbend);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  qucs::matrix calcMatrixZ (nr_double_t);
+  void calcAC (double);
+  qucs::matrix calcMatrixZ (double);
 };
 
 #endif /* __MSMBEND_H__ */

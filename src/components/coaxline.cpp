@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "coaxline.h"
 
@@ -31,14 +29,14 @@ coaxline::coaxline () : circuit (2) {
   type = CIR_COAXLINE;
 }
 
-void coaxline::calcPropagation (nr_double_t frequency) {
-  nr_double_t er   = getPropertyDouble ("er");
-  nr_double_t mur  = getPropertyDouble ("mur");
-  nr_double_t rho  = getPropertyDouble ("rho");
-  nr_double_t tand = getPropertyDouble ("tand");
-  nr_double_t d    = getPropertyDouble ("d");
-  nr_double_t D    = getPropertyDouble ("D");
-  nr_double_t ad, ac, rs;
+void coaxline::calcPropagation (double frequency) {
+  double er   = getPropertyDouble ("er");
+  double mur  = getPropertyDouble ("mur");
+  double rho  = getPropertyDouble ("rho");
+  double tand = getPropertyDouble ("tand");
+  double d    = getPropertyDouble ("d");
+  double D    = getPropertyDouble ("D");
+  double ad, ac, rs;
 
   // check cutoff frequency
   if (frequency > fc) {
@@ -57,35 +55,35 @@ void coaxline::calcPropagation (nr_double_t frequency) {
   zl = Z0 / 2 / pi / std::sqrt (er) * std::log (D / d);
 }
 
-void coaxline::calcNoiseSP (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void coaxline::calcNoiseSP (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
 }
 
 void coaxline::initCheck (void) {
-  nr_double_t d   = getPropertyDouble ("d");
-  nr_double_t D   = getPropertyDouble ("D");
-  nr_double_t er  = getPropertyDouble ("er");
-  nr_double_t mur = getPropertyDouble ("mur");
+  double d   = getPropertyDouble ("d");
+  double D   = getPropertyDouble ("D");
+  double er  = getPropertyDouble ("er");
+  double mur = getPropertyDouble ("mur");
 
   // check validity
   if (d >= D) {
     logprint (LOG_ERROR,
 	      "ERROR: Inner diameter larger than outer diameter.\n");
   }
-  nr_double_t f1, f2, cl;
+  double f1, f2, cl;
   cl = C0 / std::sqrt (mur * er);
   f1 = cl / (pi_over_2 * (D + d)); // TE_11
   f2 = cl / (1 * (D - d));      // TM_N1
   fc = std::min (f1, f2);
 }
 
-void coaxline::saveCharacteristics (nr_double_t) {
+void coaxline::saveCharacteristics (double) {
   setCharacteristic ("Zl", zl);
 }
 
@@ -95,15 +93,15 @@ void coaxline::initSP (void) {
   initCheck ();
 }
 
-void coaxline::calcSP (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
+void coaxline::calcSP (double frequency) {
+  double l = getPropertyDouble ("L");
 
   // calculate propagation constants
   calcPropagation (frequency);
 
   // calculate S-parameters
-  nr_double_t z = zl / z0;
-  nr_double_t y = 1 / z;
+  double z = zl / z0;
+  double y = 1 / z;
   nr_complex_t g = nr_complex_t (alpha, beta);
   nr_complex_t n = 2.0 * cosh (g * l) + (z + y) * sinh (g * l);
   nr_complex_t s11 = (z - y) * sinh (g * l) / n;
@@ -113,13 +111,13 @@ void coaxline::calcSP (nr_double_t frequency) {
 }
 
 void coaxline::initDC (void) {
-  nr_double_t l   = getPropertyDouble ("L");
-  nr_double_t d   = getPropertyDouble ("d");
-  nr_double_t rho = getPropertyDouble ("rho");
+  double l   = getPropertyDouble ("L");
+  double d   = getPropertyDouble ("d");
+  double rho = getPropertyDouble ("rho");
 
   if (d != 0.0 && rho != 0.0 && l != 0.0) {
     // a tiny resistance
-    nr_double_t g = pi * sqr (d / 2) / rho / l;
+    double g = pi * sqr (d / 2) / rho / l;
     setVoltageSources (0);
     allocMatrixMNA ();
     setY (NODE_1, NODE_1, +g); setY (NODE_2, NODE_2, +g);
@@ -140,8 +138,8 @@ void coaxline::initAC (void) {
   initCheck ();
 }
 
-void coaxline::calcAC (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
+void coaxline::calcAC (double frequency) {
+  double l = getPropertyDouble ("L");
 
   // calculate propagation constants
   calcPropagation (frequency);
@@ -154,11 +152,11 @@ void coaxline::calcAC (nr_double_t frequency) {
   setY (NODE_1, NODE_2, y21); setY (NODE_2, NODE_1, y21);
 }
 
-void coaxline::calcNoiseAC (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void coaxline::calcNoiseAC (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

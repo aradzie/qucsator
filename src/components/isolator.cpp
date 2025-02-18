@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "isolator.h"
 
@@ -31,10 +29,10 @@ isolator::isolator () : circuit (2) {
 }
 
 void isolator::initSP (void) {
-  nr_double_t z1 = getPropertyDouble ("Z1");
-  nr_double_t z2 = getPropertyDouble ("Z2");
-  nr_double_t s1 = (z1 - z0) / (z1 + z0);
-  nr_double_t s2 = (z2 - z0) / (z2 + z0);
+  double z1 = getPropertyDouble ("Z1");
+  double z2 = getPropertyDouble ("Z2");
+  double s1 = (z1 - z0) / (z1 + z0);
+  double s2 = (z2 - z0) / (z2 + z0);
   allocMatrixS ();
   setS (NODE_1, NODE_1, s1);
   setS (NODE_2, NODE_2, s2);
@@ -42,23 +40,23 @@ void isolator::initSP (void) {
   setS (NODE_2, NODE_1, std::sqrt (1 - s1 * s1) * std::sqrt (1 - s2 * s2));
 }
 
-void isolator::calcNoiseSP (nr_double_t) {
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t z1 = getPropertyDouble ("Z1");
-  nr_double_t z2 = getPropertyDouble ("Z2");
-  nr_double_t r = (z0 - z1) / (z0 + z2);
-  nr_double_t f = 4 * z0 / sqr (z1 + z0) * celsius2kelvin (T) / T0;
+void isolator::calcNoiseSP (double) {
+  double T = getPropertyDouble ("Temp");
+  double z1 = getPropertyDouble ("Z1");
+  double z2 = getPropertyDouble ("Z2");
+  double r = (z0 - z1) / (z0 + z2);
+  double f = 4 * z0 / sqr (z1 + z0) * celsius2kelvin (T) / T0;
   setN (NODE_1, NODE_1, f * z1);
   setN (NODE_1, NODE_2, f * std::sqrt (z1 * z2) * r);
   setN (NODE_2, NODE_1, f * std::sqrt (z1 * z2) * r);
   setN (NODE_2, NODE_2, f * z2 * r * r);
 }
 
-void isolator::calcNoiseAC (nr_double_t) {
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t z1 = getPropertyDouble ("Z1");
-  nr_double_t z2 = getPropertyDouble ("Z2");
-  nr_double_t f = 4 * celsius2kelvin (T) / T0;
+void isolator::calcNoiseAC (double) {
+  double T = getPropertyDouble ("Temp");
+  double z1 = getPropertyDouble ("Z1");
+  double z2 = getPropertyDouble ("Z2");
+  double f = 4 * celsius2kelvin (T) / T0;
   setN (NODE_1, NODE_1, +f / z1);
   setN (NODE_1, NODE_2, 0);
   setN (NODE_2, NODE_1, -f * 2 / std::sqrt (z1 * z2));
@@ -66,10 +64,10 @@ void isolator::calcNoiseAC (nr_double_t) {
 }
 
 void isolator::initDC (void) {
-  nr_double_t z1 = getPropertyDouble ("Z1");
-  nr_double_t z2 = getPropertyDouble ("Z2");
+  double z1 = getPropertyDouble ("Z1");
+  double z2 = getPropertyDouble ("Z2");
 #if AUGMENTED
-  nr_double_t z21 = 2 * std::sqrt (z1 * z2);
+  double z21 = 2 * std::sqrt (z1 * z2);
   setVoltageSources (2);
   allocMatrixMNA ();
   setB (NODE_1, VSRC_1, +1.0); setB (NODE_1, VSRC_2, +0.0);

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "trafo.h"
 
@@ -31,11 +29,11 @@ trafo::trafo () : circuit (4) {
 }
 
 void trafo::initSP (void) {
-  nr_double_t  t = getPropertyDouble ("T");
-  nr_double_t  d = t * t + 1.0;
-  nr_double_t z1 = t * t / d;
-  nr_double_t z2 = t / d;
-  nr_double_t z3 = 1 / d;
+  double  t = getPropertyDouble ("T");
+  double  d = t * t + 1.0;
+  double z1 = t * t / d;
+  double z2 = t / d;
+  double z3 = 1 / d;
   allocMatrixS ();
   setS (NODE_1, NODE_1,  z1); setS (NODE_1, NODE_2,  z2);
   setS (NODE_1, NODE_3, -z2); setS (NODE_1, NODE_4,  z3);
@@ -55,7 +53,7 @@ void trafo::initDC (void) {
 }
 
 void trafo::initAC (void) {
-  nr_double_t t = getPropertyDouble ("T");
+  double t = getPropertyDouble ("T");
   setVoltageSources (1);
   allocMatrixMNA ();
   setB (NODE_1, VSRC_1, -1); setB (NODE_2, VSRC_1, +t);

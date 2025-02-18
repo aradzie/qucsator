@@ -20,9 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
-//#include <cstdlib>
 #include <cmath>
 #include <cassert>
 
@@ -39,7 +36,7 @@ namespace qucs {
     \param[in] z angle in radians
     \return cosine of z
 */
-nr_double_t cos (const nr_double_t arg) {
+double cos (const double arg) {
   return std::cos (arg);
 }
 
@@ -47,7 +44,7 @@ nr_double_t cos (const nr_double_t arg) {
     \param[in] z angle in radians
     \return sine of z
 */
-nr_double_t sin (const nr_double_t arg) {
+double sin (const double arg) {
   return std::sin (arg);
 }
 
@@ -55,7 +52,7 @@ nr_double_t sin (const nr_double_t arg) {
     \param[in] z angle in radians
     \return tangent of z
 */
-nr_double_t  tan (const nr_double_t arg) {
+double  tan (const double arg) {
   return std::tan (arg);
 }
 
@@ -63,7 +60,7 @@ nr_double_t  tan (const nr_double_t arg) {
     \param[in] z arc
     \return arc cosine of z
 */
-nr_double_t  acos (const nr_double_t arg) {
+double  acos (const double arg) {
   return std::acos (arg);
 }
 
@@ -71,7 +68,7 @@ nr_double_t  acos (const nr_double_t arg) {
     \param[in] z arc
     \return arc sine of z
 */
-nr_double_t  asin (const nr_double_t arg) {
+double  asin (const double arg) {
   return std::asin (arg);
 }
 
@@ -79,7 +76,7 @@ nr_double_t  asin (const nr_double_t arg) {
     \param[in] z arc
     \return arc tangent of z
 */
-nr_double_t  atan (const nr_double_t arg) {
+double  atan (const double arg) {
   return std::atan (arg);
 }
 
@@ -88,7 +85,7 @@ nr_double_t  atan (const nr_double_t arg) {
     \param[in] y proportion of y-coordinate
     \return principal value of the arc tangent of y/x, expressed in radians.
 */
-nr_double_t  atan2 (const nr_double_t x, const nr_double_t y) {
+double  atan2 (const double x, const double y) {
   return std::atan2 (x,y);
 }
 
@@ -100,7 +97,7 @@ nr_double_t  atan2 (const nr_double_t x, const nr_double_t y) {
     \param[in] z arc
     \return hyperbolic cosine of z
 */
-nr_double_t  cosh (const nr_double_t arg) {
+double  cosh (const double arg) {
   return std::cosh (arg);
 }
 
@@ -108,7 +105,7 @@ nr_double_t  cosh (const nr_double_t arg) {
     \param[in] z arc
     \return hyperbolic sine of z
 */
-nr_double_t  sinh (const nr_double_t arg) {
+double  sinh (const double arg) {
   return std::sinh (arg);
 }
 
@@ -116,7 +113,7 @@ nr_double_t  sinh (const nr_double_t arg) {
     \param[in] z arc
     \return hyperbolic tangent of z
 */
-nr_double_t  tanh (const nr_double_t arg) {
+double  tanh (const double arg) {
   return std::tanh (arg);
 }
 
@@ -124,7 +121,7 @@ nr_double_t  tanh (const nr_double_t arg) {
     \param[in] z arc
     \return arc hyperbolic cosine of z
 */
-nr_double_t  acosh (const nr_double_t arg) {
+double  acosh (const double arg) {
 #ifdef HAVE_STD_ACOSH
   // c++11
   return std::acosh (arg);
@@ -139,7 +136,7 @@ nr_double_t  acosh (const nr_double_t arg) {
     \param[in] z arc
     \return arc hyperbolic sine of z
 */
-nr_double_t asinh (const nr_double_t arg)
+double asinh (const double arg)
 {
 #ifdef HAVE_STD_ASINH
   // c++11
@@ -155,7 +152,7 @@ nr_double_t asinh (const nr_double_t arg)
     \param[in] z arc
     \return arc hyperbolic tangent of z
 */
-nr_double_t atanh (const nr_double_t arg)
+double atanh (const double arg)
 {
 #ifdef HAVE_STD_ATANH
   // c++11
@@ -171,13 +168,13 @@ nr_double_t atanh (const nr_double_t arg)
 //
 // exponential and logarithmic functions
 //
-nr_double_t exp (const nr_double_t arg) {
+double exp (const double arg) {
   return std::exp (arg);
 }
-nr_double_t log (const nr_double_t arg) {
+double log (const double arg) {
   return std::log (arg);
 }
-nr_double_t log10 (const nr_double_t arg) {
+double log10 (const double arg) {
   return std::log10 (arg);
 }
 
@@ -185,12 +182,12 @@ nr_double_t log10 (const nr_double_t arg) {
 // power functions
 //
 
-nr_double_t pow (const nr_double_t a, const nr_double_t b)
+double pow (const double a, const double b)
 {
   return std::pow (a,b);
 }
 
-nr_double_t sqrt (const nr_double_t d) {
+double sqrt (const double d) {
   return std::sqrt (d);
 }
 
@@ -205,20 +202,20 @@ nr_double_t sqrt (const nr_double_t d) {
    \param[in] b second length
    \return Euclidean distance from (0,0) to (a,b): \f$\sqrt{a^2+b^2}\f$
 */
-nr_double_t xhypot (const nr_double_t a, const nr_double_t b) {
+double xhypot (const double a, const double b) {
 #ifdef HAVE_STD_HYPOT
   return std::hypot(a,b) // c++11
 #else
-  nr_double_t c = fabs (a);
-  nr_double_t d = fabs (b);
+  double c = fabs (a);
+  double d = fabs (b);
   if (c > d) {
-    nr_double_t e = d / c;
+    double e = d / c;
     return c * sqrt (1 + e * e);
   }
   else if (d == 0)
     return 0;
   else {
-    nr_double_t e = c / d;
+    double e = c / d;
     return d * sqrt (1 + e * e);
   }
 #endif
@@ -228,7 +225,7 @@ nr_double_t xhypot (const nr_double_t a, const nr_double_t b) {
 // error functions
 //
 
-nr_double_t erf( nr_double_t arg) {
+double erf( double arg) {
 #ifdef HAVE_STD_ERF
   return std::erf (arg); // c++11
 #elif HAVE_ERF
@@ -240,15 +237,15 @@ nr_double_t erf( nr_double_t arg) {
 //
 // rounding and remainder functions
 //
-nr_double_t ceil( nr_double_t arg) {
+double ceil( double arg) {
   return std::ceil(arg);
 }
 
-nr_double_t floor( nr_double_t arg) {
+double floor( double arg) {
   return std::floor(arg);
 }
 
-nr_double_t fmod( nr_double_t arg) {
+double fmod( double arg) {
 #ifdef HAVE_STD_TRUNC
   return std::fmod(arg);
 #else
@@ -256,7 +253,7 @@ nr_double_t fmod( nr_double_t arg) {
 #endif
 }
 
-nr_double_t trunc( nr_double_t arg) {
+double trunc( double arg) {
 #ifdef HAVE_STD_TRUNC
   return std::trunc(arg);
 #elif HAVE_TRUNC
@@ -265,7 +262,7 @@ nr_double_t trunc( nr_double_t arg) {
   return arg > 0 ? floor (arg) : floor (arg + 1);
 #endif
 }
-nr_double_t round( nr_double_t arg) {
+double round( double arg) {
 #ifdef HAVE_STD_ROUND
   return std::round(arg);
 #elif HAVE_ROUND
@@ -279,15 +276,15 @@ nr_double_t round( nr_double_t arg) {
 //
 // Qucs extra trigonometric helper
 //
-nr_double_t coth (const nr_double_t d) {
+double coth (const double d) {
   return 1.0 / std::tanh (d);
 }
 
-nr_double_t sech (const nr_double_t d) {
+double sech (const double d) {
   return  (1.0 / std::cosh (d));
 }
 
-nr_double_t cosech (const nr_double_t d) {
+double cosech (const double d) {
   return  (1.0 / std::sinh (d));
 }
 
@@ -301,7 +298,7 @@ nr_double_t cosech (const nr_double_t d) {
    \param[in] r Real number
    \return \f$x^2\f$
 */
-nr_double_t  sqr (const nr_double_t r) {
+double  sqr (const double r) {
   return r * r;
 }
 
@@ -316,7 +313,7 @@ unsigned int sqr (unsigned int r) {
    \param[in] r Real number
    \return \f$x^4\f$
 */
-nr_double_t  quadr (const nr_double_t r) {
+double  quadr (const double r) {
   return r * r * r * r;
 }
 
@@ -342,7 +339,7 @@ nr_double_t  quadr (const nr_double_t r) {
    \todo Change limexp(real) limexp(complex) file order
    \todo Document #limitexp
 */
-nr_double_t limexp (const nr_double_t r) {
+double limexp (const double r) {
   return r < limitexp ? exp (r) : exp (limitexp) * (1.0 + (r - limitexp));
 }
 
@@ -360,7 +357,7 @@ nr_double_t limexp (const nr_double_t r) {
    \return signum of d
    \todo Move near complex signum
 */
-nr_double_t signum (const nr_double_t d) {
+double signum (const double d) {
   if (d == 0) return 0;
   return d < 0 ? -1 : 1;
 }
@@ -378,7 +375,7 @@ nr_double_t signum (const nr_double_t d) {
    \return sign of d
    \todo Move near complex sign
 */
-nr_double_t sign (const nr_double_t d) {
+double sign (const double d) {
   return d < 0 ? -1 : 1;
 }
 
@@ -389,7 +386,7 @@ nr_double_t sign (const nr_double_t d) {
    \return cardianal sinus of s
    \todo Why not inline
 */
-nr_double_t sinc (const nr_double_t d) {
+double sinc (const double d) {
   if (d == 0) return 1;
   return sin (d) / d;
 }
@@ -408,7 +405,7 @@ nr_double_t sinc (const nr_double_t d) {
     \return fixed complex number
     \todo Why not inline?
 */
-nr_double_t fix (const nr_double_t d) {
+double fix (const double d) {
   return (d > 0) ? floor (d) : ceil (d);
 }
 
@@ -421,8 +418,8 @@ nr_double_t fix (const nr_double_t d) {
    \return Heaviside step
    \todo Create Heaviside alias
 */
-nr_double_t step (const nr_double_t d) {
-  nr_double_t x = d;
+double step (const double d) {
+  double x = d;
   if (x < 0.0)
     x = 0.0;
   else if (x > 0.0)
@@ -462,7 +459,7 @@ factorial (unsigned int n) {
    \param[in] r Real number
    \return Real part of r ie r
 */
-nr_double_t real (const nr_double_t r) {
+double real (const double r) {
   return r;
 }
 
@@ -471,7 +468,7 @@ nr_double_t real (const nr_double_t r) {
    \param[in] r Real number
    \return Imaginary part of r
 */
-nr_double_t imag (const nr_double_t r) {
+double imag (const double r) {
   return 0.0;
 }
 
@@ -481,7 +478,7 @@ nr_double_t imag (const nr_double_t r) {
    \param[in] r Real number
    \return Euclidean norm of r
 */
-nr_double_t norm (const nr_double_t r) {
+double norm (const double r) {
   return r * r;
 }
 
@@ -490,7 +487,7 @@ nr_double_t norm (const nr_double_t r) {
    \param[in] r Real number
    \return Modulus of r
 */
-nr_double_t abs (const nr_double_t r) {
+double abs (const double r) {
   return std::abs (r);
 }
 
@@ -499,7 +496,7 @@ nr_double_t abs (const nr_double_t r) {
    \param[in] r Real number
    \return Conjugate of real r ie r
 */
-nr_double_t conj (const nr_double_t r) {
+double conj (const double r) {
   return r;
 }
 
@@ -508,7 +505,7 @@ nr_double_t conj (const nr_double_t r) {
  * \param x input
  * \return input in degree (x)*180/pi
  */
-nr_double_t rad2deg (const nr_double_t x) {
+double rad2deg (const double x) {
   return (180.0 * (x) / pi);
 }
 
@@ -517,7 +514,7 @@ nr_double_t rad2deg (const nr_double_t x) {
  * \param x input
  * \return input in radian (x)*pi/180
  */
-nr_double_t deg2rad (const nr_double_t x) {
+double deg2rad (const double x) {
   return (pi * (x) / 180.0);
 }
 

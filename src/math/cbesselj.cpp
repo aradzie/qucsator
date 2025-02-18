@@ -55,8 +55,6 @@
 */
 
 
-#include "config.h"
-
 #include <cassert>
 #include <cmath>
 #include <limits>
@@ -113,7 +111,7 @@ cbesselj_smallarg (unsigned int n, nr_complex_t z)
       return n > 0 ? 0.0 : 1;
     }
 
-  ak = ak / (nr_double_t) qucs::factorial (n);
+  ak = ak / (double) qucs::factorial (n);
 
   /* R_0 */
   R0 = ak * 1.0;
@@ -124,8 +122,8 @@ cbesselj_smallarg (unsigned int n, nr_complex_t z)
     {
       ak = -(z * z) / (4.0 * k * (n + k));
       Rk = ak * Rk;
-      if (fabs (real (Rk)) < fabs (real (R) * std::numeric_limits<nr_double_t>::epsilon()) &&
-	  fabs (imag (Rk)) < fabs (imag (R) * std::numeric_limits<nr_double_t>::epsilon()))
+      if (fabs (real (Rk)) < fabs (real (R) * std::numeric_limits<double>::epsilon()) &&
+	  fabs (imag (Rk)) < fabs (imag (R) * std::numeric_limits<double>::epsilon()))
 	return R;
 
       R += Rk;
@@ -144,8 +142,8 @@ cbesselj_mediumarg_odd (unsigned int n, nr_complex_t z)
 
   unsigned int m;
   unsigned int k;
-  nr_double_t t;
-  nr_double_t m1pna2;
+  double t;
+  double m1pna2;
 
   m = (2 * std::abs (z) + 0.25 * (n + std::abs (imag (z))));
 
@@ -160,7 +158,7 @@ cbesselj_mediumarg_odd (unsigned int n, nr_complex_t z)
       ak = cos (z * std::sin (t)) * std::cos (n * t);
       second += ak;
     }
-  return first + second / (nr_double_t) m;
+  return first + second / (double) m;
 }
 
 static nr_complex_t
@@ -171,8 +169,8 @@ cbesselj_mediumarg_even (unsigned int n, nr_complex_t z)
 
   unsigned int m;
   unsigned int k;
-  nr_double_t t;
-  nr_double_t m1pn1a2;
+  double t;
+  double m1pn1a2;
 
   m = (2 * std::abs (z) + 0.25 * (n + std::abs (imag (z))));
 
@@ -187,7 +185,7 @@ cbesselj_mediumarg_even (unsigned int n, nr_complex_t z)
       ak = std::sin (z * std::sin (t)) * std::sin (n * t);
       second += ak;
     }
-  return first + second / (nr_double_t) m;
+  return first + second / (double) m;
 }
 
 
@@ -217,7 +215,7 @@ cbesselj_largearg (unsigned int n, nr_complex_t z)
   unsigned long num, denum;
   nr_complex_t m1a8z2;
   unsigned int k;
-  nr_double_t l, m;
+  double l, m;
 
   /* P0 & Q0 */
   P0 = 1;
@@ -238,10 +236,10 @@ cbesselj_largearg (unsigned int n, nr_complex_t z)
 
       num = (4 * qucs::sqr (n) - qucs::sqr (4 * k - 3)) * (4 * qucs::sqr (n) - (4 * k - 1));
       denum = 2 * k * (2 * k - 1);
-      Pk = Pk * ((nr_double_t) num * m1a8z2) / ((nr_double_t) denum);
+      Pk = Pk * ((double) num * m1a8z2) / ((double) denum);
 
-      if (real (Pk) < real (P0) * std::numeric_limits<nr_double_t>::epsilon() &&
-	  imag (Pk) < imag (P0) * std::numeric_limits<nr_double_t>::epsilon())
+      if (real (Pk) < real (P0) * std::numeric_limits<double>::epsilon() &&
+	  imag (Pk) < imag (P0) * std::numeric_limits<double>::epsilon())
 	break;
 
       P += Pk;
@@ -255,10 +253,10 @@ cbesselj_largearg (unsigned int n, nr_complex_t z)
 
       num = (4 * qucs::sqr (n) - qucs::sqr (4 * k - 1)) * (4 * qucs::sqr (n) - (4 * k - 1));
       denum = 2 * k * (2 * k - 1);
-      Qk = Qk * ((nr_double_t) num * m1a8z2) / ((nr_double_t) denum);
+      Qk = Qk * ((double) num * m1a8z2) / ((double) denum);
 
-      if (real (Qk) < real (Q0) * std::numeric_limits<nr_double_t>::epsilon() ||
-	  imag (Qk) < imag (Q0) * std::numeric_limits<nr_double_t>::epsilon())
+      if (real (Qk) < real (Q0) * std::numeric_limits<double>::epsilon() ||
+	  imag (Qk) < imag (Q0) * std::numeric_limits<double>::epsilon())
 	break;
 
       Q_ += Qk;
@@ -280,7 +278,7 @@ cbesselj_largearg (unsigned int n, nr_complex_t z)
 nr_complex_t
 cbesselj (unsigned int n, nr_complex_t z)
 {
-  nr_double_t mul = 1.0;
+  double mul = 1.0;
   nr_complex_t ret;
 
   /* J_n(-z)=(-1)^n J_n(z) */

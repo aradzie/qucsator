@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "relais.h"
 
@@ -40,17 +38,17 @@ void relais::initSP (void) {
   setS (NODE_3, NODE_2, 2 / (r + 2));
 }
 
-void relais::calcNoiseSP (nr_double_t) {
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t f = celsius2kelvin (T) * 4.0 * r * z0 / qucs::sqr (2.0 * z0 + r) / T0;
+void relais::calcNoiseSP (double) {
+  double T = getPropertyDouble ("Temp");
+  double f = celsius2kelvin (T) * 4.0 * r * z0 / qucs::sqr (2.0 * z0 + r) / T0;
   setN (NODE_2, NODE_2, +f); setN (NODE_3, NODE_3, +f);
   setN (NODE_2, NODE_3, -f); setN (NODE_3, NODE_2, -f);
 }
 
-void relais::calcNoiseAC (nr_double_t) {
+void relais::calcNoiseAC (double) {
   if (r > 0.0 || r < 0.0) {
-    nr_double_t T = getPropertyDouble ("Temp");
-    nr_double_t f = celsius2kelvin (T) / T0 * 4.0 / r;
+    double T = getPropertyDouble ("Temp");
+    double f = celsius2kelvin (T) / T0 * 4.0 / r;
     setN (NODE_2, NODE_2, +f); setN (NODE_3, NODE_3, +f);
     setN (NODE_2, NODE_3, -f); setN (NODE_3, NODE_2, -f);
   }
@@ -69,13 +67,13 @@ void relais::initDC (void) {
 #define HYST_ON  3
 
 void relais::calcDC (void) {
-  nr_double_t vt   = getPropertyDouble ("Vt");
-  nr_double_t vh   = getPropertyDouble ("Vh");
-  nr_double_t von  = vt + vh;
-  nr_double_t voff = vt - vh;
-  nr_double_t ron  = getPropertyDouble ("Ron");
-  nr_double_t roff = getPropertyDouble ("Roff");
-  nr_double_t v = real (getV (NODE_1) - getV (NODE_4));
+  double vt   = getPropertyDouble ("Vt");
+  double vh   = getPropertyDouble ("Vh");
+  double von  = vt + vh;
+  double voff = vt - vh;
+  double ron  = getPropertyDouble ("Ron");
+  double roff = getPropertyDouble ("Roff");
+  double v = real (getV (NODE_1) - getV (NODE_4));
   if (state == REAL_OFF) {
     if (v >= von) {
       state = REAL_ON;
@@ -106,7 +104,7 @@ void relais::initTR (void) {
   initDC ();
 }
 
-void relais::calcTR (nr_double_t) {
+void relais::calcTR (double) {
   calcDC ();
 }
 

@@ -27,40 +27,40 @@ class msline : public qucs::circuit
  public:
   CREATOR (msline);
   void initDC (void);
-  void calcNoiseSP (nr_double_t);
-  void calcSP (nr_double_t);
-  void calcPropagation (nr_double_t);
+  void calcNoiseSP (double);
+  void calcSP (double);
+  void calcPropagation (double);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  void saveCharacteristics (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
+  void saveCharacteristics (double);
 
-  static void analyseQuasiStatic (nr_double_t, nr_double_t, nr_double_t,
-				  nr_double_t, const char * const,
-				  nr_double_t&, nr_double_t&, nr_double_t&);
-  static void analyseDispersion (nr_double_t, nr_double_t, nr_double_t,
-				 nr_double_t, nr_double_t, nr_double_t, const char * const,
-				 nr_double_t&, nr_double_t&);
-  static void Hammerstad_ab (nr_double_t, nr_double_t,
-			     nr_double_t&, nr_double_t&);
-  static void Hammerstad_er (nr_double_t, nr_double_t, nr_double_t,
-			     nr_double_t, nr_double_t&);
-  static void Hammerstad_zl (nr_double_t, nr_double_t&);
-  static void Getsinger_disp (nr_double_t, nr_double_t, nr_double_t,
-			      nr_double_t, nr_double_t,
-			      nr_double_t&, nr_double_t&);
-  static void Kirschning_er (nr_double_t, nr_double_t, nr_double_t,
-			     nr_double_t, nr_double_t&);
-  static void Kirschning_zl (nr_double_t, nr_double_t, nr_double_t,
-			     nr_double_t, nr_double_t, nr_double_t,
-			     nr_double_t&, nr_double_t&);
-  static void analyseLoss (nr_double_t, nr_double_t, nr_double_t, nr_double_t,
-			   nr_double_t, nr_double_t, nr_double_t, nr_double_t,
-			   nr_double_t, nr_double_t, const char *,
-			   nr_double_t&, nr_double_t&);
+  static void analyseQuasiStatic (double, double, double,
+				  double, const char * const,
+				  double&, double&, double&);
+  static void analyseDispersion (double, double, double,
+				 double, double, double, const char * const,
+				 double&, double&);
+  static void Hammerstad_ab (double, double,
+			     double&, double&);
+  static void Hammerstad_er (double, double, double,
+			     double, double&);
+  static void Hammerstad_zl (double, double&);
+  static void Getsinger_disp (double, double, double,
+			      double, double,
+			      double&, double&);
+  static void Kirschning_er (double, double, double,
+			     double, double&);
+  static void Kirschning_zl (double, double, double,
+			     double, double, double,
+			     double&, double&);
+  static void analyseLoss (double, double, double, double,
+			   double, double, double, double,
+			   double, double, const char *,
+			   double&, double&);
 
  private:
-  nr_double_t alpha, beta, zl, ereff;
+  double alpha, beta, zl, ereff;
 };
 
 #endif /* __MSLINE_H__ */

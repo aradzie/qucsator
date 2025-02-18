@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "pac.h"
 
@@ -31,50 +29,50 @@ pac::pac () : circuit (2) {
   setISource (true);
 }
 
-void pac::calcSP (nr_double_t) {
-  nr_double_t z = getPropertyDouble ("Z") / z0;
+void pac::calcSP (double) {
+  double z = getPropertyDouble ("Z") / z0;
   setS (NODE_1, NODE_1, z / (z + 2));
   setS (NODE_2, NODE_2, z / (z + 2));
   setS (NODE_1, NODE_2, 2 / (z + 2));
   setS (NODE_2, NODE_1, 2 / (z + 2));
 }
 
-void pac::calcNoiseSP (nr_double_t) {
-  nr_double_t r = getPropertyDouble ("Z");
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t f = celsius2kelvin (T) * 4.0 * r * z0 / qucs::sqr (2.0 * z0 + r) / T0;
+void pac::calcNoiseSP (double) {
+  double r = getPropertyDouble ("Z");
+  double T = getPropertyDouble ("Temp");
+  double f = celsius2kelvin (T) * 4.0 * r * z0 / qucs::sqr (2.0 * z0 + r) / T0;
   setN (NODE_1, NODE_1, +f); setN (NODE_2, NODE_2, +f);
   setN (NODE_1, NODE_2, -f); setN (NODE_2, NODE_1, -f);
 }
 
 void pac::calcDC (void) {
-  nr_double_t g = 1.0 / getPropertyDouble ("Z");
+  double g = 1.0 / getPropertyDouble ("Z");
   clearI ();
   setY (NODE_1, NODE_1, +g); setY (NODE_2, NODE_2, +g);
   setY (NODE_1, NODE_2, -g); setY (NODE_2, NODE_1, -g);
 }
 
-void pac::calcAC (nr_double_t) {
-  nr_double_t p = getPropertyDouble ("P");
-  nr_double_t r = getPropertyDouble ("Z");
-  nr_double_t i = std::sqrt (8 * p / r);
+void pac::calcAC (double) {
+  double p = getPropertyDouble ("P");
+  double r = getPropertyDouble ("Z");
+  double i = std::sqrt (8 * p / r);
   calcDC ();
   setI (NODE_1, +i); setI (NODE_2, -i);
 }
 
-void pac::calcNoiseAC (nr_double_t) {
-  nr_double_t r = getPropertyDouble ("Z");
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t f = celsius2kelvin (T) / T0 * 4.0 / r;
+void pac::calcNoiseAC (double) {
+  double r = getPropertyDouble ("Z");
+  double T = getPropertyDouble ("Temp");
+  double f = celsius2kelvin (T) / T0 * 4.0 / r;
   setN (NODE_1, NODE_1, +f); setN (NODE_2, NODE_2, +f);
   setN (NODE_1, NODE_2, -f); setN (NODE_2, NODE_1, -f);
 }
 
-void pac::calcTR (nr_double_t t) {
-  nr_double_t p = getPropertyDouble ("P");
-  nr_double_t r = getPropertyDouble ("Z");
-  nr_double_t f = getPropertyDouble ("f");
-  nr_double_t i = std::sqrt (8 * p / r) * std::sin (2 * pi * f * t);
+void pac::calcTR (double t) {
+  double p = getPropertyDouble ("P");
+  double r = getPropertyDouble ("Z");
+  double f = getPropertyDouble ("f");
+  double i = std::sqrt (8 * p / r) * std::sin (2 * pi * f * t);
   calcDC ();
   setI (NODE_1, +i); setI (NODE_2, -i);
 }
@@ -83,17 +81,17 @@ void pac::initHB (void) {
   setVoltageSources (1);
   allocMatrixMNA ();
   voltageSource (VSRC_1, NODE_1, NODE_2);
-  nr_double_t g = 1.0 / getPropertyDouble ("Z");
+  double g = 1.0 / getPropertyDouble ("Z");
   setY (NODE_1, NODE_1, +g); setY (NODE_2, NODE_2, +g);
   setY (NODE_1, NODE_2, -g); setY (NODE_2, NODE_1, -g);
 }
 
-void pac::calcHB (nr_double_t frequency) {
-  nr_double_t f = getPropertyDouble ("f");
+void pac::calcHB (double frequency) {
+  double f = getPropertyDouble ("f");
   if (f == frequency) {
-    nr_double_t p = getPropertyDouble ("P");
-    nr_double_t r = getPropertyDouble ("Z");
-    nr_double_t u = std::sqrt (4 * p * r);
+    double p = getPropertyDouble ("P");
+    double r = getPropertyDouble ("Z");
+    double u = std::sqrt (4 * p * r);
     setE (VSRC_1, u);
   }
   else {

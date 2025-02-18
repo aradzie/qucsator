@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vrect.h"
 
@@ -41,18 +39,18 @@ void vrect::initSP (void) {
 }
 
 void vrect::initDC (void) {
-  nr_double_t th = getPropertyDouble ("TH");
-  nr_double_t tl = getPropertyDouble ("TL");
-  nr_double_t tr = getPropertyDouble ("Tr");
-  nr_double_t tf = getPropertyDouble ("Tf");
+  double th = getPropertyDouble ("TH");
+  double tl = getPropertyDouble ("TL");
+  double tr = getPropertyDouble ("Tr");
+  double tf = getPropertyDouble ("Tf");
   if (tr > th) tr = th;
   if (tf > tl) tf = tl;
   // DC value defined as 0.0 instead of
   // (th + (tf - tr) / 2) / (th + tl) previously used
   // so that the transient starting value will also be 0,
   // otherwise a discontinuity occurs
-  nr_double_t a  = 0.0;
-  nr_double_t u  = getPropertyDouble ("U") * a;
+  double a  = 0.0;
+  double u  = getPropertyDouble ("U") * a;
   allocMatrixMNA ();
   voltageSource (VSRC_1, NODE_1, NODE_2, u);
 }
@@ -66,15 +64,15 @@ void vrect::initTR (void) {
   initDC ();
 }
 
-void vrect::calcTR (nr_double_t t) {
-  nr_double_t u  = getPropertyDouble ("U");
-  nr_double_t th = getPropertyDouble ("TH");
-  nr_double_t tl = getPropertyDouble ("TL");
-  nr_double_t tr = getPropertyDouble ("Tr");
-  nr_double_t tf = getPropertyDouble ("Tf");
-  nr_double_t td = getPropertyDouble ("Td");
-  nr_double_t ut = 0;
-  nr_double_t s  = getNet()->getSrcFactor ();
+void vrect::calcTR (double t) {
+  double u  = getPropertyDouble ("U");
+  double th = getPropertyDouble ("TH");
+  double tl = getPropertyDouble ("TL");
+  double tr = getPropertyDouble ("Tr");
+  double tf = getPropertyDouble ("Tf");
+  double td = getPropertyDouble ("Td");
+  double ut = 0;
+  double s  = getNet()->getSrcFactor ();
 
   if (tr > th) tr = th;
   if (tf > tl) tf = tl;

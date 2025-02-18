@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "irect.h"
 
@@ -40,14 +38,14 @@ void irect::initSP (void) {
 }
 
 void irect::initDC (void) {
-  nr_double_t th = getPropertyDouble ("TH");
-  nr_double_t tl = getPropertyDouble ("TL");
-  nr_double_t tr = getPropertyDouble ("Tr");
-  nr_double_t tf = getPropertyDouble ("Tf");
+  double th = getPropertyDouble ("TH");
+  double tl = getPropertyDouble ("TL");
+  double tr = getPropertyDouble ("Tr");
+  double tf = getPropertyDouble ("Tf");
   if (tr > th) tr = th;
   if (tf > tl) tf = tl;
-  nr_double_t a  = (th + (tf - tr) / 2) / (th + tl);
-  nr_double_t i  = getPropertyDouble ("I") * a;
+  double a  = (th + (tf - tr) / 2) / (th + tl);
+  double i  = getPropertyDouble ("I") * a;
   allocMatrixMNA ();
   setI (NODE_1, +i); setI (NODE_2, -i);
 }
@@ -61,15 +59,15 @@ void irect::initTR (void) {
   initDC ();
 }
 
-void irect::calcTR (nr_double_t t) {
-  nr_double_t i  = getPropertyDouble ("I");
-  nr_double_t th = getPropertyDouble ("TH");
-  nr_double_t tl = getPropertyDouble ("TL");
-  nr_double_t tr = getPropertyDouble ("Tr");
-  nr_double_t tf = getPropertyDouble ("Tf");
-  nr_double_t td = getPropertyDouble ("Td");
-  nr_double_t it = 0;
-  nr_double_t s  = getNet()->getSrcFactor ();
+void irect::calcTR (double t) {
+  double i  = getPropertyDouble ("I");
+  double th = getPropertyDouble ("TH");
+  double tl = getPropertyDouble ("TL");
+  double tr = getPropertyDouble ("Tr");
+  double tf = getPropertyDouble ("Tf");
+  double td = getPropertyDouble ("Td");
+  double it = 0;
+  double s  = getNet()->getSrcFactor ();
 
   if (tr > th) tr = th;
   if (tf > tl) tf = tl;

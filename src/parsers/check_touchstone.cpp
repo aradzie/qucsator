@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -89,7 +87,7 @@ static void touchstone_join (void) {
 static int touchstone_vector_check (void) {
   qucs::vector * root = touchstone_vector, * next;
   int even = 0, errors = 0, size = root->getSize (), noise = 0, lines = 1;
-  nr_double_t f = real (root->get (0));
+  double f = real (root->get (0));
 
   /* check size of first line */
   if ((size & 1) == 0) {
@@ -111,7 +109,7 @@ static int touchstone_vector_check (void) {
   /* go through each vector */
   for (root = (qucs::vector *) root->getNext (); root != NULL; root = next) {
     next = (qucs::vector *) root->getNext ();
-    nr_double_t freq = real (root->get (0));
+    double freq = real (root->get (0));
 
     /* check increasing frequency value */
     if (f >= freq) {
@@ -301,7 +299,7 @@ static void touchstone_create (void) {
       val = qucs::polar (real (root->get (2)), deg2rad (real (root->get (3))));
       if (ZREF != touchstone_options.resistance) {
 	// re-normalize reflexion coefficient if necessary
-	nr_double_t r = (ZREF - touchstone_options.resistance) /
+	double r = (ZREF - touchstone_options.resistance) /
 	  (ZREF + touchstone_options.resistance);
 	val = (val - r) / (1.0 - r * val);
       }

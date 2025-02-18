@@ -20,8 +20,6 @@
  */
 
 
-#include "config.h"
-
 #include "component.h"
 #include "capq.h"
 #include "iostream"
@@ -35,15 +33,15 @@ capq::capq () : circuit (2) {
   type = CIR_CAPQ;
 }
 
-void capq::calcYp (nr_double_t frequency) {
- nr_double_t C = getPropertyDouble ("C");
- nr_double_t Q = getPropertyDouble ("Q");
- nr_double_t f = getPropertyDouble ("f");
- nr_double_t Bc = 2.*pi*frequency*C;
- nr_double_t Gp = 0;
+void capq::calcYp (double frequency) {
+ double C = getPropertyDouble ("C");
+ double Q = getPropertyDouble ("Q");
+ double f = getPropertyDouble ("f");
+ double Bc = 2.*pi*frequency*C;
+ double Gp = 0;
  if ((f!=0) && (Q!=0) && (frequency!=0)) // Q=0 or f=0 can be used to force ideal behavior (no losses)
  {
-   nr_double_t Qf=Q;
+   double Qf=Q;
    if (!strcmp (getPropertyString ("Mode"), "Linear")) Qf*=frequency/f;
    if (!strcmp (getPropertyString ("Mode"), "SquareRoot"))Qf*=qucs::sqrt(frequency/f);
    Gp = Bc / Qf;
@@ -56,7 +54,7 @@ void capq::calcYp (nr_double_t frequency) {
 // Q = 1 / (2*pi*f*Rs*C) where Rs is the series resistance and C the capacitance or also
 // Q = 2*pi*f*C*Gp where Gp is the parallel conductance
 
-void capq::calcSP (nr_double_t frequency) {
+void capq::calcSP (double frequency) {
   calcYp(frequency);
   nr_complex_t y = 2.0 * z0 * Yp;
   setS (NODE_1, NODE_1, 1.0 / (1.0 + y));
@@ -65,9 +63,9 @@ void capq::calcSP (nr_double_t frequency) {
   setS (NODE_2, NODE_1, y / (1.0 + y));
 }
 
-void capq::calcNoiseSP (nr_double_t) {
+void capq::calcNoiseSP (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
@@ -90,7 +88,7 @@ void capq::initSP(void)
   allocMatrixS ();
 }
 
-void capq::calcAC (nr_double_t frequency) {
+void capq::calcAC (double frequency) {
  calcYp(frequency);
  nr_complex_t y11 = Yp;
  nr_complex_t y12 = -Yp;
@@ -100,9 +98,9 @@ void capq::calcAC (nr_double_t frequency) {
   setY (NODE_1, NODE_2, y12); setY (NODE_2, NODE_1, y21);
 }
 
-void capq::calcNoiseAC (nr_double_t) {
+void capq::calcNoiseAC (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

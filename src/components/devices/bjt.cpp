@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "device.h"
 #include "bjt.h"
@@ -40,28 +38,28 @@ bjt::bjt () : circuit (4) {
   type = CIR_BJT;
 }
 
-void bjt::calcSP (nr_double_t frequency) {
+void bjt::calcSP (double frequency) {
   // build admittance matrix and convert it to S-parameter matrix
   setMatrixS (ytos (calcMatrixY (frequency)));
 }
 
-matrix bjt::calcMatrixY (nr_double_t frequency) {
+matrix bjt::calcMatrixY (double frequency) {
 
   // fetch computed operating points
-  nr_double_t Cbe  = getOperatingPoint ("Cbe");
-  nr_double_t gbe  = getOperatingPoint ("gpi");
-  nr_double_t Cbci = getOperatingPoint ("Cbci");
-  nr_double_t gbc  = getOperatingPoint ("gmu");
-  nr_double_t Ccs  = getOperatingPoint ("Ccs");
+  double Cbe  = getOperatingPoint ("Cbe");
+  double gbe  = getOperatingPoint ("gpi");
+  double Cbci = getOperatingPoint ("Cbci");
+  double gbc  = getOperatingPoint ("gmu");
+  double Ccs  = getOperatingPoint ("Ccs");
 #if NEWSGP
-  nr_double_t gm   = getOperatingPoint ("gmf");
-  nr_double_t gmr  = getOperatingPoint ("gmr");
+  double gm   = getOperatingPoint ("gmf");
+  double gmr  = getOperatingPoint ("gmr");
 #else
-  nr_double_t gm   = getOperatingPoint ("gm");
-  nr_double_t go   = getOperatingPoint ("go");
+  double gm   = getOperatingPoint ("gm");
+  double go   = getOperatingPoint ("go");
 #endif
-  nr_double_t Ptf  = getPropertyDouble ("Ptf");
-  nr_double_t Tf   = getPropertyDouble ("Tf");
+  double Ptf  = getPropertyDouble ("Ptf");
+  double Tf   = getPropertyDouble ("Tf");
 
   // compute admittance matrix entries
   nr_complex_t Ybe = nr_complex_t (gbe, 2.0 * pi * frequency * Cbe);
@@ -72,7 +70,7 @@ matrix bjt::calcMatrixY (nr_double_t frequency) {
   nr_complex_t Ybebc = nr_complex_t (0.0, 2.0 * pi * frequency * dQbedUbc);
 
   // compute influence of excess phase
-  nr_double_t phase = deg2rad (Ptf) * Tf * 2 * pi * frequency;
+  double phase = deg2rad (Ptf) * Tf * 2 * pi * frequency;
 #if NEWSGP
   nr_complex_t gmf = qucs::polar (gm, -phase);
 #else
@@ -120,29 +118,29 @@ matrix bjt::calcMatrixY (nr_double_t frequency) {
   return y;
 }
 
-void bjt::calcNoiseSP (nr_double_t frequency) {
+void bjt::calcNoiseSP (double frequency) {
   setMatrixN (cytocs (calcMatrixCy (frequency) * z0, getMatrixS ()));
 }
 
-matrix bjt::calcMatrixCy (nr_double_t frequency) {
+matrix bjt::calcMatrixCy (double frequency) {
 
   // fetch computed operating points
-  nr_double_t Ibe = fabs (getOperatingPoint ("Ibe"));
-  nr_double_t Ice = fabs (getOperatingPoint ("Ice"));
+  double Ibe = fabs (getOperatingPoint ("Ibe"));
+  double Ice = fabs (getOperatingPoint ("Ice"));
 
   // get model properties
-  nr_double_t Kf  = getPropertyDouble ("Kf");
-  nr_double_t Af  = getPropertyDouble ("Af");
-  nr_double_t Ffe = getPropertyDouble ("Ffe");
-  nr_double_t Kb  = getPropertyDouble ("Kb");
-  nr_double_t Ab  = getPropertyDouble ("Ab");
-  nr_double_t Fb  = getPropertyDouble ("Fb");
+  double Kf  = getPropertyDouble ("Kf");
+  double Af  = getPropertyDouble ("Af");
+  double Ffe = getPropertyDouble ("Ffe");
+  double Kb  = getPropertyDouble ("Kb");
+  double Ab  = getPropertyDouble ("Ab");
+  double Fb  = getPropertyDouble ("Fb");
 
-  nr_double_t ib = 2 * Ibe * QoverkB / T0 +            // shot noise
+  double ib = 2 * Ibe * QoverkB / T0 +            // shot noise
     (Kf * qucs::pow (Ibe, Af) / qucs::pow (frequency, Ffe) +       // flicker noise
      Kb * qucs::pow (Ibe, Ab) / (1 + sqr (frequency / Fb)))  // burst noise
     / kB / T0;
-  nr_double_t ic = 2 * Ice * QoverkB / T0;             // shot noise
+  double ic = 2 * Ice * QoverkB / T0;             // shot noise
 
   /* build noise current correlation matrix and convert it to
      noise-wave correlation matrix */
@@ -159,25 +157,25 @@ matrix bjt::calcMatrixCy (nr_double_t frequency) {
 
 void bjt::initModel (void) {
   // fetch necessary device properties
-  nr_double_t T  = getPropertyDouble ("Temp");
-  nr_double_t Tn = getPropertyDouble ("Tnom");
-  nr_double_t A  = getPropertyDouble ("Area");
+  double T  = getPropertyDouble ("Temp");
+  double Tn = getPropertyDouble ("Tnom");
+  double A  = getPropertyDouble ("Area");
 
   // compute Is temperature and area dependency
-  nr_double_t Is  = getPropertyDouble ("Is");
-  nr_double_t Xti = getPropertyDouble ("Xti");
-  nr_double_t Eg  = getPropertyDouble ("Eg");
-  nr_double_t T1, T2, IsT;
+  double Is  = getPropertyDouble ("Is");
+  double Xti = getPropertyDouble ("Xti");
+  double Eg  = getPropertyDouble ("Eg");
+  double T1, T2, IsT;
   T2 = celsius2kelvin (T);
   T1 = celsius2kelvin (Tn);
   IsT = pnCurrent_T (T1, T2, Is, Eg, 1, Xti);
   setScaledProperty ("Is", IsT * A);
 
   // compute Vje, Vjc and Vjs temperature dependencies
-  nr_double_t Vje = getPropertyDouble ("Vje");
-  nr_double_t Vjc = getPropertyDouble ("Vjc");
-  nr_double_t Vjs = getPropertyDouble ("Vjs");
-  nr_double_t VjeT, VjcT, VjsT;
+  double Vje = getPropertyDouble ("Vje");
+  double Vjc = getPropertyDouble ("Vjc");
+  double Vjs = getPropertyDouble ("Vjs");
+  double VjeT, VjcT, VjsT;
   VjeT = pnPotential_T (T1,T2, Vje);
   VjcT = pnPotential_T (T1,T2, Vjc);
   VjsT = pnPotential_T (T1,T2, Vjs);
@@ -186,29 +184,29 @@ void bjt::initModel (void) {
   setScaledProperty ("Vjs", VjsT);
 
   // compute Bf and Br temperature dependencies
-  nr_double_t Bf  = getPropertyDouble ("Bf");
-  nr_double_t Br  = getPropertyDouble ("Br");
-  nr_double_t Xtb = getPropertyDouble ("Xtb");
-  nr_double_t F = qucs::exp (Xtb * qucs::log (T2 / T1));
+  double Bf  = getPropertyDouble ("Bf");
+  double Br  = getPropertyDouble ("Br");
+  double Xtb = getPropertyDouble ("Xtb");
+  double F = qucs::exp (Xtb * qucs::log (T2 / T1));
   setScaledProperty ("Bf", Bf * F);
   setScaledProperty ("Br", Br * F);
 
   // compute Ise and Isc temperature and area dependencies
-  nr_double_t Ise = getPropertyDouble ("Ise");
-  nr_double_t Isc = getPropertyDouble ("Isc");
-  nr_double_t Ne  = getPropertyDouble ("Ne");
-  nr_double_t Nc  = getPropertyDouble ("Nc");
-  nr_double_t G = qucs::log (IsT / Is);
-  nr_double_t F1 = qucs::exp (G / Ne);
-  nr_double_t F2 = qucs::exp (G / Nc);
+  double Ise = getPropertyDouble ("Ise");
+  double Isc = getPropertyDouble ("Isc");
+  double Ne  = getPropertyDouble ("Ne");
+  double Nc  = getPropertyDouble ("Nc");
+  double G = qucs::log (IsT / Is);
+  double F1 = qucs::exp (G / Ne);
+  double F2 = qucs::exp (G / Nc);
   Ise = Ise / F * F1;
   Isc = Isc / F * F2;
   setScaledProperty ("Ise", Ise * A);
   setScaledProperty ("Isc", Isc * A);
 
   // check unphysical parameters
-  nr_double_t Nf = getPropertyDouble ("Nf");
-  nr_double_t Nr = getPropertyDouble ("Nr");
+  double Nf = getPropertyDouble ("Nf");
+  double Nr = getPropertyDouble ("Nr");
   if (Nf < 1.0) {
     logprint (LOG_ERROR, "WARNING: Unphysical model parameter Nf = %g in "
 	      "BJT `%s'\n", Nf, getName ());
@@ -230,19 +228,19 @@ void bjt::initModel (void) {
    * which use negative values. Instead of failing, warn the user.
    * \todo Provide a way to silece such warnings
    */
-  nr_double_t Vtf = getPropertyDouble ("Vtf");
+  double Vtf = getPropertyDouble ("Vtf");
   if (Vtf < 0.0) {
     logprint (LOG_ERROR, "WARNING: Unphysical model parameter Vtf = %g in "
 	      "BJT `%s'\n", Vtf, getName ());
   }
 
   // compute Cje, Cjc and Cjs temperature and area dependencies
-  nr_double_t Cje = getPropertyDouble ("Cje");
-  nr_double_t Cjc = getPropertyDouble ("Cjc");
-  nr_double_t Cjs = getPropertyDouble ("Cjs");
-  nr_double_t Mje = getPropertyDouble ("Mje");
-  nr_double_t Mjc = getPropertyDouble ("Mjc");
-  nr_double_t Mjs = getPropertyDouble ("Mjs");
+  double Cje = getPropertyDouble ("Cje");
+  double Cjc = getPropertyDouble ("Cjc");
+  double Cjs = getPropertyDouble ("Cjs");
+  double Mje = getPropertyDouble ("Mje");
+  double Mjc = getPropertyDouble ("Mjc");
+  double Mjs = getPropertyDouble ("Mjs");
   Cje = pnCapacitance_T (T1, T2, Mje, VjeT / Vje, Cje);
   Cjc = pnCapacitance_T (T1, T2, Mjc, VjcT / Vjc, Cjc);
   Cjs = pnCapacitance_T (T1, T2, Mjs, VjsT / Vjs, Cjs);
@@ -251,20 +249,20 @@ void bjt::initModel (void) {
   setScaledProperty ("Cjs", Cjs * A);
 
   // compute Rb, Rc, Re and Rbm area dependencies
-  nr_double_t Rb  = getPropertyDouble ("Rb");
-  nr_double_t Re  = getPropertyDouble ("Re");
-  nr_double_t Rc  = getPropertyDouble ("Rc");
-  nr_double_t Rbm = getPropertyDouble ("Rbm");
+  double Rb  = getPropertyDouble ("Rb");
+  double Re  = getPropertyDouble ("Re");
+  double Rc  = getPropertyDouble ("Rc");
+  double Rbm = getPropertyDouble ("Rbm");
   setScaledProperty ("Rb", Rb / A);
   setScaledProperty ("Re", Re / A);
   setScaledProperty ("Rc", Rc / A);
   setScaledProperty ("Rbm", Rbm / A);
 
   // compute Ikf, Ikr, Irb and Itf area dependencies
-  nr_double_t Ikf = getPropertyDouble ("Ikf");
-  nr_double_t Ikr = getPropertyDouble ("Ikr");
-  nr_double_t Irb = getPropertyDouble ("Irb");
-  nr_double_t Itf = getPropertyDouble ("Itf");
+  double Ikf = getPropertyDouble ("Ikf");
+  double Ikr = getPropertyDouble ("Ikr");
+  double Irb = getPropertyDouble ("Irb");
+  double Itf = getPropertyDouble ("Itf");
   setScaledProperty ("Ikf", Ikf * A);
   setScaledProperty ("Ikr", Ikr * A);
   setScaledProperty ("Irb", Irb * A);
@@ -287,7 +285,7 @@ void bjt::initDC (void) {
   pol = !strcmp (type, "pnp") ? -1 : 1;
 
   // get simulation temperature
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
 
   // initialize starting values
   restartDC ();
@@ -298,7 +296,7 @@ void bjt::initDC (void) {
   }
 
   // possibly insert series resistance at emitter
-  nr_double_t Re = getScaledProperty ("Re");
+  double Re = getScaledProperty ("Re");
   if (Re != 0.0) {
     // create additional circuit if necessary and reassign nodes
     re = splitResistor (this, re, "Re", "emitter", NODE_E);
@@ -313,7 +311,7 @@ void bjt::initDC (void) {
   }
 
   // possibly insert series resistance at collector
-  nr_double_t Rc = getScaledProperty ("Rc");
+  double Rc = getScaledProperty ("Rc");
   if (Rc != 0.0) {
     // create additional circuit if necessary and reassign nodes
     rc = splitResistor (this, rc, "Rc", "collector", NODE_C);
@@ -328,8 +326,8 @@ void bjt::initDC (void) {
   }
 
   // possibly insert base series resistance
-  nr_double_t Rb  = getScaledProperty ("Rb");
-  nr_double_t Rbm = getScaledProperty ("Rbm");
+  double Rb  = getScaledProperty ("Rb");
+  double Rbm = getScaledProperty ("Rbm");
   if (Rbm <= 0.0) Rbm = Rb; // Rbm defaults to Rb if zero
   if (Rb < Rbm)   Rbm = Rb; // Rbm must be less or equal Rb
   setScaledProperty ("Rbm", Rbm);
@@ -360,28 +358,28 @@ void bjt::restartDC (void) {
 void bjt::calcDC (void) {
 
   // fetch device model parameters
-  nr_double_t Is   = getScaledProperty ("Is");
-  nr_double_t Nf   = getPropertyDouble ("Nf");
-  nr_double_t Nr   = getPropertyDouble ("Nr");
-  nr_double_t Vaf  = getPropertyDouble ("Vaf");
-  nr_double_t Var  = getPropertyDouble ("Var");
-  nr_double_t Ikf  = getScaledProperty ("Ikf");
-  nr_double_t Ikr  = getScaledProperty ("Ikr");
-  nr_double_t Bf   = getScaledProperty ("Bf");
-  nr_double_t Br   = getScaledProperty ("Br");
-  nr_double_t Ise  = getScaledProperty ("Ise");
-  nr_double_t Isc  = getScaledProperty ("Isc");
-  nr_double_t Ne   = getPropertyDouble ("Ne");
-  nr_double_t Nc   = getPropertyDouble ("Nc");
-  nr_double_t Rb   = getScaledProperty ("Rb");
-  nr_double_t Rbm  = getScaledProperty ("Rbm");
-  nr_double_t Irb  = getScaledProperty ("Irb");
-  nr_double_t T    = getPropertyDouble ("Temp");
+  double Is   = getScaledProperty ("Is");
+  double Nf   = getPropertyDouble ("Nf");
+  double Nr   = getPropertyDouble ("Nr");
+  double Vaf  = getPropertyDouble ("Vaf");
+  double Var  = getPropertyDouble ("Var");
+  double Ikf  = getScaledProperty ("Ikf");
+  double Ikr  = getScaledProperty ("Ikr");
+  double Bf   = getScaledProperty ("Bf");
+  double Br   = getScaledProperty ("Br");
+  double Ise  = getScaledProperty ("Ise");
+  double Isc  = getScaledProperty ("Isc");
+  double Ne   = getPropertyDouble ("Ne");
+  double Nc   = getPropertyDouble ("Nc");
+  double Rb   = getScaledProperty ("Rb");
+  double Rbm  = getScaledProperty ("Rbm");
+  double Irb  = getScaledProperty ("Irb");
+  double T    = getPropertyDouble ("Temp");
 
-  nr_double_t Ut, Q1, Q2;
-  nr_double_t Iben, Ibcn, Ibei, Ibci, Ibc, gbe, gbc, gtiny;
-  nr_double_t IeqB, IeqC, IeqE, IeqS, UbeCrit, UbcCrit;
-  nr_double_t gm, go;
+  double Ut, Q1, Q2;
+  double Iben, Ibcn, Ibei, Ibci, Ibc, gbe, gbc, gtiny;
+  double IeqB, IeqC, IeqE, IeqS, UbeCrit, UbcCrit;
+  double gm, go;
 
   // interpret zero as infinity for these model parameters
   Ikf = Ikf > 0 ? 1.0 / Ikf : 0;
@@ -449,8 +447,8 @@ void bjt::calcDC (void) {
   // compute base charge quantities
   Q1 = 1 / (1 - Ubc * Vaf - Ube * Var);
   Q2 = If * Ikf + Ir * Ikr;
-  nr_double_t SArg = 1.0 + 4.0 * Q2;
-  nr_double_t Sqrt = SArg > 0 ? qucs::sqrt (SArg) : 1;
+  double SArg = 1.0 + 4.0 * Q2;
+  double Sqrt = SArg > 0 ? qucs::sqrt (SArg) : 1;
   Qb = Q1 * (1 + Sqrt) / 2;
   dQbdUbe = Q1 * (Qb * Var + gif * Ikf / Sqrt);
   dQbdUbc = Q1 * (Qb * Vaf + gir * Ikr / Sqrt);
@@ -458,8 +456,8 @@ void bjt::calcDC (void) {
   // If and gif will be later used also for the capacitance/charge calculations
   // Values computed from the excess phase routine should be used only
   //   for computing the companion model current and conductance
-  nr_double_t Ifx = If;
-  nr_double_t gifx = gif;
+  double Ifx = If;
+  double gifx = gif;
   // during transient analysis only
   if (doTR) {
     // calculate excess phase influence
@@ -484,7 +482,7 @@ void bjt::calcDC (void) {
   // calculate current-dependent base resistance
   if (Rbm != 0.0) {
     if (Irb != 0.0) {
-      nr_double_t a, b, z;
+      double a, b, z;
       a = (Ibci + Ibcn + Ibei + Iben) / Irb;
       a = std::max (a, NR_TINY); // enforce positive values
       z = (qucs::sqrt (1 + 144 / sqr (pi) * a) - 1) / 24 * sqr (pi) / qucs::sqrt (a);
@@ -551,7 +549,7 @@ void bjt::calcDC (void) {
 }
 
 void bjt::saveOperatingPoints (void) {
-  nr_double_t Vbe, Vbc;
+  double Vbe, Vbc;
   Vbe = real (getV (NODE_B) - getV (NODE_E)) * pol;
   Vbc = real (getV (NODE_B) - getV (NODE_C)) * pol;
   Ucs = real (getV (NODE_S) - getV (NODE_C)) * pol;
@@ -575,24 +573,24 @@ void bjt::loadOperatingPoints (void) {
 void bjt::calcOperatingPoints (void) {
 
   // fetch device model parameters
-  nr_double_t Cje0 = getScaledProperty ("Cje");
-  nr_double_t Vje  = getScaledProperty ("Vje");
-  nr_double_t Mje  = getPropertyDouble ("Mje");
-  nr_double_t Cjc0 = getScaledProperty ("Cjc");
-  nr_double_t Vjc  = getScaledProperty ("Vjc");
-  nr_double_t Mjc  = getPropertyDouble ("Mjc");
-  nr_double_t Xcjc = getPropertyDouble ("Xcjc");
-  nr_double_t Cjs0 = getScaledProperty ("Cjs");
-  nr_double_t Vjs  = getScaledProperty ("Vjs");
-  nr_double_t Mjs  = getPropertyDouble ("Mjs");
-  nr_double_t Fc   = getPropertyDouble ("Fc");
-  nr_double_t Vtf  = getPropertyDouble ("Vtf");
-  nr_double_t Tf   = getPropertyDouble ("Tf");
-  nr_double_t Xtf  = getPropertyDouble ("Xtf");
-  nr_double_t Itf  = getScaledProperty ("Itf");
-  nr_double_t Tr   = getPropertyDouble ("Tr");
+  double Cje0 = getScaledProperty ("Cje");
+  double Vje  = getScaledProperty ("Vje");
+  double Mje  = getPropertyDouble ("Mje");
+  double Cjc0 = getScaledProperty ("Cjc");
+  double Vjc  = getScaledProperty ("Vjc");
+  double Mjc  = getPropertyDouble ("Mjc");
+  double Xcjc = getPropertyDouble ("Xcjc");
+  double Cjs0 = getScaledProperty ("Cjs");
+  double Vjs  = getScaledProperty ("Vjs");
+  double Mjs  = getPropertyDouble ("Mjs");
+  double Fc   = getPropertyDouble ("Fc");
+  double Vtf  = getPropertyDouble ("Vtf");
+  double Tf   = getPropertyDouble ("Tf");
+  double Xtf  = getPropertyDouble ("Xtf");
+  double Itf  = getScaledProperty ("Itf");
+  double Tr   = getPropertyDouble ("Tr");
 
-  nr_double_t Cbe, Cbci, Cbcx, Ccs;
+  double Cbe, Cbci, Cbcx, Ccs;
 
   // interpret zero as infinity for that model parameter
   Vtf = Vtf > 0 ? 1.0 / Vtf : 0;
@@ -603,7 +601,7 @@ void bjt::calcOperatingPoints (void) {
 
   // diffusion capacitance of base-emitter diode
   if (If != 0.0) {
-    nr_double_t e, Tff, dTffdUbe, dTffdUbc, a;
+    double e, Tff, dTffdUbe, dTffdUbc, a;
     a = 1 / (1 + Itf / If);
     e = 2 * qucs::exp (std::min (Ubc * Vtf, 709.0));
     Tff = Tf * (1 + Xtf * sqr (a) * e);
@@ -650,9 +648,9 @@ void bjt::initSP (void) {
 }
 
 void bjt::processCbcx (void) {
-  nr_double_t Xcjc = getPropertyDouble ("Xcjc");
-  nr_double_t Rbm  = getScaledProperty ("Rbm");
-  nr_double_t Cjc0 = getScaledProperty ("Cjc");
+  double Xcjc = getPropertyDouble ("Xcjc");
+  double Rbm  = getScaledProperty ("Rbm");
+  double Cjc0 = getScaledProperty ("Cjc");
 
   /* if necessary then insert external capacitance between internal
      collector node and external base node */
@@ -677,11 +675,11 @@ void bjt::initAC (void) {
   }
 }
 
-void bjt::calcAC (nr_double_t frequency) {
+void bjt::calcAC (double frequency) {
   setMatrixY (calcMatrixY (frequency));
 }
 
-void bjt::calcNoiseAC (nr_double_t frequency) {
+void bjt::calcNoiseAC (double frequency) {
   setMatrixN (calcMatrixCy (frequency));
 }
 
@@ -708,16 +706,16 @@ void bjt::initTR (void) {
   }
 }
 
-void bjt::calcTR (nr_double_t t) {
+void bjt::calcTR (double t) {
   calcDC ();
   saveOperatingPoints ();
   loadOperatingPoints ();
   calcOperatingPoints ();
 
-  nr_double_t Cbe  = getOperatingPoint ("Cbe");
-  nr_double_t Ccs  = getOperatingPoint ("Ccs");
-  nr_double_t Cbci = getOperatingPoint ("Cbci");
-  nr_double_t Cbcx = getOperatingPoint ("Cbcx");
+  double Cbe  = getOperatingPoint ("Cbe");
+  double Ccs  = getOperatingPoint ("Ccs");
+  double Cbci = getOperatingPoint ("Cbci");
+  double Cbcx = getOperatingPoint ("Cbcx");
 
   // handle Rbb and Cbcx appropriately
   if (Rbb != 0.0) {
@@ -739,12 +737,12 @@ void bjt::calcTR (nr_double_t t) {
   transientCapacitanceC (NODE_B, NODE_E, NODE_B, NODE_C, dQbedUbc, Ubc);
 }
 
-void bjt::excessPhase (int istate, nr_double_t& i, nr_double_t& g) {
+void bjt::excessPhase (int istate, double& i, double& g) {
 
   // fetch device properties
-  nr_double_t Ptf = getPropertyDouble ("Ptf");
-  nr_double_t Tf = getPropertyDouble ("Tf");
-  nr_double_t td = deg2rad (Ptf) * Tf;
+  double Ptf = getPropertyDouble ("Ptf");
+  double Tf = getPropertyDouble ("Tf");
+  double td = deg2rad (Ptf) * Tf;
 
   // return if nothing todo
   if (td == 0.0) return;
@@ -753,8 +751,8 @@ void bjt::excessPhase (int istate, nr_double_t& i, nr_double_t& g) {
   if (getMode () & MODE_INIT) fillState (istate, i);
 
   // calculate current coefficients C1, C2 and C3
-  nr_double_t * delta = getDelta ();
-  nr_double_t c3, c2, c1, dn, ra;
+  double * delta = getDelta ();
+  double c3, c2, c1, dn, ra;
   c1 = delta[0] / td;
   c2 = 3 * c1;
   c1 = c2 * c1;

@@ -32,10 +32,10 @@ class spdeembed : public spfile, public qucs::circuit
   CREATOR(spdeembed);
 
   void initSP (void);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
 };
 
 #endif /* SPDEEMBED_H */

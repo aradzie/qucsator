@@ -30,12 +30,12 @@ class eqndefined : public qucs::circuit
   void initDC (void);
   void calcDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void saveOperatingPoints (void);
   void initSP (void);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
   void initHB (int);
   void calcHB (int);
 
@@ -43,9 +43,9 @@ class eqndefined : public qucs::circuit
   void initModel (void);
   char * createVariable (const char *, int, int, bool prefix = true);
   char * createVariable (const char *, int, bool prefix = true);
-  void setResult (void *, nr_double_t);
-  nr_double_t getResult (void *);
-  qucs::matrix calcMatrixY (nr_double_t);
+  void setResult (void *, double);
+  double getResult (void *);
+  qucs::matrix calcMatrixY (double);
   void evalOperatingPoints (void);
   void updateLocals (void);
 
@@ -55,9 +55,9 @@ class eqndefined : public qucs::circuit
   void ** geqn;
   void ** qeqn;
   void ** ceqn;
-  nr_double_t * _jstat;
-  nr_double_t * _jdyna;
-  nr_double_t * _charges;
+  double * _jstat;
+  double * _jdyna;
+  double * _charges;
   bool doHB;
 };
 

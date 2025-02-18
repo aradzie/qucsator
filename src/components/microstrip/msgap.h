@@ -27,10 +27,10 @@ class msgap : public qucs::circuit
 {
  public:
   CREATOR (msgap);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
-  void calcAC (nr_double_t);
-  qucs::matrix calcMatrixY (nr_double_t);
+  void calcAC (double);
+  qucs::matrix calcMatrixY (double);
 };
 
 #endif /* __MSGAP_H__ */

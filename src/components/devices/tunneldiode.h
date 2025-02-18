@@ -26,24 +26,24 @@ class tunneldiode : public qucs::circuit
 {
  public:
   CREATOR (tunneldiode);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void calcDC (void);
   void saveOperatingPoints (void);
   void loadOperatingPoints (void);
   void calcOperatingPoints (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 
  private:
-  nr_double_t Ud, gd, Id, Qd;
+  double Ud, gd, Id, Qd;
 
  private:
-  qucs::matrix calcMatrixY (nr_double_t);
+  qucs::matrix calcMatrixY (double);
 
-  void calcId (nr_double_t, nr_double_t&, nr_double_t&);
+  void calcId (double, double&, double&);
 };
 
 #endif /* __TUNNELDIODE_H__ */

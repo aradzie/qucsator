@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,7 +31,7 @@
 #include "fourier.h"
 
 // Helper macro.
-#define Swap(a,b) { nr_double_t t; t = a; a = b; b = t; }
+#define Swap(a,b) { double t; t = a; a = b; b = t; }
 
 namespace qucs {
 
@@ -42,7 +40,7 @@ using namespace fourier;
 /* The function performs a 1-dimensional fast fourier transformation.
    Each data item is meant to be defined in equidistant steps.  The
    number of data items needs to be of binary size, e.g. 64, 128. */
-void fourier::_fft_1d (nr_double_t * data, int len, int isign) {
+void fourier::_fft_1d (double * data, int len, int isign) {
 
   // bit reversal method
   int i, j, m, n;
@@ -63,7 +61,7 @@ void fourier::_fft_1d (nr_double_t * data, int len, int isign) {
 
   // Danielson-Lanzcos algorithm
   int mmax, istep;
-  nr_double_t wt, th, wr, wi, wpr, wpi, ti, tr;
+  double wt, th, wr, wi, wpr, wpi, ti, tr;
   mmax = 2;
   while (n > mmax) {
     istep = mmax << 1;
@@ -92,9 +90,9 @@ void fourier::_fft_1d (nr_double_t * data, int len, int isign) {
 
 /* The function transforms two real vectors using a single fast
    fourier transformation step.  The routine works in place. */
-void fourier::_fft_1d_2r (nr_double_t * r1, nr_double_t * r2, int len) {
+void fourier::_fft_1d_2r (double * r1, double * r2, int len) {
   int n3, n2, j;
-  nr_double_t rep, rem, aip, aim;
+  double rep, rem, aip, aim;
   n3 = 1 + (n2 = len + len);
 
   // put the two real vectors into one complex vector
@@ -127,8 +125,8 @@ void fourier::_fft_1d_2r (nr_double_t * r1, nr_double_t * r2, int len) {
 /* The following function transforms two vectors yielding real valued
    vectors using a single inverse fast fourier transformation step.
    The routine works in place as well. */
-void fourier::_ifft_1d_2r (nr_double_t * r1, nr_double_t * r2, int len) {
-  nr_double_t r, i;
+void fourier::_ifft_1d_2r (double * r1, double * r2, int len) {
+  double r, i;
   int j, jj, nn = len + len;
 
   // put the two complex vectors into one complex vector
@@ -161,8 +159,8 @@ vector fourier::fft_1d (vector var, int isign) {
   while (size < len) size <<= 1;
 
   // put data items (temporary array) in place
-  nr_double_t * data;
-  data = (nr_double_t *) calloc (2 * size * sizeof (nr_double_t), 1);
+  double * data;
+  data = (double *) calloc (2 * size * sizeof (double), 1);
   for (n = i = 0; i < len; i++, n += 2) {
     data[n] = real (var (i)); data[n+1] = imag (var (i));
   }
@@ -185,10 +183,10 @@ vector fourier::fft_1d (vector var, int isign) {
 /* The function performs a 1-dimensional discrete fourier
    transformation.  Each data item is meant to be defined in
    equidistant steps. */
-void fourier::_dft_1d (nr_double_t * data, int len, int isign) {
-  int k, n, size = 2 * len * sizeof (nr_double_t);
-  nr_double_t * res = (nr_double_t *) calloc (size, 1);
-  nr_double_t th, c, s;
+void fourier::_dft_1d (double * data, int len, int isign) {
+  int k, n, size = 2 * len * sizeof (double);
+  double * res = (double *) calloc (size, 1);
+  double th, c, s;
   for (n = 0; n < 2 * len; n += 2) {
     th = n * pi / 2 / len;
     for (k = 0; k < 2 * len; k += 2) {
@@ -209,11 +207,11 @@ vector fourier::dft_1d (vector var, int isign) {
   int k, n, len = var.getSize ();
   vector res = vector (len);
   for (n = 0; n < len; n++) {
-    nr_double_t th = - isign * 2 * pi * n / len;
+    double th = - isign * 2 * pi * n / len;
     nr_complex_t val = 0;
     for (k = 0; k < len; k++)
       val += var (k) * std::polar (1.0, th * k);
-    res (n) = isign < 0 ? val / (nr_double_t) len : val;
+    res (n) = isign < 0 ? val / (double) len : val;
   }
   return res;
 }
@@ -225,10 +223,10 @@ vector fourier::ifft_1d (vector var) {
 vector fourier::idft_1d (vector var) {
   return dft_1d (var, -1);
 }
-void fourier::_ifft_1d (nr_double_t * data, int len) {
+void fourier::_ifft_1d (double * data, int len) {
   _fft_1d (data, len, -1);
 }
-void fourier::_idft_1d (nr_double_t * data, int len) {
+void fourier::_idft_1d (double * data, int len) {
   _dft_1d (data, len, -1);
 }
 
@@ -236,7 +234,7 @@ void fourier::_idft_1d (nr_double_t * data, int len) {
    Each data item is meant to be defined in equidistant steps.  The
    number of data items needs to be of binary size, e.g. 64, 128 for
    each dimension. */
-void fourier::_fft_nd (nr_double_t * data, int len[], int nd, int isign) {
+void fourier::_fft_nd (double * data, int len[], int nd, int isign) {
 
  int i, i1, i2, i3, i2rev, i3rev, ip1, ip2, ip3, ifp1, ifp2;
  int ibit, k1, k2, n, np, nr, nt;
@@ -272,7 +270,7 @@ void fourier::_fft_nd (nr_double_t * data, int len[], int nd, int isign) {
    }
 
    // Danielson-Lanzcos algorithm
-   nr_double_t ti, tr, wt, th, wr, wi, wpi, wpr;
+   double ti, tr, wt, th, wr, wi, wpi, wpr;
    ifp1 = ip1;
    while (ifp1 < ip2) {
      ifp2 = ifp1 << 1;
@@ -305,7 +303,7 @@ void fourier::_fft_nd (nr_double_t * data, int len[], int nd, int isign) {
 }
 
 // Helper functions.
-void fourier::_ifft_nd (nr_double_t * data, int len[], int nd) {
+void fourier::_ifft_nd (double * data, int len[], int nd) {
   _fft_nd (data, len, nd, -1);
 }
 

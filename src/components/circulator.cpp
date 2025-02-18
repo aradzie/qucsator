@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "circulator.h"
 
@@ -31,14 +29,14 @@ circulator::circulator () : circuit (3) {
   setVoltageSources (3);
 }
 
-void circulator::calcSP (nr_double_t) {
-  nr_double_t z1 = getPropertyDouble ("Z1");
-  nr_double_t z2 = getPropertyDouble ("Z2");
-  nr_double_t z3 = getPropertyDouble ("Z3");
-  nr_double_t r1 = (z0 - z1) / (z0 + z1);
-  nr_double_t r2 = (z0 - z2) / (z0 + z2);
-  nr_double_t r3 = (z0 - z3) / (z0 + z3);
-  nr_double_t d  = 1 - r1 * r2 * r3;
+void circulator::calcSP (double) {
+  double z1 = getPropertyDouble ("Z1");
+  double z2 = getPropertyDouble ("Z2");
+  double z3 = getPropertyDouble ("Z3");
+  double r1 = (z0 - z1) / (z0 + z1);
+  double r2 = (z0 - z2) / (z0 + z2);
+  double r3 = (z0 - z3) / (z0 + z3);
+  double d  = 1 - r1 * r2 * r3;
   setS (NODE_1, NODE_1, (r2 * r3 - r1) / d);
   setS (NODE_2, NODE_2, (r1 * r3 - r2) / d);
   setS (NODE_3, NODE_3, (r1 * r2 - r3) / d);
@@ -57,23 +55,23 @@ void circulator::calcSP (nr_double_t) {
 }
 
 void circulator::initDC (void) {
-  nr_double_t z1 = getPropertyDouble ("Z1");
-  nr_double_t z2 = getPropertyDouble ("Z2");
-  nr_double_t z3 = getPropertyDouble ("Z3");
-  nr_double_t r1 = (z0 - z1) / (z0 + z1);
-  nr_double_t r2 = (z0 - z2) / (z0 + z2);
-  nr_double_t r3 = (z0 - z3) / (z0 + z3);
-  nr_double_t d  = 1 - r1 * r2 * r3;
+  double z1 = getPropertyDouble ("Z1");
+  double z2 = getPropertyDouble ("Z2");
+  double z3 = getPropertyDouble ("Z3");
+  double r1 = (z0 - z1) / (z0 + z1);
+  double r2 = (z0 - z2) / (z0 + z2);
+  double r3 = (z0 - z3) / (z0 + z3);
+  double d  = 1 - r1 * r2 * r3;
 
-  nr_double_t s11 = (r2 * r3 - r1) / d;
-  nr_double_t s22 = (r1 * r3 - r2) / d;
-  nr_double_t s33 = (r1 * r2 - r3) / d;
-  nr_double_t s12 = std::sqrt (z2/z1) * (z1+z0) / (z2+z0) * r3 * (1-r1*r1) / d;
-  nr_double_t s23 = std::sqrt (z3/z2) * (z2+z0) / (z3+z0) * r1 * (1-r2*r2) / d;
-  nr_double_t s31 = std::sqrt (z1/z3) * (z3+z0) / (z1+z0) * r2 * (1-r3*r3) / d;
-  nr_double_t s21 = std::sqrt (z1/z2) * (z2+z0) / (z1+z0) * (1-r2*r2) / d;
-  nr_double_t s13 = std::sqrt (z3/z1) * (z1+z0) / (z3+z0) * (1-r1*r1) / d;
-  nr_double_t s32 = std::sqrt (z2/z3) * (z3+z0) / (z2+z0) * (1-r3*r3) / d;
+  double s11 = (r2 * r3 - r1) / d;
+  double s22 = (r1 * r3 - r2) / d;
+  double s33 = (r1 * r2 - r3) / d;
+  double s12 = std::sqrt (z2/z1) * (z1+z0) / (z2+z0) * r3 * (1-r1*r1) / d;
+  double s23 = std::sqrt (z3/z2) * (z2+z0) / (z3+z0) * r1 * (1-r2*r2) / d;
+  double s31 = std::sqrt (z1/z3) * (z3+z0) / (z1+z0) * r2 * (1-r3*r3) / d;
+  double s21 = std::sqrt (z1/z2) * (z2+z0) / (z1+z0) * (1-r2*r2) / d;
+  double s13 = std::sqrt (z3/z1) * (z1+z0) / (z3+z0) * (1-r1*r1) / d;
+  double s32 = std::sqrt (z2/z3) * (z3+z0) / (z2+z0) * (1-r3*r3) / d;
 
   allocMatrixMNA ();
 

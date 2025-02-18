@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,7 +35,7 @@ namespace qucs {
 
 /* This function drops those values in the history which are newer
    than the specified time. */
-void history::truncate (const nr_double_t tcut)
+void history::truncate (const double tcut)
 {
     std::size_t i;
     std::size_t ts = this->t->size ();
@@ -58,8 +56,8 @@ void history::truncate (const nr_double_t tcut)
 void history::drop (void) {
   if(this->values->empty())
     return;
-  nr_double_t f = this->first ();
-  nr_double_t l = this->last ();
+  double f = this->first ();
+  double l = this->last ();
   if (age > 0.0 && l - f > age) {
     std::size_t r;
     std::size_t i = this->leftidx ();
@@ -79,10 +77,10 @@ void history::drop (void) {
 
 /* Interpolates a value using 2 left side and 2 right side values if
    possible. */
-nr_double_t history::interpol (nr_double_t tval, int idx, bool left) {
+double history::interpol (double tval, int idx, bool left) {
   static spline spl (SPLINE_BC_NATURAL);
-  static tvector<nr_double_t> x (4);
-  static tvector<nr_double_t> y (4);
+  static tvector<double> x (4);
+  static tvector<double> y (4);
 
   unsigned int n = left ? idx + 1: idx;
   if (n > 1 && n + 2 < this->values->size ()) {
@@ -101,14 +99,14 @@ nr_double_t history::interpol (nr_double_t tval, int idx, bool left) {
 /* The function returns the value nearest to the given time value.  If
    the optional parameter is true then additionally cubic spline
    interpolation is used. */
-nr_double_t history::nearest (nr_double_t tval, bool interpolate) {
+double history::nearest (double tval, bool interpolate) {
   if (t->empty())
     return 0.0;
 
   int l = this->leftidx ();
   int r = t->size () - 1;
   int i = -1;
-  nr_double_t diff = std::numeric_limits<nr_double_t>::max();
+  double diff = std::numeric_limits<double>::max();
   sign = true;
   i = seek (tval, l, r, diff, i);
   i = i - l;
@@ -121,13 +119,13 @@ nr_double_t history::nearest (nr_double_t tval, bool interpolate) {
    given time value.  Since the time vector is ordered a recursive
    lookup algorithm can be used.  The function returns the current
    index into the time vector as well as the error in time. */
-int history::seek (nr_double_t tval, int l, int r, nr_double_t& diff,
+int history::seek (double tval, int l, int r, double& diff,
 		   int idx) {
   int i = (l + r) / 2;
   if (l == r)
     return i;
-  nr_double_t v = (*this->t)[i];
-  nr_double_t d = v - tval;
+  double v = (*this->t)[i];
+  double d = v - tval;
   if (fabs (d) < diff) {
     // better approximation
     diff = fabs (d);

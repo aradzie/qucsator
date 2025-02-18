@@ -27,8 +27,6 @@
     to output and blocks all signals flowing into the output.
 */
 
-#include "config.h"
-
 #include "component.h"
 #include "amplifier.h"
 
@@ -53,9 +51,9 @@ amplifier::amplifier () : circuit (2) {
     \f$G\f$ the gain.
 */
 void amplifier::initSP (void) {
-  nr_double_t g = getPropertyDouble ("G");
-  nr_double_t z1 = getPropertyDouble ("Z1");
-  nr_double_t z2 = getPropertyDouble ("Z2");
+  double g = getPropertyDouble ("G");
+  double z1 = getPropertyDouble ("Z1");
+  double z2 = getPropertyDouble ("Z2");
 
   allocMatrixS ();
 
@@ -65,10 +63,10 @@ void amplifier::initSP (void) {
   setS (NODE_2, NODE_1, 4 * z0 * std::sqrt (z1 * z2) * g / (z1 + z0) / (z2 + z0));
 }
 
-void amplifier::calcNoiseSP (nr_double_t) {
-  nr_double_t g = getPropertyDouble ("G");
-  nr_double_t z2 = getPropertyDouble ("Z2");
-  nr_double_t NF = getPropertyDouble ("NF");
+void amplifier::calcNoiseSP (double) {
+  double g = getPropertyDouble ("G");
+  double z2 = getPropertyDouble ("Z2");
+  double NF = getPropertyDouble ("NF");
   setN (NODE_1, NODE_1, 0);
   setN (NODE_2, NODE_2, 4 * z0 * z2 * sqr (g) * (NF - 1) / sqr (z2 + z0));
   setN (NODE_1, NODE_2, 0);
@@ -88,9 +86,9 @@ void amplifier::calcNoiseSP (nr_double_t) {
     \f$G\f$ the gain.
 */
 void amplifier::initDC (void) {
-  nr_double_t g = getPropertyDouble ("G");
-  nr_double_t z1 = getPropertyDouble ("Z1");
-  nr_double_t z2 = getPropertyDouble ("Z2");
+  double g = getPropertyDouble ("G");
+  double z1 = getPropertyDouble ("Z1");
+  double z2 = getPropertyDouble ("Z2");
 
   allocMatrixMNA ();
 
@@ -108,10 +106,10 @@ void amplifier::initAC (void) {
   initDC ();
 }
 
-void amplifier::calcNoiseAC (nr_double_t) {
-  nr_double_t g = getPropertyDouble ("G");
-  nr_double_t z2 = getPropertyDouble ("Z2");
-  nr_double_t NF = getPropertyDouble ("NF");
+void amplifier::calcNoiseAC (double) {
+  double g = getPropertyDouble ("G");
+  double z2 = getPropertyDouble ("Z2");
+  double NF = getPropertyDouble ("NF");
   setN (NODE_1, NODE_1, 0);
   setN (NODE_2, NODE_2, 4 * sqr (g) * (NF - 1) / z2);
   setN (NODE_1, NODE_2, 0);

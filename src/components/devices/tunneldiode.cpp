@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "device.h"
 #include "devstates.h"
@@ -44,20 +42,20 @@ void tunneldiode::initDC (void) {
 }
 
 // Calculate one branch of the tunnel current.
-void tunneldiode::calcId (nr_double_t U, nr_double_t& I, nr_double_t& G) {
-  nr_double_t eta  = getPropertyDouble ("eta");
-  nr_double_t Wr   = getPropertyDouble ("Wr");
-  nr_double_t dv   = getPropertyDouble ("dv");
-  nr_double_t de   = getPropertyDouble ("de");
-  nr_double_t dW   = getPropertyDouble ("dW");
+void tunneldiode::calcId (double U, double& I, double& G) {
+  double eta  = getPropertyDouble ("eta");
+  double Wr   = getPropertyDouble ("Wr");
+  double dv   = getPropertyDouble ("dv");
+  double de   = getPropertyDouble ("de");
+  double dW   = getPropertyDouble ("dW");
 
   U   = Wr - Q_e*U/dv;
   de *= kB * celsius2kelvin (getPropertyDouble ("Temp"));
 
-  nr_double_t a = pi_over_2 + qucs::atan ( U / dW );
+  double a = pi_over_2 + qucs::atan ( U / dW );
 
-  nr_double_t e = (eta - U) / de;
-  nr_double_t b = e;
+  double e = (eta - U) / de;
+  double b = e;
   if (e < 15.0)  // avoid numerical overflow
     b = qucs::log (1.0 + qucs::exp ( e ));
 
@@ -71,21 +69,21 @@ void tunneldiode::calcId (nr_double_t U, nr_double_t& I, nr_double_t& G) {
 // Callback for DC analysis.
 void tunneldiode::calcDC (void) {
   // get device properties
-  nr_double_t Ip   = getPropertyDouble ("Ip");
-  nr_double_t A    = getPropertyDouble ("Area");
-  nr_double_t Tmax = getPropertyDouble ("Tmax");
-  nr_double_t de   = getPropertyDouble ("de");
-  nr_double_t eta  = getPropertyDouble ("eta");
-  nr_double_t Iv   = getPropertyDouble ("Iv");
-  nr_double_t Vv   = getPropertyDouble ("Vv");
-  nr_double_t nv   = getPropertyDouble ("nv");
-  nr_double_t T    = kB * celsius2kelvin (getPropertyDouble ("Temp"));
+  double Ip   = getPropertyDouble ("Ip");
+  double A    = getPropertyDouble ("Area");
+  double Tmax = getPropertyDouble ("Tmax");
+  double de   = getPropertyDouble ("de");
+  double eta  = getPropertyDouble ("eta");
+  double Iv   = getPropertyDouble ("Iv");
+  double Vv   = getPropertyDouble ("Vv");
+  double nv   = getPropertyDouble ("nv");
+  double T    = kB * celsius2kelvin (getPropertyDouble ("Temp"));
 
   // diode voltage
   Ud = real (getV (NODE_A1) - getV (NODE_A2));
 
   // bi-directional tunnel current
-  nr_double_t Ipos, Ineg, Gpos, Gneg;
+  double Ipos, Ineg, Gpos, Gneg;
   gd = Id = A * Ip * Tmax * de * T / eta / pi_over_2;
   calcId ( Ud, Ipos, Gpos);
   calcId (-Ud, Ineg, Gneg);
@@ -94,11 +92,11 @@ void tunneldiode::calcDC (void) {
 
   // thermal-ionic current
   nv *= T / Q_e;
-  nr_double_t c = A * Iv / qucs::sinh (Vv / nv);
+  double c = A * Iv / qucs::sinh (Vv / nv);
   Id += c * qucs::sinh (Ud / nv);
   gd += c * qucs::cosh (Ud / nv) / nv;
 
-  nr_double_t Ieq = Id - Ud * gd;
+  double Ieq = Id - Ud * gd;
 
   // fill in I-Vector
   setI (NODE_A2, +Ieq);
@@ -111,7 +109,7 @@ void tunneldiode::calcDC (void) {
 
 // Saves operating points (voltages).
 void tunneldiode::saveOperatingPoints (void) {
-  nr_double_t Vd = real (getV (NODE_A1) - getV (NODE_A2));
+  double Vd = real (getV (NODE_A1) - getV (NODE_A2));
   setOperatingPoint ("Vd", Vd);
 }
 
@@ -122,17 +120,17 @@ void tunneldiode::loadOperatingPoints (void) {
 
 // Calculates and saves operating points.
 void tunneldiode::calcOperatingPoints (void) {
-  nr_double_t A   = getPropertyDouble ("Area");
-  nr_double_t Cj0 = getPropertyDouble ("Cj0");
-  nr_double_t M   = getScaledProperty ("M");
-  nr_double_t Vj  = getScaledProperty ("Vj");
-  nr_double_t te  = getScaledProperty ("te");
+  double A   = getPropertyDouble ("Area");
+  double Cj0 = getPropertyDouble ("Cj0");
+  double M   = getScaledProperty ("M");
+  double Vj  = getScaledProperty ("Vj");
+  double te  = getScaledProperty ("te");
 
   // calculate capacitances and charges
-  nr_double_t Cd;
+  double Cd;
 
   // depletion capacitance
-  nr_double_t c = 1.0 + fabs(Ud) / Vj;
+  double c = 1.0 + fabs(Ud) / Vj;
   Cd = A * Cj0 / qucs::pow (c, M);
   Qd = A * Cj0 * Vj / (1.0-M) * (1.0 - qucs::pow (c, 1.0 - M));
 
@@ -152,9 +150,9 @@ void tunneldiode::initAC (void) {
 }
 
 // Build admittance matrix for AC and SP analysis.
-matrix tunneldiode::calcMatrixY (nr_double_t frequency) {
-  nr_double_t gd = getOperatingPoint ("gd");
-  nr_double_t Cd = getOperatingPoint ("Cd");
+matrix tunneldiode::calcMatrixY (double frequency) {
+  double gd = getOperatingPoint ("gd");
+  double Cd = getOperatingPoint ("Cd");
   nr_complex_t yd = nr_complex_t (gd, Cd * 2.0 * pi * frequency);
   matrix y (2);
   y.set (NODE_A1, NODE_A1, +yd);
@@ -165,12 +163,12 @@ matrix tunneldiode::calcMatrixY (nr_double_t frequency) {
 }
 
 // Callback for the AC analysis.
-void tunneldiode::calcAC (nr_double_t frequency) {
+void tunneldiode::calcAC (double frequency) {
   setMatrixY (calcMatrixY (frequency));
 }
 
 // Callback for S-parameter analysis.
-void tunneldiode::calcSP (nr_double_t frequency) {
+void tunneldiode::calcSP (double frequency) {
   setMatrixS (ytos (calcMatrixY (frequency)));
 }
 
@@ -184,14 +182,14 @@ void tunneldiode::initTR (void) {
 }
 
 // Callback for the TR analysis.
-void tunneldiode::calcTR (nr_double_t) {
+void tunneldiode::calcTR (double) {
   calcDC ();
 
   saveOperatingPoints ();
   loadOperatingPoints ();
   calcOperatingPoints ();
 
-  nr_double_t Cd = getOperatingPoint ("Cd");
+  double Cd = getOperatingPoint ("Cd");
   transientCapacitance (qState, NODE_A1, NODE_A2, Cd, Ud, Qd);
 }
 

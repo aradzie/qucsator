@@ -27,8 +27,6 @@
 #include <assert.h>
 #include <limits>
 
-#include "config.h"
-
 #include "logging.h"
 #include "complex.h"
 #include "object.h"
@@ -271,7 +269,7 @@ int nasolver<nr_type_t>::solve_nonlinear_continuation_gMin (void)
 {
     qucs::exception * e;
     int convergence, run = 0, MaxIterations, error = 0;
-    nr_double_t gStep, gPrev;
+    double gStep, gPrev;
 
     // fetch simulation properties
     MaxIterations = getPropertyInteger ("MaxIter") / 4 + 1;
@@ -307,7 +305,7 @@ int nasolver<nr_type_t>::solve_nonlinear_continuation_gMin (void)
         {
             gStep /= 2;
             // here the absolute minimum step checker
-            if (gStep < std::numeric_limits<nr_double_t>::epsilon())
+            if (gStep < std::numeric_limits<double>::epsilon())
             {
                 error = 1;
                 e = new qucs::exception (EXCEPTION_NO_CONVERGENCE);
@@ -339,7 +337,7 @@ int nasolver<nr_type_t>::solve_nonlinear_continuation_Source (void)
 {
     qucs::exception * e;
     int convergence, run = 0, MaxIterations, error = 0;
-    nr_double_t sStep, sPrev;
+    double sStep, sPrev;
 
     // fetch simulation properties
     MaxIterations = getPropertyInteger ("MaxIter") / 4 + 1;
@@ -381,7 +379,7 @@ int nasolver<nr_type_t>::solve_nonlinear_continuation_Source (void)
             restorePreviousIteration ();
             saveSolution ();
             // here the absolute minimum step checker
-            if (sStep < std::numeric_limits<nr_double_t>::epsilon())
+            if (sStep < std::numeric_limits<double>::epsilon())
             {
                 error = 1;
                 e = new qucs::exception (EXCEPTION_NO_CONVERGENCE);
@@ -578,7 +576,7 @@ nr_type_t nasolver<nr_type_t>::MatValX (nr_complex_t z, nr_complex_t *)
 }
 
 template <class nr_type_t>
-nr_type_t nasolver<nr_type_t>::MatValX (nr_complex_t z, nr_double_t *)
+nr_type_t nasolver<nr_type_t>::MatValX (nr_complex_t z, double *)
 {
     return real (z);
 }
@@ -1014,7 +1012,7 @@ void nasolver<nr_type_t>::runMNA (void)
 template <class nr_type_t>
 void nasolver<nr_type_t>::applyAttenuation (void)
 {
-    nr_double_t alpha = 1.0, nMax;
+    double alpha = 1.0, nMax;
 
     // create solution difference vector and find maximum deviation
     tvector<nr_type_t> dx = *x - *xprev;
@@ -1023,7 +1021,7 @@ void nasolver<nr_type_t>::applyAttenuation (void)
     // compute appropriate damping factor
     if (nMax > 0.0)
     {
-        nr_double_t g = 1.0;
+        double g = 1.0;
         alpha = std::min (0.9, g / nMax);
         if (alpha < 0.1) alpha = 0.1;
     }
@@ -1041,12 +1039,12 @@ void nasolver<nr_type_t>::applyAttenuation (void)
 template <class nr_type_t>
 void nasolver<nr_type_t>::lineSearch (void)
 {
-    nr_double_t alpha = 0.5, n, nMin, aprev = 1.0, astep = 0.5, adiff;
+    double alpha = 0.5, n, nMin, aprev = 1.0, astep = 0.5, adiff;
     int dir = -1;
 
     // compute solution deviation vector
     tvector<nr_type_t> dx = *x - *xprev;
-    nMin = std::numeric_limits<nr_double_t>::max();
+    nMin = std::numeric_limits<double>::max();
 
     do
     {
@@ -1094,7 +1092,7 @@ void nasolver<nr_type_t>::lineSearch (void)
 template <class nr_type_t>
 void nasolver<nr_type_t>::steepestDescent (void)
 {
-    nr_double_t alpha = 1.0, sl, n;
+    double alpha = 1.0, sl, n;
 
     // compute solution deviation vector
     tvector<nr_type_t> dx = *x - *xprev;
@@ -1132,7 +1130,7 @@ int nasolver<nr_type_t>::checkConvergence (void)
 
     int N = countNodes ();
     int M = countVoltageSources ();
-    nr_double_t v_abs, v_rel, i_abs, i_rel;
+    double v_abs, v_rel, i_abs, i_rel;
     int r;
 
     // check the nodal voltage changes against the allowed absolute

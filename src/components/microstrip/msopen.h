@@ -27,13 +27,13 @@ class msopen : public qucs::circuit
 {
  public:
   CREATOR (msopen);
-  static nr_double_t calcCend (nr_double_t, nr_double_t, nr_double_t,
-			       nr_double_t, nr_double_t, const char * const, const char * const,
+  static double calcCend (double, double, double,
+			       double, double, const char * const, const char * const,
 			       const char * const);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
-  void calcAC (nr_double_t);
-  nr_complex_t calcY (nr_double_t);
+  void calcAC (double);
+  nr_complex_t calcY (double);
 };
 
 #endif /* __MSOPEN_H__ */

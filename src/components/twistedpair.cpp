@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "twistedpair.h"
 
@@ -35,12 +33,12 @@ void twistedpair::initSP (void) {
   calcLength ();
 }
 
-void twistedpair::calcSP (nr_double_t frequency) {
+void twistedpair::calcSP (double frequency) {
   calcPropagation (frequency);
 
   nr_complex_t g = nr_complex_t (alpha, beta);
-  nr_double_t p = 2 * z0 + zl;
-  nr_double_t n = 2 * z0 - zl;
+  double p = 2 * z0 + zl;
+  double n = 2 * z0 - zl;
   nr_complex_t e = qucs::exp (2.0 * g * len);
   nr_complex_t d = p * p * e - n * n;
 
@@ -58,24 +56,24 @@ void twistedpair::calcSP (nr_double_t frequency) {
   setS (NODE_2, NODE_4, -s12); setS (NODE_4, NODE_2, -s12);
 }
 
-void twistedpair::calcNoiseSP (nr_double_t) {
+void twistedpair::calcNoiseSP (double) {
   if (len < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
 }
 
 void twistedpair::initDC (void) {
-  nr_double_t d   = getPropertyDouble ("d");
-  nr_double_t rho = getPropertyDouble ("rho");
+  double d   = getPropertyDouble ("d");
+  double rho = getPropertyDouble ("rho");
   calcLength ();
 
   if (d != 0.0 && rho != 0.0 && len != 0.0) {
     // tiny resistances
-    nr_double_t g1 = pi * sqr (d / 2) / rho / len;
-    nr_double_t g2 = g1;
+    double g1 = pi * sqr (d / 2) / rho / len;
+    double g2 = g1;
     setVoltageSources (0);
     allocMatrixMNA ();
     setY (NODE_1, NODE_1, +g1); setY (NODE_2, NODE_2, +g1);
@@ -105,13 +103,13 @@ void twistedpair::initAC (void) {
   }
 }
 
-nr_double_t twistedpair::calcLoss (nr_double_t frequency) {
-  nr_double_t d    = getPropertyDouble ("d");
-  nr_double_t rho  = getPropertyDouble ("rho");
-  nr_double_t mur  = getPropertyDouble ("mur");
-  nr_double_t tand = getPropertyDouble ("tand");
+double twistedpair::calcLoss (double frequency) {
+  double d    = getPropertyDouble ("d");
+  double rho  = getPropertyDouble ("rho");
+  double mur  = getPropertyDouble ("mur");
+  double tand = getPropertyDouble ("tand");
 
-  nr_double_t delta, rout, rin, ad, ac, l0;
+  double delta, rout, rin, ad, ac, l0;
   // calculate conductor losses
   rout = d / 2;
   if (frequency > 0.0) {
@@ -130,21 +128,21 @@ nr_double_t twistedpair::calcLoss (nr_double_t frequency) {
   return alpha;
 }
 
-nr_double_t twistedpair::calcLength (void) {
-  nr_double_t l  = getPropertyDouble ("L");
-  nr_double_t T  = getPropertyDouble ("T");
-  nr_double_t D  = getPropertyDouble ("D");
+double twistedpair::calcLength (void) {
+  double l  = getPropertyDouble ("L");
+  double T  = getPropertyDouble ("T");
+  double D  = getPropertyDouble ("D");
   len = l * T * pi * D * qucs::sqrt (1 + 1 / sqr (T * pi * D));
   return len;
 }
 
-void twistedpair::calcPropagation (nr_double_t frequency) {
-  nr_double_t d  = getPropertyDouble ("d");
-  nr_double_t D  = getPropertyDouble ("D");
-  nr_double_t er = getPropertyDouble ("er");
-  nr_double_t T  = getPropertyDouble ("T");
+void twistedpair::calcPropagation (double frequency) {
+  double d  = getPropertyDouble ("d");
+  double D  = getPropertyDouble ("D");
+  double er = getPropertyDouble ("er");
+  double T  = getPropertyDouble ("T");
 
-  nr_double_t q, p;
+  double q, p;
   p = qucs::atan (T * pi * D);
   q = 0.25 + 0.001 * p * p;  // soft PTFE
   q = 0.25 + 0.0004 * p * p; // usual
@@ -155,14 +153,14 @@ void twistedpair::calcPropagation (nr_double_t frequency) {
   alpha = calcLoss (frequency);
 }
 
-void twistedpair::saveCharacteristics (nr_double_t) {
+void twistedpair::saveCharacteristics (double) {
   setCharacteristic ("Zl", zl);
   setCharacteristic ("Er", ereff);
   setCharacteristic ("Length", len);
   setCharacteristic ("Angle", angle);
 }
 
-void twistedpair::calcAC (nr_double_t frequency) {
+void twistedpair::calcAC (double frequency) {
   if (len != 0.0) {
     calcPropagation (frequency);
     nr_complex_t g = nr_complex_t (alpha, beta);
@@ -179,10 +177,10 @@ void twistedpair::calcAC (nr_double_t frequency) {
   }
 }
 
-void twistedpair::calcNoiseAC (nr_double_t) {
+void twistedpair::calcNoiseAC (double) {
   if (len < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

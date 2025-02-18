@@ -26,12 +26,12 @@ class msrstub : public qucs::circuit
 {
  public:
   CREATOR (msrstub);
-  static nr_double_t calcReactance (nr_double_t, nr_double_t, nr_double_t,
-				    nr_double_t, nr_double_t, nr_double_t);
-  void calcSP (nr_double_t);
+  static double calcReactance (double, double, double,
+				    double, double, double);
+  void calcSP (double);
   void initDC (void);
-  void calcAC (nr_double_t);
-  nr_complex_t calcZ (nr_double_t);
+  void calcAC (double);
+  nr_complex_t calcZ (double);
 };
 
 #endif /* __MSRSTUB_H__ */

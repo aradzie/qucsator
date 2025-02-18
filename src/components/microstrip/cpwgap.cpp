@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "cpwgap.h"
@@ -31,21 +29,21 @@ cpwgap::cpwgap () : circuit (2) {
   type = CIR_CPWGAP;
 }
 
-void cpwgap::calcSP (nr_double_t frequency) {
+void cpwgap::calcSP (double frequency) {
   setMatrixS (ytos (calcMatrixY (frequency)));
 }
 
-matrix cpwgap::calcMatrixY (nr_double_t frequency) {
+matrix cpwgap::calcMatrixY (double frequency) {
 
-  nr_double_t W = getPropertyDouble ("W");
-  nr_double_t g = getPropertyDouble ("G");
+  double W = getPropertyDouble ("W");
+  double g = getPropertyDouble ("G");
   substrate * subst = getSubstrate ();
-  nr_double_t er = subst->getPropertyDouble ("er");
+  double er = subst->getPropertyDouble ("er");
 
   // calculate series capacitance
   er = (er + 1) / 2;
-  nr_double_t p = g / 4 / W;
-  nr_double_t C = 2 * E0 * er * W / pi *
+  double p = g / 4 / W;
+  double C = 2 * E0 * er * W / pi *
     (p - std::sqrt (1 + p * p) + std::log ((1 + std::sqrt (1 + p * p)) / p));
 
   // build Y-parameter matrix
@@ -63,7 +61,7 @@ void cpwgap::initDC (void) {
   clearY ();
 }
 
-void cpwgap::calcAC (nr_double_t frequency) {
+void cpwgap::calcAC (double frequency) {
   setMatrixY (calcMatrixY (frequency));
 }
 

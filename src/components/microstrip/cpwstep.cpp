@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "cpwline.h"
@@ -33,22 +31,22 @@ cpwstep::cpwstep () : circuit (2) {
 }
 
 // Returns the coplanar step capacitances per unit length.
-void cpwstep::calcCends (nr_double_t frequency,
-			 nr_double_t& C1, nr_double_t& C2) {
+void cpwstep::calcCends (double frequency,
+			 double& C1, double& C2) {
 
   // get properties of substrate and coplanar step
-  nr_double_t W1 = getPropertyDouble ("W1");
-  nr_double_t W2 = getPropertyDouble ("W2");
-  nr_double_t s  = getPropertyDouble ("S");
-  nr_double_t s1 = (s - W1) / 2;
-  nr_double_t s2 = (s - W2) / 2;
+  double W1 = getPropertyDouble ("W1");
+  double W2 = getPropertyDouble ("W2");
+  double s  = getPropertyDouble ("S");
+  double s1 = (s - W1) / 2;
+  double s2 = (s - W2) / 2;
   substrate * subst = getSubstrate ();
-  nr_double_t er = subst->getPropertyDouble ("er");
-  nr_double_t h  = subst->getPropertyDouble ("h");
-  nr_double_t t  = subst->getPropertyDouble ("t");
+  double er = subst->getPropertyDouble ("er");
+  double h  = subst->getPropertyDouble ("h");
+  double t  = subst->getPropertyDouble ("t");
   int backMetal  = !strcmp (getPropertyString ("Backside"), "Metal");
 
-  nr_double_t ZlEff, ErEff, ZlEffFreq, ErEffFreq;
+  double ZlEff, ErEff, ZlEffFreq, ErEffFreq;
   cpwline::analyseQuasiStatic (W1, s1, h, t, er, backMetal, ZlEff, ErEff);
   cpwline::analyseDispersion  (W1, s1, h, er, ZlEff, ErEff, frequency,
 			       ZlEffFreq, ErEffFreq);
@@ -64,7 +62,7 @@ void cpwstep::initSP (void) {
   checkProperties ();
 }
 
-void cpwstep::calcSP (nr_double_t frequency) {
+void cpwstep::calcSP (double frequency) {
   nr_complex_t z = 2.0 / calcY (frequency) / z0;
   nr_complex_t s11 = -1.0 / (z + 1.0);
   nr_complex_t s21 = +z / (z + 1.0);
@@ -75,9 +73,9 @@ void cpwstep::calcSP (nr_double_t frequency) {
 }
 
 void cpwstep::checkProperties (void) {
-  nr_double_t W1 = getPropertyDouble ("W1");
-  nr_double_t W2 = getPropertyDouble ("W2");
-  nr_double_t s  = getPropertyDouble ("S");
+  double W1 = getPropertyDouble ("W1");
+  double W2 = getPropertyDouble ("W2");
+  double s  = getPropertyDouble ("S");
   if (W1 == W2) {
     logprint (LOG_ERROR, "ERROR: Strip widths of step discontinuity do not "
 	      "differ\n");
@@ -87,21 +85,21 @@ void cpwstep::checkProperties (void) {
 	      "than groundplane gap\n");
   }
   substrate * subst = getSubstrate ();
-  nr_double_t er = subst->getPropertyDouble ("er");
+  double er = subst->getPropertyDouble ("er");
   if (er < 2 || er > 14) {
     logprint (LOG_ERROR, "WARNING: Model for coplanar step valid for "
 	      "2 < er < 14 (er = %g)\n", er);
   }
 }
 
-nr_complex_t cpwstep::calcY (nr_double_t frequency) {
-  nr_double_t W1 = getPropertyDouble ("W1");
-  nr_double_t W2 = getPropertyDouble ("W2");
-  nr_double_t s  = getPropertyDouble ("S");
-  nr_double_t s1 = (s - W1) / 2;
-  nr_double_t s2 = (s - W2) / 2;
-  nr_double_t a, c, c1, c2, x1, x2;
-  nr_double_t o = 2 * pi * frequency;
+nr_complex_t cpwstep::calcY (double frequency) {
+  double W1 = getPropertyDouble ("W1");
+  double W2 = getPropertyDouble ("W2");
+  double s  = getPropertyDouble ("S");
+  double s1 = (s - W1) / 2;
+  double s2 = (s - W2) / 2;
+  double a, c, c1, c2, x1, x2;
+  double o = 2 * pi * frequency;
   calcCends (frequency, c1, c2);
   x1 = c1 * s1;
   x2 = c2 * s2;
@@ -131,7 +129,7 @@ void cpwstep::initAC (void) {
   checkProperties ();
 }
 
-void cpwstep::calcAC (nr_double_t frequency) {
+void cpwstep::calcAC (double frequency) {
   nr_complex_t z = 1.0 / calcY (frequency);
   setD (VSRC_1, VSRC_1, z); setD (VSRC_2, VSRC_2, z);
   setD (VSRC_1, VSRC_2, z); setD (VSRC_2, VSRC_1, z);

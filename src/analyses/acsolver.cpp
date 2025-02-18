@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <cstring>
 #include <cmath>
@@ -68,7 +66,7 @@ acsolver::~acsolver () {
    based on the given acsolver object. */
 acsolver::acsolver (acsolver & o) : nasolver<nr_complex_t> (o) {
   swp = o.swp ? new sweep (*(o.swp)) : NULL;
-  xn = o.xn ? new tvector<nr_double_t> (*(o.xn)) : NULL;
+  xn = o.xn ? new tvector<double> (*(o.xn)) : NULL;
   noise = o.noise;
 }
 
@@ -137,7 +135,7 @@ void acsolver::init (void) {
 
 /* This function saves the results of a single solve() functionality
    (for the given frequency) into the output dataset. */
-void acsolver::saveAllResults (nr_double_t freq) {
+void acsolver::saveAllResults (double freq) {
   qucs::vector * f;
   // add current frequency to the dependency of the output dataset
   if ((f = data->findDependency ("acfrequency")) == NULL) {
@@ -168,7 +166,7 @@ void acsolver::saveNoiseResults (qucs::vector * f) {
   for (circuit * c = root; c != NULL; c = (circuit *) c->getNext ()) {
     if (!c->isProbe ()) continue;
     int np, nn;
-    nr_double_t vp, vn;
+    double vp, vn;
     np = getNodeNr (c->getNode (NODE_1)->getName ());
     vp = np > 0 ? xn->get (np - 1) : 0.0;
     nn = getNodeNr (c->getNode (NODE_2)->getName ());
@@ -192,7 +190,7 @@ void acsolver::solve_noise (void) {
   // create the Cy matrix
   createNoiseMatrix ();
   // create noise result vector if necessary
-  if (xn == NULL) xn = new tvector<nr_double_t> (N + M);
+  if (xn == NULL) xn = new tvector<double> (N + M);
 
   // temporary result vector for transimpedances
   tvector<nr_complex_t> zn = tvector<nr_complex_t> (N + M);

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "phaseshifter.h"
 
@@ -31,9 +29,9 @@ phaseshifter::phaseshifter () : circuit (2) {
 }
 
 void phaseshifter::initSP (void) {
-  nr_double_t p = deg2rad (getPropertyDouble ("phi"));
-  nr_double_t z = getPropertyDouble ("Zref");
-  nr_double_t r = (z0 - z) / (z0 + z);
+  double p = deg2rad (getPropertyDouble ("phi"));
+  double z = getPropertyDouble ("Zref");
+  double r = (z0 - z) / (z0 + z);
   nr_complex_t d = 1.0 - qucs::polar (r * r, 2 * p);
   nr_complex_t s11 = r * (qucs::polar (1.0, 2 * p) - 1.0) / d;
   nr_complex_t s21 = (1.0 - r * r) * qucs::polar (1.0, p) / d;
@@ -52,7 +50,7 @@ void phaseshifter::initDC (void) {
 }
 
 void phaseshifter::initAC (void) {
-  nr_double_t p = deg2rad (getPropertyDouble ("phi"));
+  double p = deg2rad (getPropertyDouble ("phi"));
 
   if (p == 0.0) { // no phase shift, thus a short
     initDC ();
@@ -60,9 +58,9 @@ void phaseshifter::initAC (void) {
   else { // compute Y-parameters directly
     setVoltageSources (0);
     allocMatrixMNA ();
-    nr_double_t z = getPropertyDouble ("Zref");
-    nr_double_t y11 =  1 / z / std::tan (p);
-    nr_double_t y21 = -1 / z / std::sin (p);
+    double z = getPropertyDouble ("Zref");
+    double y11 =  1 / z / std::tan (p);
+    double y21 = -1 / z / std::sin (p);
     setY (NODE_1, NODE_1, nr_complex_t (0, y11)); setY (NODE_2, NODE_2, nr_complex_t (0, y11));
     setY (NODE_1, NODE_2, nr_complex_t (0, y21)); setY (NODE_2, NODE_1, nr_complex_t (0, y21));
   }

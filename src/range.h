@@ -28,20 +28,20 @@ class range
 {
  public:
   range ();
-  range (nr_double_t, nr_double_t);
-  range (char, nr_double_t, nr_double_t, char);
+  range (double, double);
+  range (char, double, double, char);
   range (const range &);
   ~range ();
-  bool inside (nr_double_t);
-  bool outside (nr_double_t);
-  nr_double_t lo (void) { return l; }
-  nr_double_t hi (void) { return h; }
+  bool inside (double);
+  bool outside (double);
+  double lo (void) { return l; }
+  double hi (void) { return h; }
   char * toString (void);
 
  private:
   char il;        // interval boundary
-  nr_double_t l;  // lower bound of the value
-  nr_double_t h;  // upper bound of the value
+  double l;  // lower bound of the value
+  double h;  // upper bound of the value
   char ih;        // interval boundary
   char * txt;
 };

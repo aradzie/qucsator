@@ -27,10 +27,6 @@
   *
   */
 
-#include "config.h"
-
-//#include <stdio.h>
-//#include <stdlib.h>
 #include <string.h>
 
 #include "object.h"
@@ -108,8 +104,8 @@ sweep * analysis::createSweep (const std::string& n) {
 
   // linearly or logarithmically stepped sweeps
   if (!strcmp (type, "lin") || !strcmp (type, "log")) {
-    nr_double_t start = getPropertyDouble ("Start");
-    nr_double_t stop = getPropertyDouble ("Stop");
+    double start = getPropertyDouble ("Start");
+    double stop = getPropertyDouble ("Stop");
     int points = getPropertyInteger ("Points");
     if (!strcmp (type, "lin")) {
       swp = new linsweep (n);
@@ -133,7 +129,7 @@ sweep * analysis::createSweep (const std::string& n) {
 
   // constant value
   else if (!strcmp (type, "const")) {
-    nr_double_t val = getPropertyDouble ("Values");
+    double val = getPropertyDouble ("Values");
     swp = new consweep (n);
     ((consweep *) swp)->create (1);
     swp->set (0, val);

@@ -43,8 +43,6 @@
 */
 
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "bondwire.h"
@@ -118,9 +116,9 @@ void bondwire::getProperties (void) {
 
   /* how to get properties of the substrate, e.g. Er, H */
   substrate * subst = getSubstrate ();
-  nr_double_t er    = subst->getPropertyDouble ("er");
-  nr_double_t h     = subst->getPropertyDouble ("h");
-  nr_double_t t     = subst->getPropertyDouble ("t");
+  double er    = subst->getPropertyDouble ("er");
+  double h     = subst->getPropertyDouble ("h");
+  double t     = subst->getPropertyDouble ("t");
 
   /* Not yet used */
   (void) er;
@@ -135,8 +133,8 @@ void bondwire::getProperties (void) {
  * \param rho bond wire resistivity
  * \param mur relative magnetic permeabillity
  */
-static nr_double_t skindepth (const nr_double_t f,
-			      const nr_double_t rho, const nr_double_t mur) {
+static double skindepth (const double f,
+			      const double rho, const double mur) {
   return std::sqrt (rho / (pi * f * MU0 * mur));
 }
 
@@ -151,8 +149,8 @@ static nr_double_t skindepth (const nr_double_t f,
  *
  * \todo Factorise the resistance model.
  */
-nr_double_t bondwire::resistance (const nr_double_t f) const {
-  nr_double_t delta, rout, rin;
+double bondwire::resistance (const double f) const {
+  double delta, rout, rin;
   rout = d / 2;
   if (f > 0.0) {
     delta = skindepth (f, rho, mur);
@@ -190,12 +188,12 @@ nr_double_t bondwire::resistance (const nr_double_t f) const {
  *  \return mur/4 if rho is zero, otherwise C
  *  \todo Check domain validity for round C factor.
  */
-static nr_double_t correctionfactor (const nr_double_t f,
-				     const nr_double_t d,
-				     const nr_double_t rho,
-				     const nr_double_t mur) {
+static double correctionfactor (const double f,
+				     const double d,
+				     const double rho,
+				     const double mur) {
   /* skin depth */
-  nr_double_t delta;
+  double delta;
 
   if (f > 0.0 && rho > 0.0) {
     delta = skindepth (f, rho, mur);
@@ -246,10 +244,10 @@ static nr_double_t correctionfactor (const nr_double_t f,
    \param rho bond wire resistivity
    \param mur relative magnetic permeabillity
 */
-nr_double_t bondwire::Lfreespace (const nr_double_t f) const {
-  nr_double_t _2ld = (2.0 * l) / d;
-  nr_double_t d2l = d / (2.0 * l);
-  nr_double_t tmp;
+double bondwire::Lfreespace (const double f) const {
+  double _2ld = (2.0 * l) / d;
+  double d2l = d / (2.0 * l);
+  double tmp;
 
   tmp = std::log (_2ld + std::sqrt (1 + _2ld * _2ld));
   tmp += d2l - std::sqrt (1 + d2l * d2l);
@@ -289,8 +287,8 @@ nr_double_t bondwire::Lfreespace (const nr_double_t f) const {
         perfect that is really a zero order model in the high
         frequency domain.
 */
-nr_double_t bondwire::Lmirror (void) const {
-  nr_double_t tmp;
+double bondwire::Lmirror (void) const {
+  double tmp;
 
   /* compute \$\ln \frac{l+\sqrt{l^2+d^2/4}}{l+\sqrt{l^2+4h^2}}\$ */
   tmp  = std::log ((l + std::sqrt (l * l + d * d / 4)) / (l + std::sqrt (l * l + 4 * h * h)));
@@ -306,8 +304,8 @@ nr_double_t bondwire::Lmirror (void) const {
 
 /*! Compute Y matrix of bond wire.
  */
-matrix bondwire::calcMatrixY (const nr_double_t f) {
-  nr_double_t Lw;
+matrix bondwire::calcMatrixY (const double f) {
+  double Lw;
   L = 0;
 
   switch (model) {
@@ -345,12 +343,12 @@ void bondwire::initSP (void) {
 /*! Compute S parameters.
  *! Reuse computed Y matrix.
  */
-void bondwire::calcSP (const nr_double_t frequency) {
+void bondwire::calcSP (const double frequency) {
   setMatrixS (ytos (calcMatrixY (frequency)));
 }
 
 /*! Save self-inductance and resistance. */
-void bondwire::saveCharacteristics (nr_double_t) {
+void bondwire::saveCharacteristics (double) {
   setCharacteristic ("L", L);
   setCharacteristic ("R", R);
 }
@@ -359,7 +357,7 @@ void bondwire::saveCharacteristics (nr_double_t) {
  *! DC model of a bondwire is a resistance.
  */
 void bondwire::initDC (void) {
-  nr_double_t g;
+  double g;
 
   getProperties ();
 
@@ -391,23 +389,23 @@ void bondwire::initAC (void) {
 /*! Compute AC model.
  *! Use serial LR model (Y matrix).
  */
-void bondwire::calcAC (const nr_double_t frequency) {
+void bondwire::calcAC (const double frequency) {
   setMatrixY (calcMatrixY (frequency));
 }
 
-void bondwire::calcNoiseSP (nr_double_t) {
+void bondwire::calcNoiseSP (double) {
   // calculate noise correlation matrix
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t f = celsius2kelvin (T) * 4.0 * R * z0 / norm (4.0 * z0 + R) / T0;
+  double T = getPropertyDouble ("Temp");
+  double f = celsius2kelvin (T) * 4.0 * R * z0 / norm (4.0 * z0 + R) / T0;
   setN (NODE_1, NODE_1, +f); setN (NODE_2, NODE_2, +f);
   setN (NODE_1, NODE_2, -f); setN (NODE_2, NODE_1, -f);
 }
 
-void bondwire::calcNoiseAC (nr_double_t) {
+void bondwire::calcNoiseAC (double) {
   // calculate noise current correlation matrix
-  nr_double_t y = 1 / R;
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t f = celsius2kelvin (T) / T0 * 4.0 * y;
+  double y = 1 / R;
+  double T = getPropertyDouble ("Temp");
+  double f = celsius2kelvin (T) / T0 * 4.0 * y;
   setN (NODE_1, NODE_1, +f); setN (NODE_2, NODE_2, +f);
   setN (NODE_1, NODE_2, -f); setN (NODE_2, NODE_1, -f);
 }

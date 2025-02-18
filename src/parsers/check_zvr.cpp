@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -179,31 +177,31 @@ static void zvr_conversion (struct zvr_data_t * root) {
     // magnitude in [dB] and angle in [degree]
     if (!strcmp (hdr->d_FMT, "COMPLEX") && !strcmp (hdr->d_UNT, "dB")) {
       for (n = 0; n < var->getSize (); n++) {
-	nr_double_t r = real (var->get (n));
-	nr_double_t i = imag (var->get (n));
+	double r = real (var->get (n));
+	double i = imag (var->get (n));
 	var->set (std::polar (std::pow (10.0, r / 20.0), deg2rad (i)), n);
       }
     }
     // magnitude in [dB]
     else if (!strcmp (hdr->d_FMT, "MAGNITUDE") && !strcmp (hdr->d_UNT, "dB")) {
       for (n = 0; n < var->getSize (); n++) {
-	nr_double_t r = real (var->get (n));
+	double r = real (var->get (n));
 	var->set (std::pow (10.0, r / 20.0), n);
       }
     }
     // linear magnitude and angle in [degree]
     else if (!strcmp (hdr->d_FMT, "MA")) {
       for (n = 0; n < var->getSize (); n++) {
-	nr_double_t r = real (var->get (n));
-	nr_double_t i = imag (var->get (n));
+	double r = real (var->get (n));
+	double i = imag (var->get (n));
 	var->set (std::polar (r, deg2rad (i)), n);
       }
     }
     // magnitude in [dB] and angle in [degree]
     else if (!strcmp (hdr->d_FMT, "DB")) {
       for (n = 0; n < var->getSize (); n++) {
-	nr_double_t r = real (var->get (n));
-	nr_double_t i = imag (var->get (n));
+	double r = real (var->get (n));
+	double i = imag (var->get (n));
 	var->set (std::polar (std::pow (10.0, r / 20.0), deg2rad (i)), n);
       }
     }

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <float.h>
@@ -58,7 +56,7 @@ using namespace transient;
 
 // Constructor creates an unnamed instance of the trsolver class.
 trsolver::trsolver ()
-    : nasolver<nr_double_t> (), states<nr_double_t> ()
+    : nasolver<double> (), states<double> ()
 {
     swp = NULL;
     type = ANALYSIS_TRANSIENT;
@@ -71,7 +69,7 @@ trsolver::trsolver ()
 
 // Constructor creates a named instance of the trsolver class.
 trsolver::trsolver (const std::string &n)
-    : nasolver<nr_double_t> (n), states<nr_double_t> ()
+    : nasolver<double> (n), states<double> ()
 {
     swp = NULL;
     type = ANALYSIS_TRANSIENT;
@@ -99,7 +97,7 @@ trsolver::~trsolver ()
 /* The copy constructor creates a new instance of the trsolver class
    based on the given trsolver object. */
 trsolver::trsolver (trsolver & o)
-    : nasolver<nr_double_t> (o), states<nr_double_t> (o)
+    : nasolver<double> (o), states<double> (o)
 {
     swp = o.swp ? new sweep (*o.swp) : NULL;
     for (int i = 0; i < 8; i++) solution[i] = NULL;
@@ -169,7 +167,7 @@ int trsolver::dcAnalysis (void)
    for each requested time and solves it then. */
 int trsolver::solve (void)
 {
-    nr_double_t time, saveCurrent;
+    double time, saveCurrent;
     int error = 0, convError = 0;
     const char * const solver = getPropertyString ("Solver");
     relaxTSR = !strcmp (getPropertyString ("relaxTSR"), "yes") ? true : false;
@@ -391,14 +389,14 @@ int trsolver::solve (void)
 }
 
 // The function initializes the history.
-void trsolver::initHistory (nr_double_t t)
+void trsolver::initHistory (double t)
 {
     // initialize time vector
     tHistory = new history ();
     tHistory->push_back(t);
     tHistory->self ();
     // initialize circuit histories
-    nr_double_t age = 0.0;
+    double age = 0.0;
     circuit * root = subnet->getRoot ();
     for (circuit * c = root; c != NULL; c = (circuit *) c->getNext ())
     {
@@ -418,7 +416,7 @@ void trsolver::initHistory (nr_double_t t)
 
 /* The following function updates the histories for the circuits which
    requested them. */
-void trsolver::updateHistory (nr_double_t t)
+void trsolver::updateHistory (double t)
 {
     if (t > tHistory->last ())
     {
@@ -490,7 +488,7 @@ int trsolver::predictor (void)
 }
 
 // Stores the given vector into all the solution vectors.
-void trsolver::fillSolution (tvector<nr_double_t> * s)
+void trsolver::fillSolution (tvector<double> * s)
 {
     for (int i = 0; i < 8; i++) *SOL (i) = *s;
 }
@@ -501,7 +499,7 @@ void trsolver::predictBashford (void)
 {
     int N = countNodes ();
     int M = countVoltageSources ();
-    nr_double_t xn, dd, hn;
+    double xn, dd, hn;
 
     // go through each solution
     for (int r = 0; r < N + M; r++)
@@ -525,7 +523,7 @@ void trsolver::predictEuler (void)
 {
     int N = countNodes ();
     int M = countVoltageSources ();
-    nr_double_t xn, dd, hn;
+    double xn, dd, hn;
 
     for (int r = 0; r < N + M; r++)
     {
@@ -543,7 +541,7 @@ void trsolver::predictGear (void)
 {
     int N = countNodes ();
     int M = countVoltageSources ();
-    nr_double_t xn;
+    double xn;
 
     // go through each solution
     for (int r = 0; r < N + M; r++)
@@ -614,7 +612,7 @@ void trsolver::setDelta (void)
 
 /* This function tries to adapt the current time-step according to the
    global truncation error. */
-void trsolver::adjustDelta (nr_double_t t)
+void trsolver::adjustDelta (double t)
 {
     deltaOld = delta;
     delta = checkDelta ();
@@ -763,9 +761,9 @@ void trsolver::initDC (void)
 void trsolver::initTR (void)
 {
     const char * const IMethod = getPropertyString ("IntegrationMethod");
-    nr_double_t start = getPropertyDouble ("Start");
-    nr_double_t stop = getPropertyDouble ("Stop");
-    nr_double_t points = getPropertyDouble ("Points");
+    double start = getPropertyDouble ("Start");
+    double stop = getPropertyDouble ("Stop");
+    double points = getPropertyDouble ("Points");
 
     // fetch corrector integration method and determine predicor method
     corrMaxOrder = getPropertyInteger ("Order");
@@ -809,8 +807,8 @@ void trsolver::initTR (void)
         // Note for convenience the definition:
         //   #define SOL(state) (solution[(int) getState (sState, (state))])
         // is provided and used elsewhere to update the solutions
-        solution[i] = new tvector<nr_double_t>;
-        setState (sState, (nr_double_t) i, i);
+        solution[i] = new tvector<double>;
+        setState (sState, (double) i, i);
     }
 
     // tell circuits about the transient analysis
@@ -851,7 +849,7 @@ void trsolver::initCircuitTR (circuit * c)
 
 /* This function saves the results of a single solve() functionality
    (for the given timestamp) into the output dataset. */
-void trsolver::saveAllResults (nr_double_t time)
+void trsolver::saveAllResults (double time)
 {
     qucs::vector * t;
     // add current frequency to the dependency of the output dataset
@@ -867,19 +865,19 @@ void trsolver::saveAllResults (nr_double_t time)
 /* This function is meant to adapt the current time-step the transient
    analysis advanced.  For the computation of the new time-step the
    truncation error depending on the integration method is used. */
-nr_double_t trsolver::checkDelta (void)
+double trsolver::checkDelta (void)
 {
-    nr_double_t LTEreltol = getPropertyDouble ("LTEreltol");
-    nr_double_t LTEabstol = getPropertyDouble ("LTEabstol");
-    nr_double_t LTEfactor = getPropertyDouble ("LTEfactor");
-    nr_double_t dif, rel, tol, lte, q, n =  std::numeric_limits<nr_double_t>::max();
+    double LTEreltol = getPropertyDouble ("LTEreltol");
+    double LTEabstol = getPropertyDouble ("LTEabstol");
+    double LTEfactor = getPropertyDouble ("LTEfactor");
+    double dif, rel, tol, lte, q, n =  std::numeric_limits<double>::max();
     int N = countNodes ();
     int M = countVoltageSources ();
 
     // cec = corrector error constant
-    nr_double_t cec = getCorrectorError (corrType, corrOrder);
+    double cec = getCorrectorError (corrType, corrOrder);
     // pec = predictor error constant
-    nr_double_t pec = getPredictorError (predType, predOrder);
+    double pec = getPredictorError (predType, predOrder);
 
     // go through each solution
     for (int r = 0; r < N + M; r++)
@@ -912,7 +910,7 @@ nr_double_t trsolver::checkDelta (void)
 }
 
 // The function updates the integration coefficients.
-void trsolver::updateCoefficients (nr_double_t delta)
+void trsolver::updateCoefficients (double delta)
 {
     setState (dState, delta);
     saveState (dState, deltas);

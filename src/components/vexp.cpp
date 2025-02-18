@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vexp.h"
 
@@ -56,15 +54,15 @@ void vexp::initTR (void) {
   initDC ();
 }
 
-void vexp::calcTR (nr_double_t t) {
-  nr_double_t u1 = getPropertyDouble ("U1");
-  nr_double_t u2 = getPropertyDouble ("U2");
-  nr_double_t t1 = getPropertyDouble ("T1");
-  nr_double_t t2 = getPropertyDouble ("T2");
-  nr_double_t tr = getPropertyDouble ("Tr");
-  nr_double_t tf = getPropertyDouble ("Tf");
-  nr_double_t ut = 0;
-  nr_double_t s  = getNet()->getSrcFactor ();
+void vexp::calcTR (double t) {
+  double u1 = getPropertyDouble ("U1");
+  double u2 = getPropertyDouble ("U2");
+  double t1 = getPropertyDouble ("T1");
+  double t2 = getPropertyDouble ("T2");
+  double tr = getPropertyDouble ("Tr");
+  double tf = getPropertyDouble ("Tf");
+  double ut = 0;
+  double s  = getNet()->getSrcFactor ();
 
   if (t <= t1) { // before pulse
     ut = u1;

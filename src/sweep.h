@@ -43,10 +43,10 @@ class sweep : public object
   ~sweep ();
   int getSize (void) { return size; }
   int getType (void) { return type; }
-  nr_double_t get (int);
-  nr_double_t next (void);
-  nr_double_t prev (void);
-  void set (int, nr_double_t);
+  double get (int);
+  double next (void);
+  double prev (void);
+  void set (int, double);
   void setSize (int);
   char * toString (void);
   void reverse (void);
@@ -58,7 +58,7 @@ class sweep : public object
   int type;
 
  private:
-  nr_double_t * data;
+  double * data;
   int size;
   char * txt;
   int counter;
@@ -71,7 +71,7 @@ class linsweep : public sweep
   linsweep ();
   linsweep (const std::string &);
   ~linsweep ();
-  void create (nr_double_t, nr_double_t, int);
+  void create (double, double, int);
 };
 
 class logsweep : public sweep
@@ -80,7 +80,7 @@ class logsweep : public sweep
   logsweep ();
   logsweep (const std::string &);
   ~logsweep ();
-  void create (nr_double_t, nr_double_t, int);
+  void create (double, double, int);
 };
 
 class consweep : public sweep
@@ -89,7 +89,7 @@ class consweep : public sweep
   consweep ();
   consweep (const std::string &);
   ~consweep ();
-  void create (nr_double_t);
+  void create (double);
 };
 
 class lstsweep : public sweep

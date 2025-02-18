@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vdc.h"
 
@@ -46,7 +44,7 @@ void vdc::initDC (void) {
 }
 
 void vdc::calcDC (void) {
-  nr_double_t f = getNet()->getSrcFactor ();
+  double f = getNet()->getSrcFactor ();
   setE (VSRC_1, f * getPropertyDouble ("U"));
 }
 
@@ -64,7 +62,7 @@ void vdc::initHB (void) {
   voltageSource (VSRC_1, NODE_1, NODE_2);
 }
 
-void vdc::calcHB (nr_double_t frequency) {
+void vdc::calcHB (double frequency) {
   if (frequency == 0.0) {
     setE (VSRC_1, getPropertyDouble ("U"));
   } else {

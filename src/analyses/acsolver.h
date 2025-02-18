@@ -40,14 +40,14 @@ class acsolver : public nasolver<nr_complex_t>
   void solve_noise (void);
   static void calc (acsolver *);
   void init (void);
-  void saveAllResults (nr_double_t);
+  void saveAllResults (double);
   void saveNoiseResults (qucs::vector *);
 
  private:
   sweep * swp;
-  nr_double_t freq;
+  double freq;
   int noise;
-  tvector<nr_double_t> * xn;
+  tvector<double> * xn;
 };
 
 } // namespace qucs

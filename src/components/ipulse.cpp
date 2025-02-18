@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "ipulse.h"
 
@@ -40,7 +38,7 @@ void ipulse::initSP (void) {
 }
 
 void ipulse::initDC (void) {
-  nr_double_t i = getPropertyDouble ("I1");
+  double i = getPropertyDouble ("I1");
   allocMatrixMNA ();
   setI (NODE_1, +i); setI (NODE_2, -i);
 }
@@ -54,15 +52,15 @@ void ipulse::initTR (void) {
   initDC ();
 }
 
-void ipulse::calcTR (nr_double_t t) {
-  nr_double_t i1 = getPropertyDouble ("I1");
-  nr_double_t i2 = getPropertyDouble ("I2");
-  nr_double_t t1 = getPropertyDouble ("T1");
-  nr_double_t t2 = getPropertyDouble ("T2");
-  nr_double_t tr = getPropertyDouble ("Tr");
-  nr_double_t tf = getPropertyDouble ("Tf");
-  nr_double_t it = 0;
-  nr_double_t s  = getNet()->getSrcFactor ();
+void ipulse::calcTR (double t) {
+  double i1 = getPropertyDouble ("I1");
+  double i2 = getPropertyDouble ("I2");
+  double t1 = getPropertyDouble ("T1");
+  double t2 = getPropertyDouble ("T2");
+  double tr = getPropertyDouble ("Tr");
+  double tf = getPropertyDouble ("Tf");
+  double it = 0;
+  double s  = getNet()->getSrcFactor ();
 
   if (t < t1) { // before pulse
     it = i1;

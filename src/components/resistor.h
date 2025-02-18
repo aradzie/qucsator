@@ -27,14 +27,14 @@ class resistor : public qucs::circuit
  public:
   CREATOR (resistor);
   void initSP (void);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void calcDC (void);
   void initDC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
   void initAC (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
   void initTR (void);
   void initHB (void);
 

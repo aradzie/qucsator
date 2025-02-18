@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "cccs.h"
 
@@ -31,10 +29,10 @@ cccs::cccs () : circuit (4) {
   setVoltageSources (1);
 }
 
-void cccs::calcSP (nr_double_t frequency) {
+void cccs::calcSP (double frequency) {
 
-  nr_double_t g = getPropertyDouble ("G");
-  nr_double_t t = getPropertyDouble ("T");
+  double g = getPropertyDouble ("G");
+  double t = getPropertyDouble ("T");
 
   nr_complex_t z1 = qucs::polar (g, pi - 2.0 * pi * frequency * t);
   nr_complex_t z2 = qucs::polar (g, - 2.0 * pi * frequency * t);
@@ -52,7 +50,7 @@ void cccs::calcSP (nr_double_t frequency) {
 void cccs::initDC (void) {
   setISource (false);
   allocMatrixMNA ();
-  nr_double_t g = getPropertyDouble ("G");
+  double g = getPropertyDouble ("G");
   setC (VSRC_1, NODE_1, +1.0); setC (VSRC_1, NODE_2, +0.0);
   setC (VSRC_1, NODE_3, +0.0); setC (VSRC_1, NODE_4, -1.0);
   setB (NODE_1, VSRC_1, +1/g); setB (NODE_2, VSRC_1, +1.0);
@@ -65,15 +63,15 @@ void cccs::initAC (void) {
   initDC ();
 }
 
-void cccs::calcAC (nr_double_t frequency) {
-  nr_double_t g = getPropertyDouble ("G");
-  nr_double_t t = getPropertyDouble ("T");
+void cccs::calcAC (double frequency) {
+  double g = getPropertyDouble ("G");
+  double t = getPropertyDouble ("T");
   nr_complex_t r = qucs::polar (1.0 / g, - 2.0 * pi * frequency * t);
   setB (NODE_1, VSRC_1, +r); setB (NODE_4, VSRC_1, -r);
 }
 
 void cccs::initTR (void) {
-  nr_double_t t = getPropertyDouble ("T");
+  double t = getPropertyDouble ("T");
   initDC ();
   deleteHistory ();
   if (t > 0.0) {
@@ -85,12 +83,12 @@ void cccs::initTR (void) {
   }
 }
 
-void cccs::calcTR (nr_double_t t) {
-  nr_double_t T = getPropertyDouble ("T");
+void cccs::calcTR (double t) {
+  double T = getPropertyDouble ("T");
   if (T > 0.0) {
     T = t - T;
-    nr_double_t g = getPropertyDouble ("G");
-    nr_double_t i = getJ (VSRC_1, T);
+    double g = getPropertyDouble ("G");
+    double i = getJ (VSRC_1, T);
     setI (NODE_2, -g * i);
     setI (NODE_3, +g * i);
   }

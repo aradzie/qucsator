@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "dcblock.h"
 
@@ -60,10 +58,10 @@ void dcblock::initTR (void) {
   setISource (true);
 }
 
-void dcblock::calcTR (nr_double_t) {
-  nr_double_t c = getPropertyDouble ("C");
-  nr_double_t g, i;
-  nr_double_t v = real (getV (NODE_1) - getV (NODE_2));
+void dcblock::calcTR (double) {
+  double c = getPropertyDouble ("C");
+  double g, i;
+  double v = real (getV (NODE_1) - getV (NODE_2));
 
   setState (qState, c * v);
   integrate (qState, c, g, i);

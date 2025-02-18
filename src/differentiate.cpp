@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -130,7 +128,7 @@ node * differentiate::plus_reduce (node * f0, node * f1) {
     delete f1;
     return f0;
   } else if (isConst (f0) && isConst (f1)) {
-    nr_double_t t = D(f0) + D(f1);
+    double t = D(f0) + D(f1);
     delete f0; delete f1;
     retCon (t);
   } else {
@@ -157,7 +155,7 @@ node * differentiate::minus_reduce (node * f0) {
     delete f0;
     retCon (0);
   } else if (isConst (f0)) {
-    nr_double_t t = -D(f0);
+    double t = -D(f0);
     delete f0;
     retCon (t);
   }
@@ -175,7 +173,7 @@ node * differentiate::minus_reduce (node * f0, node * f1) {
     delete f1;
     return f0;
   } else if (isConst (f0) && isConst (f1)) {
-    nr_double_t t = D(f0) - D(f1);
+    double t = D(f0) - D(f1);
     delete f0; delete f1;
     retCon (t);
   } else {
@@ -213,7 +211,7 @@ node * differentiate::times_reduce (node * f0, node * f1) {
     delete f1;
     return minus_reduce (f0);
   } else if (isConst (f0) && isConst (f1)) {
-    nr_double_t t = D(f0) * D(f1);
+    double t = D(f0) * D(f1);
     delete f0; delete f1;
     retCon (t);
   } else {
@@ -247,7 +245,7 @@ node * differentiate::over_reduce (node * f0, node * f1) {
     if (isZero (f1)) {
       retApp2 ("/", f0, f1);
     }
-    nr_double_t t = D(f0) / D(f1);
+    double t = D(f0) / D(f1);
     delete f0; delete f1;
     retCon (t);
   } else if (isOne (f1)) {
@@ -318,7 +316,7 @@ node * differentiate::power_reduce (node * f0, node * f1) {
       delete f0; delete f1;
       retCon (1);
     }
-    nr_double_t t = std::pow (D(f0), D(f1));
+    double t = std::pow (D(f0), D(f1));
     delete f0; delete f1;
     retCon (t);
   } else if (isOne (f1)) {
@@ -506,7 +504,7 @@ node * differentiate::sqr_reduce (node * f0) {
     delete f0;
     retCon (0);
   } else if (isConst (f0)) {
-    nr_double_t t = D(f0) * D(f0);
+    double t = D(f0) * D(f0);
     delete f0;
     retCon (t);
   } else {
@@ -667,7 +665,7 @@ node * differentiate::ifthenelse (application * app, char * derivative) {
   _AD2 (d2);
   if (isConst (d1) && isConst (d2)) {
     if (D(d1) == D(d2)) {
-      nr_double_t t = D(d1);
+      double t = D(d1);
       delete d1; delete d2;
       retCon (t);
     }
@@ -716,7 +714,7 @@ node * differentiate::hypot_reduce (node * f0, node * f1) {
     delete f1;
     return sqrt_reduce (sqr_reduce (f0));
   } else if (isConst (f0) && isConst (f1)) {
-    nr_double_t t = ::xhypot (D(f0), D(f1));
+    double t = ::xhypot (D(f0), D(f1));
     delete f0; delete f1;
     retCon (t);
   } else {

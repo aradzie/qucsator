@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "msline.h"
@@ -34,30 +32,30 @@ msopen::msopen () : circuit (1) {
 }
 
 // Returns the microstrip open end capacitance.
-nr_double_t msopen::calcCend (nr_double_t frequency, nr_double_t W,
-			      nr_double_t h, nr_double_t t, nr_double_t er,
+double msopen::calcCend (double frequency, double W,
+			      double h, double t, double er,
 			      const char * const SModel, const char * const DModel,
 			      const char * const Model) {
 
-  nr_double_t ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
+  double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
   msline::analyseQuasiStatic (W, h, t, er, SModel, ZlEff, ErEff, WEff);
   msline::analyseDispersion  (WEff, h, er, ZlEff, ErEff, frequency, DModel,
 			      ZlEffFreq, ErEffFreq);
 
   W /= h;
-  nr_double_t dl = 0;
+  double dl = 0;
   /* Kirschning, Jansen and Koster */
   if (!strcmp (Model, "Kirschning")) {
-    nr_double_t Q6 = qucs::pow (ErEffFreq, 0.81);
-    nr_double_t Q7 = qucs::pow (W, 0.8544);
-    nr_double_t Q1 = 0.434907 *
+    double Q6 = qucs::pow (ErEffFreq, 0.81);
+    double Q7 = qucs::pow (W, 0.8544);
+    double Q1 = 0.434907 *
       (Q6 + 0.26) / (Q6 - 0.189) * (Q7 + 0.236) / (Q7 + 0.87);
-    nr_double_t Q2 = qucs::pow (W, 0.371) / (2.358 * er + 1.0) + 1.0;
-    nr_double_t Q3 = qucs::atan (0.084 * qucs::pow (W, 1.9413 / Q2)) *
+    double Q2 = qucs::pow (W, 0.371) / (2.358 * er + 1.0) + 1.0;
+    double Q3 = qucs::atan (0.084 * qucs::pow (W, 1.9413 / Q2)) *
       0.5274 / qucs::pow (ErEffFreq, 0.9236) + 1.0;
-    nr_double_t Q4 = 0.0377 * (6.0 - 5.0 * qucs::exp (0.036 * (1.0 - er))) *
+    double Q4 = 0.0377 * (6.0 - 5.0 * qucs::exp (0.036 * (1.0 - er))) *
       qucs::atan (0.067 * qucs::pow (W, 1.456)) + 1.0;
-    nr_double_t Q5 = 1.0 - 0.218 * qucs::exp (-7.5 * W);
+    double Q5 = 1.0 - 0.218 * qucs::exp (-7.5 * W);
     dl = Q1 * Q3 * Q5 / Q4;
   }
   /* Hammerstad */
@@ -68,31 +66,31 @@ nr_double_t msopen::calcCend (nr_double_t frequency, nr_double_t W,
   return dl * h * qucs::sqrt (ErEffFreq) / C0 / ZlEffFreq;
 }
 
-void msopen::calcSP (nr_double_t frequency) {
+void msopen::calcSP (double frequency) {
   setS (NODE_1, NODE_1, ztor (1.0 / calcY (frequency)));
 }
 
-nr_complex_t msopen::calcY (nr_double_t frequency) {
+nr_complex_t msopen::calcY (double frequency) {
 
   /* how to get properties of this component, e.g. W */
-  nr_double_t W = getPropertyDouble ("W");
+  double W = getPropertyDouble ("W");
   const char * SModel = getPropertyString ("MSModel");
   const char * DModel = getPropertyString ("MSDispModel");
   const char * Model  = getPropertyString ("Model");
 
   /* how to get properties of the substrate, e.g. Er, H */
   substrate * subst = getSubstrate ();
-  nr_double_t er    = subst->getPropertyDouble ("er");
-  nr_double_t h     = subst->getPropertyDouble ("h");
-  nr_double_t t     = subst->getPropertyDouble ("t");
+  double er    = subst->getPropertyDouble ("er");
+  double h     = subst->getPropertyDouble ("h");
+  double t     = subst->getPropertyDouble ("t");
 
   /* local variables */
   nr_complex_t y;
-  nr_double_t o = 2 * pi * frequency;
+  double o = 2 * pi * frequency;
 
   /* Alexopoulos and Wu */
   if (!strcmp (Model, "Alexopoulos")) {
-    nr_double_t ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
+    double ZlEff, ErEff, WEff, ZlEffFreq, ErEffFreq;
     msline::analyseQuasiStatic (W, h, t, er, SModel, ZlEff, ErEff, WEff);
     msline::analyseDispersion  (WEff, h, er, ZlEff, ErEff, frequency, DModel,
 				ZlEffFreq, ErEffFreq);
@@ -102,7 +100,7 @@ nr_complex_t msopen::calcY (nr_double_t frequency) {
 		"for er = 9.9 (er = %g)\n", er);
     }
 
-    nr_double_t c1, c2, l2, r2;
+    double c1, c2, l2, r2;
     c1 = (1.125 * qucs::tanh (1.358 * W / h) - 0.315) *
       h / 2.54e-5 / 25 / ZlEffFreq * 1e-12;
     c2 = (6.832 * qucs::tanh (0.0109 * W / h) + 0.919) *
@@ -113,7 +111,7 @@ nr_complex_t msopen::calcY (nr_double_t frequency) {
     y = nr_complex_t (0, c1 * o) + 1.0 / nr_complex_t (r2, l2 * o - 1 / c2 / o);
   }
   else {
-    nr_double_t c = calcCend (frequency, W, h, t, er, SModel, DModel, Model);
+    double c = calcCend (frequency, W, h, t, er, SModel, DModel, Model);
     y = nr_complex_t (0, c * o);
   }
   return y;
@@ -124,7 +122,7 @@ void msopen::initDC (void) {
   setY (NODE_1, NODE_1, 0);
 }
 
-void msopen::calcAC (nr_double_t frequency) {
+void msopen::calcAC (double frequency) {
   setY (NODE_1, NODE_1, calcY (frequency));
 }
 

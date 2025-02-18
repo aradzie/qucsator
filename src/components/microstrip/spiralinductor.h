@@ -29,18 +29,18 @@ class spiralinductor : public qucs::circuit
 {
  public:
   CREATOR (spiralinductor);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void initDC (void);
   void initAC (void);
   void initSP (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
 
 private:
-  void calcABCDparams(nr_double_t);
+  void calcABCDparams(double);
   qucs::matrix ABCD;
-  nr_double_t R;//Equivalent series resistance of the spiral inductor
+  double R;//Equivalent series resistance of the spiral inductor
 };
 
 #endif /* SPIRALINDUCTOR_H */

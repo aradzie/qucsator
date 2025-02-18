@@ -26,12 +26,12 @@ class ctline : public qucs::circuit
 {
  public:
   CREATOR (ctline);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
+  void calcNoiseSP (double);
 };
 
 #endif /* __CTLINE_H__ */

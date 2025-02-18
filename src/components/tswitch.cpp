@@ -28,8 +28,6 @@
  */
 
 
-#include "config.h"
-
 #include <iostream>
 #include <cmath>
 #include "component.h"
@@ -42,14 +40,14 @@ tswitch::tswitch () : circuit (2) {
   setVoltageSources (1);
 }
 
-nr_double_t tswitch::initState (void) {
+double tswitch::initState (void) {
   const char * const init = getPropertyString ("init");
   bool on = !strcmp (init, "on");
   return on ? getPropertyDouble ("Ron") : getPropertyDouble ("Roff");
 }
 
 void tswitch::initSP (void) {
-  nr_double_t r = initState ();
+  double r = initState ();
   allocMatrixS ();
   setS (NODE_1, NODE_1, r / (r + 2));
   setS (NODE_2, NODE_2, r / (r + 2));
@@ -57,26 +55,26 @@ void tswitch::initSP (void) {
   setS (NODE_2, NODE_1, 2 / (r + 2));
 }
 
-void tswitch::calcNoiseSP (nr_double_t) {
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t r = initState ();
-  nr_double_t f = celsius2kelvin (T) * 4.0 * r * z0 / sqr (2.0 * z0 + r) / T0;
+void tswitch::calcNoiseSP (double) {
+  double T = getPropertyDouble ("Temp");
+  double r = initState ();
+  double f = celsius2kelvin (T) * 4.0 * r * z0 / sqr (2.0 * z0 + r) / T0;
   setN (NODE_1, NODE_1, +f); setN (NODE_2, NODE_2, +f);
   setN (NODE_1, NODE_2, -f); setN (NODE_2, NODE_1, -f);
 }
 
-void tswitch::calcNoiseAC (nr_double_t) {
-  nr_double_t r = initState ();
+void tswitch::calcNoiseAC (double) {
+  double r = initState ();
   if (r > 0.0 || r < 0.0) {
-    nr_double_t T = getPropertyDouble ("Temp");
-    nr_double_t f = celsius2kelvin (T) / T0 * 4.0 / r;
+    double T = getPropertyDouble ("Temp");
+    double f = celsius2kelvin (T) / T0 * 4.0 / r;
     setN (NODE_1, NODE_1, +f); setN (NODE_2, NODE_2, +f);
     setN (NODE_1, NODE_2, -f); setN (NODE_2, NODE_1, -f);
   }
 }
 
 void tswitch::initDC (void) {
-  nr_double_t r = initState ();
+  double r = initState ();
   allocMatrixMNA ();
   voltageSource (VSRC_1, NODE_1, NODE_2);
   setD (VSRC_1, VSRC_1, -r);
@@ -96,24 +94,24 @@ void tswitch::initTR (void) {
   // make the time taken to go from fully on to fully off
   // the smallest switching time / 100, or the smallest possible
   // number, but no bigger than the max specified duration
-  nr_double_t maxduration = getPropertyDouble("MaxDuration");
+  double maxduration = getPropertyDouble("MaxDuration");
   duration = std::min ( std::max (10*NR_TINY, values->minimum() / 100),
                         maxduration );
   initDC ();
 }
 
-void tswitch::calcTR (nr_double_t t) {
+void tswitch::calcTR (double t) {
   const char * const init = getPropertyString ("init");
-  nr_double_t ron = getPropertyDouble ("Ron");
-  nr_double_t roff = getPropertyDouble ("Roff");
+  double ron = getPropertyDouble ("Ron");
+  double roff = getPropertyDouble ("Roff");
   const char * const trans_type = getPropertyString ("Transition");
-  nr_double_t r = 0;
-  nr_double_t rdiff = 0;
-  //nr_double_t s_i = 0;
-  nr_double_t r_0 = 0;
+  double r = 0;
+  double rdiff = 0;
+  //double s_i = 0;
+  double r_0 = 0;
   qucs::vector * values = getPropertyVector ("time");
   bool on = !strcmp (init, "on");
-  nr_double_t ti = 0;
+  double ti = 0;
 
   if (repeat) {
     // if the user enters an even number of switching times
@@ -126,7 +124,7 @@ void tswitch::calcTR (nr_double_t t) {
   // Initialise the last switching time to be well in the past
   // to avoid having the switch even partially in a transition
   // state (due to inaccurately computed time differences)
-  nr_double_t ts = -2*duration;
+  double ts = -2*duration;
 
   // here we determine whether a switching event should occur
   // by looping through the list of switching times and comparing
@@ -155,7 +153,7 @@ void tswitch::calcTR (nr_double_t t) {
     r = (on ? ron : roff);
   } else {
     // calculate the time since the last switch occurred
-    nr_double_t tdiff = std::max(NR_TINY, t - ts);
+    double tdiff = std::max(NR_TINY, t - ts);
 
     // set the time difference to be no more than the max switch
     // duration so when we interpolate below we only get the max

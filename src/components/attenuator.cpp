@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "attenuator.h"
 
@@ -32,34 +30,34 @@ attenuator::attenuator () : circuit (2) {
 
 void attenuator::initSP (void) {
   allocMatrixS ();
-  nr_double_t a = getPropertyDouble ("L");
-  nr_double_t z = getPropertyDouble ("Zref");
-  nr_double_t r = (z - z0) / (z + z0);
-  nr_double_t s11 = r * (a - 1) / (a - r * r);
-  nr_double_t s21 = std::sqrt (a) * (1 - r * r) / (a - r * r);
+  double a = getPropertyDouble ("L");
+  double z = getPropertyDouble ("Zref");
+  double r = (z - z0) / (z + z0);
+  double s11 = r * (a - 1) / (a - r * r);
+  double s21 = std::sqrt (a) * (1 - r * r) / (a - r * r);
   setS (NODE_1, NODE_1, s11);
   setS (NODE_2, NODE_2, s11);
   setS (NODE_1, NODE_2, s21);
   setS (NODE_2, NODE_1, s21);
 }
 
-void attenuator::calcNoiseSP (nr_double_t) {
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t l = getPropertyDouble ("L");
-  nr_double_t z = getPropertyDouble ("Zref");
-  nr_double_t r = (z - z0) / (z + z0);
-  nr_double_t f = (l - 1) * (r * r - 1) / sqr (l - r * r) * celsius2kelvin (T) / T0;
+void attenuator::calcNoiseSP (double) {
+  double T = getPropertyDouble ("Temp");
+  double l = getPropertyDouble ("L");
+  double z = getPropertyDouble ("Zref");
+  double r = (z - z0) / (z + z0);
+  double f = (l - 1) * (r * r - 1) / sqr (l - r * r) * celsius2kelvin (T) / T0;
   setN (NODE_1, NODE_1, -f * (r * r + l));
   setN (NODE_2, NODE_2, -f * (r * r + l));
   setN (NODE_1, NODE_2, +f * 2 * r * std::sqrt (l));
   setN (NODE_2, NODE_1, +f * 2 * r * std::sqrt (l));
 }
 
-void attenuator::calcNoiseAC (nr_double_t) {
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t l = getPropertyDouble ("L");
-  nr_double_t z = getPropertyDouble ("Zref");
-  nr_double_t f = 4.0 * celsius2kelvin (T) / T0 / z / (l - 1);
+void attenuator::calcNoiseAC (double) {
+  double T = getPropertyDouble ("Temp");
+  double l = getPropertyDouble ("L");
+  double z = getPropertyDouble ("Zref");
+  double f = 4.0 * celsius2kelvin (T) / T0 / z / (l - 1);
   setN (NODE_1, NODE_1, +f * (l + 1));
   setN (NODE_2, NODE_2, +f * (l + 1));
   setN (NODE_1, NODE_2, -f * 2 * std::sqrt (l));
@@ -67,7 +65,7 @@ void attenuator::calcNoiseAC (nr_double_t) {
 }
 
 void attenuator::initDC (void) {
-  nr_double_t a = getPropertyDouble ("L");
+  double a = getPropertyDouble ("L");
   if (a == 1.0) { // no attenuation
     setVoltageSources (1);
     allocMatrixMNA ();
@@ -77,9 +75,9 @@ void attenuator::initDC (void) {
   else { // compute Z-parameters
     setVoltageSources (2);
     allocMatrixMNA ();
-    nr_double_t zref = getPropertyDouble ("Zref");
-    nr_double_t z11 = zref * (a + 1) / (a - 1);
-    nr_double_t z21 = zref * (std::sqrt (a) * 2) / (a - 1);
+    double zref = getPropertyDouble ("Zref");
+    double z11 = zref * (a + 1) / (a - 1);
+    double z21 = zref * (std::sqrt (a) * 2) / (a - 1);
     setB (NODE_1, VSRC_1, +1.0); setB (NODE_1, VSRC_2, +0.0);
     setB (NODE_2, VSRC_1, +0.0); setB (NODE_2, VSRC_2, +1.0);
     setC (VSRC_1, NODE_1, -1.0); setC (VSRC_1, NODE_2, +0.0);
@@ -93,8 +91,8 @@ void attenuator::initDC (void) {
   else { // compute Y-parameters
     setVoltageSources (0);
     allocMatrixMNA ();
-    nr_double_t z = getPropertyDouble ("Zref");
-    nr_double_t f = 1 / z / (a - 1);
+    double z = getPropertyDouble ("Zref");
+    double f = 1 / z / (a - 1);
     setY (NODE_1, NODE_1, f * (a + 1));
     setY (NODE_2, NODE_2, f * (a + 1));
     setY (NODE_1, NODE_2, -f * 2 * std::sqrt (a));
@@ -104,7 +102,7 @@ void attenuator::initDC (void) {
 }
 
 void attenuator::initAC (void) {
-  nr_double_t a = getPropertyDouble ("L");
+  double a = getPropertyDouble ("L");
 
   if (a == 1.0) { // no attenuation
     setVoltageSources (1);
@@ -116,9 +114,9 @@ void attenuator::initAC (void) {
   else { // compute Z-parameters
     setVoltageSources (0);
     allocMatrixMNA ();
-    nr_double_t zref = getPropertyDouble ("Zref");
-    nr_double_t z11 = zref * (a + 1) / (a - 1);
-    nr_double_t z21 = zref * (std::sqrt (a) * 2) / (a - 1);
+    double zref = getPropertyDouble ("Zref");
+    double z11 = zref * (a + 1) / (a - 1);
+    double z21 = zref * (std::sqrt (a) * 2) / (a - 1);
 
     // build Z-parameter matrix and convert it to Y-parameters
     matrix z (2);
@@ -130,8 +128,8 @@ void attenuator::initAC (void) {
   else { // compute Y-parameters
     setVoltageSources (0);
     allocMatrixMNA ();
-    nr_double_t z = getPropertyDouble ("Zref");
-    nr_double_t f = 1 / z / (a - 1);
+    double z = getPropertyDouble ("Zref");
+    double f = 1 / z / (a - 1);
     setY (NODE_1, NODE_1, f * (a + 1));
     setY (NODE_2, NODE_2, f * (a + 1));
     setY (NODE_1, NODE_2, -f * 2 * std::sqrt (a));

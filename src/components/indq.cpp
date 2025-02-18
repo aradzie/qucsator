@@ -21,8 +21,6 @@
  */
 
 
-#include "config.h"
-
 #include "component.h"
 #include "indq.h"
 #include "iostream"
@@ -37,14 +35,14 @@ indq::indq () : circuit (2) {
 }
 
 // calculate equivalent series impedance of the lossy inductor
-void indq::calcZs(nr_double_t frequency) {
-  nr_double_t L = getPropertyDouble ("L");
-  nr_double_t Q = getPropertyDouble ("Q");
-  nr_double_t f = getPropertyDouble ("f");
-  nr_double_t Xl = 2.*pi*frequency*L;
-  nr_double_t Rs = 0.0;
+void indq::calcZs(double frequency) {
+  double L = getPropertyDouble ("L");
+  double Q = getPropertyDouble ("Q");
+  double f = getPropertyDouble ("f");
+  double Xl = 2.*pi*frequency*L;
+  double Rs = 0.0;
   if ((f != 0.0) && (Q != 0.0) && (frequency!=0)) { // Q=0 or f=0 can be used to force ideal behavior (no losses)
-    nr_double_t Qf = Q;
+    double Qf = Q;
     if (!strcmp (getPropertyString ("Mode"), "Linear")) Qf *= frequency/f;
     if (!strcmp (getPropertyString ("Mode"), "SquareRoot")) Qf *= qucs::sqrt(frequency/f);
     Rs = Xl / Qf;
@@ -56,7 +54,7 @@ void indq::calcZs(nr_double_t frequency) {
 // This function calculates the S-parameters matrix of a lossy inductance
 // Q = 2*pi*f*L/Rs
 // where Rs is the series resistance and L the inductance
-void indq::calcSP (nr_double_t frequency) {
+void indq::calcSP (double frequency) {
  // calculate element series impedance
  calcZs(frequency);
 
@@ -67,9 +65,9 @@ void indq::calcSP (nr_double_t frequency) {
  setS (NODE_2, NODE_1, 2.0 / (z + 2.0));
 }
 
-void indq::calcNoiseSP (nr_double_t) {
+void indq::calcNoiseSP (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
@@ -87,7 +85,7 @@ void indq::calcDC (void) {
 }
 
 void indq::initAC (void) {
-  nr_double_t L = getPropertyDouble ("L");
+  double L = getPropertyDouble ("L");
 
   // for non-zero inductance usual MNA entries
   if (L != 0.0) {
@@ -107,7 +105,7 @@ void indq::initSP(void)
   allocMatrixS ();
 }
 
-void indq::calcAC (nr_double_t frequency) {
+void indq::calcAC (double frequency) {
   // calculate element series impedance
   calcZs(frequency);
   // for non-zero impedance usual MNA entries
@@ -121,9 +119,9 @@ void indq::calcAC (nr_double_t frequency) {
   }
 }
 
-void indq::calcNoiseAC (nr_double_t) {
+void indq::calcNoiseAC (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

@@ -38,11 +38,11 @@ class pair
   p(s != nullptr ? std::string(s) : std::string(),0.0)
   {};
 
-  pair (const char * const s, nr_double_t v) :
+  pair (const char * const s, double v) :
     p(s != nullptr ? std::string(s) : std::string(),v)
   {} ;
 
-  pair(const std::string s, nr_double_t v) : p(s,v) {};
+  pair(const std::string s, double v) : p(s,v) {};
 
   void setName (const char * const s) {
     p.first = s != nullptr ? std::string(s) : std::string();
@@ -52,16 +52,16 @@ class pair
     return p.first.c_str();
   };
 
-  nr_double_t getValue (void) const {
+  double getValue (void) const {
     return p.second;
   }
 
-  void setValue (const nr_double_t val) {
+  void setValue (const double val) {
     p.second = val;
   }
 
  private:
-  std::pair<std::string,nr_double_t> p;
+  std::pair<std::string,double> p;
 };
 
 } // namespace qucs

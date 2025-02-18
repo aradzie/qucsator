@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "mutual2.h"
 
@@ -30,19 +28,19 @@ mutual2::mutual2 () : circuit (6) {
   type = CIR_MUTUAL2;
 }
 
-void mutual2::calcSP (nr_double_t frequency) {
+void mutual2::calcSP (double frequency) {
   setMatrixS (ytos (calcMatrixY (frequency)));
 }
 
-matrix mutual2::calcMatrixY (nr_double_t frequency) {
-  nr_double_t k12 = getPropertyDouble ("k12");
-  nr_double_t k13 = getPropertyDouble ("k13");
-  nr_double_t k23 = getPropertyDouble ("k23");
-  nr_double_t l1 = getPropertyDouble ("L1");
-  nr_double_t l2 = getPropertyDouble ("L2");
-  nr_double_t l3 = getPropertyDouble ("L3");
-  nr_double_t o = 2 * pi * frequency;
-  nr_double_t a = 1 - k12 * k12 - k13 * k13 - k23 * k23 + 2 * k12 * k13 * k23;
+matrix mutual2::calcMatrixY (double frequency) {
+  double k12 = getPropertyDouble ("k12");
+  double k13 = getPropertyDouble ("k13");
+  double k23 = getPropertyDouble ("k23");
+  double l1 = getPropertyDouble ("L1");
+  double l2 = getPropertyDouble ("L2");
+  double l3 = getPropertyDouble ("L3");
+  double o = 2 * pi * frequency;
+  double a = 1 - k12 * k12 - k13 * k13 - k23 * k23 + 2 * k12 * k13 * k23;
   nr_complex_t y11 = nr_complex_t (0, (k23 * k23 - 1) / l1 / a / o);
   nr_complex_t y22 = nr_complex_t (0, (k12 * k12 - 1) / l3 / a / o);
   nr_complex_t y44 = nr_complex_t (0, (k13 * k13 - 1) / l2 / a / o);
@@ -77,7 +75,7 @@ void mutual2::initAC (void) {
   allocMatrixMNA ();
 }
 
-void mutual2::calcAC (nr_double_t frequency) {
+void mutual2::calcAC (double frequency) {
   setMatrixY (calcMatrixY (frequency));
 }
 
@@ -113,21 +111,21 @@ void mutual2::initTR (void) {
 #define fState33 16
 #define vState33 17
 
-void mutual2::calcTR (nr_double_t) {
-  nr_double_t k12 = getPropertyDouble ("k12");
-  nr_double_t k13 = getPropertyDouble ("k13");
-  nr_double_t k23 = getPropertyDouble ("k23");
-  nr_double_t l1  = getPropertyDouble ("L1");
-  nr_double_t l2  = getPropertyDouble ("L2");
-  nr_double_t l3  = getPropertyDouble ("L3");
-  nr_double_t M12 = k12 * std::sqrt (l1 * l2);
-  nr_double_t M13 = k13 * std::sqrt (l1 * l3);
-  nr_double_t M23 = k23 * std::sqrt (l2 * l3);
-  nr_double_t r11, r12, r13, r21, r22, r23, r31, r32, r33;
-  nr_double_t v11, v12, v13, v21, v22, v23, v31, v32, v33;
-  nr_double_t i1 = real (getJ (VSRC_1));
-  nr_double_t i2 = real (getJ (VSRC_2));
-  nr_double_t i3 = real (getJ (VSRC_3));
+void mutual2::calcTR (double) {
+  double k12 = getPropertyDouble ("k12");
+  double k13 = getPropertyDouble ("k13");
+  double k23 = getPropertyDouble ("k23");
+  double l1  = getPropertyDouble ("L1");
+  double l2  = getPropertyDouble ("L2");
+  double l3  = getPropertyDouble ("L3");
+  double M12 = k12 * std::sqrt (l1 * l2);
+  double M13 = k13 * std::sqrt (l1 * l3);
+  double M23 = k23 * std::sqrt (l2 * l3);
+  double r11, r12, r13, r21, r22, r23, r31, r32, r33;
+  double v11, v12, v13, v21, v22, v23, v31, v32, v33;
+  double i1 = real (getJ (VSRC_1));
+  double i2 = real (getJ (VSRC_2));
+  double i3 = real (getJ (VSRC_3));
 
   setState  (fState11, i1 * l1);
   integrate (fState11, l1, r11, v11);

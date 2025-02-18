@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "ccvs.h"
 
@@ -31,10 +29,10 @@ ccvs::ccvs () : circuit (4) {
   setVoltageSources (2);
 }
 
-void ccvs::calcSP (nr_double_t frequency) {
+void ccvs::calcSP (double frequency) {
 
-  nr_double_t g = getPropertyDouble ("G") / z0;
-  nr_double_t t = getPropertyDouble ("T");
+  double g = getPropertyDouble ("G") / z0;
+  double t = getPropertyDouble ("T");
 
   nr_complex_t z1 = qucs::polar (g / 2.0, pi - 2.0 * pi * frequency * t);
   nr_complex_t z2 = qucs::polar (g / 2.0, - 2.0 * pi * frequency * t);
@@ -70,15 +68,15 @@ void ccvs::initAC (void) {
   initDC ();
 }
 
-void ccvs::calcAC (nr_double_t frequency) {
-  nr_double_t t = getPropertyDouble ("T");
+void ccvs::calcAC (double frequency) {
+  double t = getPropertyDouble ("T");
   nr_complex_t g = qucs::polar (getPropertyDouble ("G"),
 			  - 2.0 * pi * frequency * t);
   setD (VSRC_1, VSRC_1, -g);
 }
 
 void ccvs::initTR (void) {
-  nr_double_t t = getPropertyDouble ("T");
+  double t = getPropertyDouble ("T");
   initDC ();
   deleteHistory ();
   if (t > 0.0) {
@@ -92,12 +90,12 @@ void ccvs::initTR (void) {
   }
 }
 
-void ccvs::calcTR (nr_double_t t) {
-  nr_double_t T = getPropertyDouble ("T");
+void ccvs::calcTR (double t) {
+  double T = getPropertyDouble ("T");
   if (T > 0.0) {
     T = t - T;
-    nr_double_t g = getPropertyDouble ("G");
-    nr_double_t i = getJ (VSRC_1, T);
+    double g = getPropertyDouble ("G");
+    double i = getJ (VSRC_1, T);
     setE (VSRC_2, g * i);
   }
 }

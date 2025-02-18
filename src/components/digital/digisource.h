@@ -30,10 +30,10 @@ class digisource : public qucs::circuit
   void initDC (void);
   void initAC (void);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 
  private:
-  nr_double_t T;
+  double T;
 };
 
 #endif /* __DIGISOURCE_H__ */

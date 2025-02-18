@@ -27,14 +27,14 @@ class capacitor : public qucs::circuit
 {
  public:
   CREATOR (capacitor);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initAC (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
   void initTR (void);
   void initHB (void);
-  void calcHB (nr_double_t);
+  void calcHB (double);
 
 };
 

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "msline.h"
@@ -42,7 +40,7 @@ void mscross::initSP (void) {
   allocMatrixS ();
 }
 
-void mscross::calcSP (nr_double_t frequency) {
+void mscross::calcSP (double frequency) {
   setMatrixS (ytos (calcMatrixY (frequency)));
 }
 
@@ -63,19 +61,19 @@ void mscross::initAC (void) {
   allocMatrixMNA ();
 }
 
-void mscross::calcAC (nr_double_t frequency) {
+void mscross::calcAC (double frequency) {
   setMatrixY (calcMatrixY (frequency));
 }
 
-nr_double_t mscross::capCorrection (nr_double_t W, nr_double_t f) {
+double mscross::capCorrection (double W, double f) {
   substrate * subst = getSubstrate ();
-  nr_double_t er = subst->getPropertyDouble ("er");
-  nr_double_t h  = subst->getPropertyDouble ("h");
-  nr_double_t t  = subst->getPropertyDouble ("t");
+  double er = subst->getPropertyDouble ("er");
+  double h  = subst->getPropertyDouble ("h");
+  double t  = subst->getPropertyDouble ("t");
   const char * SModel = getPropertyString ("MSModel");
   const char * DModel = getPropertyString ("MSDispModel");
-  nr_double_t Zl1, Er1, Zl2, Er2;
-  nr_double_t ZlEff, ErEff, WEff;
+  double Zl1, Er1, Zl2, Er2;
+  double ZlEff, ErEff, WEff;
   msline::analyseQuasiStatic (W, h, t, 9.9, SModel, ZlEff, ErEff, WEff);
   msline::analyseDispersion  (W, h, 9.9, ZlEff, ErEff, f, DModel,
                               Zl1, Er1);
@@ -85,32 +83,32 @@ nr_double_t mscross::capCorrection (nr_double_t W, nr_double_t f) {
   return Zl1 / Zl2 * qucs::sqrt (Er2 / Er1);
 }
 
-nr_double_t mscross::calcCap (nr_double_t W1, nr_double_t h, nr_double_t W2) {
-  nr_double_t W1h = W1 / h;
-  nr_double_t W2h = W2 / h;
-  nr_double_t X = qucs::log10 (W1h) * (86.6 * W2h - 30.9 * qucs::sqrt (W2h) + 367) +
+double mscross::calcCap (double W1, double h, double W2) {
+  double W1h = W1 / h;
+  double W2h = W2 / h;
+  double X = qucs::log10 (W1h) * (86.6 * W2h - 30.9 * qucs::sqrt (W2h) + 367) +
     cubic (W2h) + 74 * W2h + 130;
   return 1e-12 * W1 * (0.25 * X * qucs::pow (W1h, -1.0 / 3.0) - 60 +
 			      1 / W2h / 2 - 0.375 * W1h * (1 - W2h));
  }
 
-nr_double_t mscross::calcInd (nr_double_t W1, nr_double_t h, nr_double_t W2) {
-  nr_double_t W1h = W1 / h;
-  nr_double_t W2h = W2 / h;
-  nr_double_t Y = 165.6 * W2h + 31.2 * qucs::sqrt (W2h) - 11.8 * sqr (W2h);
+double mscross::calcInd (double W1, double h, double W2) {
+  double W1h = W1 / h;
+  double W2h = W2 / h;
+  double Y = 165.6 * W2h + 31.2 * qucs::sqrt (W2h) - 11.8 * sqr (W2h);
   return 1e-9 * h * (Y * W1h - 32 * W2h + 3) * qucs::pow (W1h, -1.5);
 }
 
-matrix mscross::calcMatrixY (nr_double_t f) {
-  nr_double_t W1 = getPropertyDouble ("W1");
-  nr_double_t W2 = getPropertyDouble ("W2");
-  nr_double_t W3 = getPropertyDouble ("W3");
-  nr_double_t W4 = getPropertyDouble ("W4");
+matrix mscross::calcMatrixY (double f) {
+  double W1 = getPropertyDouble ("W1");
+  double W2 = getPropertyDouble ("W2");
+  double W3 = getPropertyDouble ("W3");
+  double W4 = getPropertyDouble ("W4");
   substrate * subst = getSubstrate ();
-  nr_double_t h  = subst->getPropertyDouble ("h");
-  nr_double_t W1h = (W1 + W3) / 2 / h;
-  nr_double_t W2h = (W2 + W4) / 2 / h;
-  nr_double_t C1, C2, C3, C4, L1, L2, L3, L4, L5;
+  double h  = subst->getPropertyDouble ("h");
+  double W1h = (W1 + W3) / 2 / h;
+  double W2h = (W2 + W4) / 2 / h;
+  double C1, C2, C3, C4, L1, L2, L3, L4, L5;
 
   // apply asymmetric modifications of original model
   C1 = calcCap (W1, h, (W2 + W4) / 2);
@@ -136,7 +134,7 @@ matrix mscross::calcMatrixY (nr_double_t f) {
   C4 = C4 * capCorrection (W4, f);
 
   // compute admittance matrix
-  nr_double_t o = 2 * pi * f;
+  double o = 2 * pi * f;
   nr_complex_t yc1 = nr_complex_t (0, o * C1);
   nr_complex_t yc2 = nr_complex_t (0, o * C2);
   nr_complex_t yc3 = nr_complex_t (0, o * C3);

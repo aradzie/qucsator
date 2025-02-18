@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "inoise.h"
 
@@ -38,22 +36,22 @@ void inoise::initSP (void) {
   setS (NODE_2, NODE_2, 1.0);
 }
 
-void inoise::calcNoiseSP (nr_double_t frequency) {
-  nr_double_t i = getPropertyDouble ("i");
-  nr_double_t e = getPropertyDouble ("e");
-  nr_double_t c = getPropertyDouble ("c");
-  nr_double_t a = getPropertyDouble ("a");
-  nr_double_t ipsd = i / (a + c * qucs::pow (frequency, e)) / kB / T0 * z0;
+void inoise::calcNoiseSP (double frequency) {
+  double i = getPropertyDouble ("i");
+  double e = getPropertyDouble ("e");
+  double c = getPropertyDouble ("c");
+  double a = getPropertyDouble ("a");
+  double ipsd = i / (a + c * qucs::pow (frequency, e)) / kB / T0 * z0;
   setN (NODE_1, NODE_1, +ipsd); setN (NODE_2, NODE_2, +ipsd);
   setN (NODE_1, NODE_2, -ipsd); setN (NODE_2, NODE_1, -ipsd);
 }
 
-void inoise::calcNoiseAC (nr_double_t frequency) {
-  nr_double_t i = getPropertyDouble ("i");
-  nr_double_t e = getPropertyDouble ("e");
-  nr_double_t c = getPropertyDouble ("c");
-  nr_double_t a = getPropertyDouble ("a");
-  nr_double_t ipsd = i / (a + c * qucs::pow (frequency, e)) / kB / T0;
+void inoise::calcNoiseAC (double frequency) {
+  double i = getPropertyDouble ("i");
+  double e = getPropertyDouble ("e");
+  double c = getPropertyDouble ("c");
+  double a = getPropertyDouble ("a");
+  double ipsd = i / (a + c * qucs::pow (frequency, e)) / kB / T0;
   setN (NODE_1, NODE_1, +ipsd); setN (NODE_2, NODE_2, +ipsd);
   setN (NODE_1, NODE_2, -ipsd); setN (NODE_2, NODE_1, -ipsd);
 }

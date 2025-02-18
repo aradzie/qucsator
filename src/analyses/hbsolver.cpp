@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <algorithm>
 
 #include <stdio.h>
@@ -329,7 +327,7 @@ bool hbsolver::isExcitation (circuit * c) {
 }
 
 // Expands the frequency array using the given frequency and the order.
-void hbsolver::expandFrequencies (nr_double_t f, int n) {
+void hbsolver::expandFrequencies (double f, int n) {
   auto nfreqs = negfreqs;
   auto pfreqs = posfreqs;
   int i, k, len = nfreqs.size ();
@@ -384,11 +382,11 @@ void hbsolver::collectFrequencies (void) {
   int i, n = calcOrder (getPropertyInteger ("n"));
 
   // expand frequencies for each excitation
-  nr_double_t f;
+  double f;
   for (auto * c : excitations) {
     if (c->getType () != CIR_VDC) { // no extra DC sources
       if ((f = c->getPropertyDouble ("f")) != 0.0) {
-	const auto epsilon = std::numeric_limits<nr_double_t>::epsilon();
+	const auto epsilon = std::numeric_limits<double>::epsilon();
         auto found =
 	  std::find_if(dfreqs.cbegin(),dfreqs.cend(),
 		       [f,epsilon](decltype(*dfreqs.cbegin()) x) {
@@ -568,7 +566,7 @@ void hbsolver::createMatrixLinearA (void) {
   int M = nlnvsrcs;
   int N = nnanodes;
   int f = 0;
-  nr_double_t freq;
+  double freq;
 
   // create new MNA matrix
   A = new tmatrix<nr_complex_t> ((N + M) * lnfreqs);
@@ -881,7 +879,7 @@ void hbsolver::calcConstantCurrent (void) {
     vs->initHB ();
     vs->setVoltageSource (0);
     for (int f = 0; f < rfreqs.size (); f++) { // for each frequency
-      nr_double_t freq = rfreqs[f];
+      double freq = rfreqs[f];
       vs->calcHB (freq);
       VC (vsrc * lnfreqs + f) = vs->getE (VSRC_1);
     }
@@ -924,21 +922,21 @@ void hbsolver::calcConstantCurrent (void) {
 /* Checks whether currents through the interconnects of the linear and
    non-linear subcircuit (in the frequency domain) are equal. */
 int hbsolver::checkBalance (void) {
-  nr_double_t iabstol = getPropertyDouble ("iabstol");
-  nr_double_t vabstol = getPropertyDouble ("vabstol");
-  nr_double_t reltol = getPropertyDouble ("reltol");
+  double iabstol = getPropertyDouble ("iabstol");
+  double vabstol = getPropertyDouble ("vabstol");
+  double reltol = getPropertyDouble ("reltol");
   int n, len = FV->size ();
   for (n = 0; n < len; n++) {
     // check iteration voltages
-    nr_double_t v_abs = abs (VS->get (n) - VP->get (n));
-    nr_double_t v_rel = abs (VS->get (n));
+    double v_abs = abs (VS->get (n) - VP->get (n));
+    double v_rel = abs (VS->get (n));
     if (v_abs >= vabstol + reltol * v_rel) return 0;
     // check balanced currents
     nr_complex_t il = IL->get (n);
     nr_complex_t in = IN->get (n);
     if (il != in) {
-      nr_double_t i_abs = abs (il + in);
-      nr_double_t i_rel = abs ((il + in) / (il - in));
+      double i_abs = abs (il + in);
+      double i_rel = abs ((il + in) / (il - in));
       if (i_abs >= iabstol && 2.0 * i_rel >= reltol) return 0;
     }
   }
@@ -1096,12 +1094,12 @@ void hbsolver::VectorFFT (tvector<nr_complex_t> * V, int isign) {
   int n = nlfreqs;
   int nd = dfreqs.size ();
   int nodes = V->size () / n;
-  nr_double_t * d = (double *)V->getData ();
+  double * d = (double *)V->getData ();
 
   if (nd == 1) {
     // for each node a single 1d-FFT
     for (k = i = 0; i < nodes; i++, k += 2 * n) {
-      nr_double_t * dst = &d[k];
+      double * dst = &d[k];
       _fft_1d (dst, n, isign);
       if (isign > 0) for (r = 0; r < 2 * n; r++) *dst++ /= n;
     }
@@ -1109,7 +1107,7 @@ void hbsolver::VectorFFT (tvector<nr_complex_t> * V, int isign) {
   else {
     // for each node a single nd-FFT
     for (k = i = 0; i < nodes; i++, k += 2 * n) {
-      nr_double_t * dst = &d[k];
+      double * dst = &d[k];
       _fft_nd (dst, ndfreqs, nd, isign);
       if (isign > 0) for (r = 0; r < 2 * n; r++) *dst++ /= ndfreqs[0];
     }
@@ -1325,7 +1323,7 @@ void hbsolver::fillMatrixLinearExtended (tmatrix<nr_complex_t> * Y,
     int nnode = vs->getNode(NODE_2)->getNode ();
     for (int f = 0; f < lnfreqs; f++, sc++) { // for each frequency
       // fill right hand side vector
-      nr_double_t freq = rfreqs[f];
+      double freq = rfreqs[f];
       vs->calcHB (freq);
       I_(sc) = vs->getE (VSRC_1);
       // fill MNA entries

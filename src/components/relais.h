@@ -31,14 +31,14 @@ class relais : public qucs::circuit
   void calcDC (void);
   void initAC (void);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
   void saveOperatingPoints (void);
-  void calcNoiseSP (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcNoiseSP (double);
+  void calcNoiseAC (double);
 
  private:
   int state;
-  nr_double_t r;
+  double r;
 };
 
 #endif /* __RELAIS_H__ */

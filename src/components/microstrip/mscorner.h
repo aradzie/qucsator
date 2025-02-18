@@ -27,16 +27,16 @@ class mscorner : public qucs::circuit
 {
  public:
   CREATOR (mscorner);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initSP (void);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
 
  private:
   void initCheck (void);
-  qucs::matrix calcMatrixZ (nr_double_t);
-  nr_double_t L, C, h;
+  qucs::matrix calcMatrixZ (double);
+  double L, C, h;
 };
 
 #endif /* __MSCORNER_H__ */

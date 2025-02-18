@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vvnoise.h"
 
@@ -44,15 +42,15 @@ void vvnoise::initSP (void) {
   setS (NODE_V2N, NODE_V2P, 1.0);
 }
 
-void vvnoise::calcNoiseSP (nr_double_t frequency) {
-  nr_double_t C = getPropertyDouble ("C");
-  nr_double_t e = getPropertyDouble ("e");
-  nr_double_t c = getPropertyDouble ("c");
-  nr_double_t a = getPropertyDouble ("a");
-  nr_double_t k = a + c * qucs::pow (frequency, e);
-  nr_double_t u1 = getPropertyDouble ("v1") / k / kB / T0 / 4 / z0;
-  nr_double_t u2 = getPropertyDouble ("v2") / k / kB / T0 / 4 / z0;
-  nr_double_t cu = C * std::sqrt (u1 * u2);
+void vvnoise::calcNoiseSP (double frequency) {
+  double C = getPropertyDouble ("C");
+  double e = getPropertyDouble ("e");
+  double c = getPropertyDouble ("c");
+  double a = getPropertyDouble ("a");
+  double k = a + c * qucs::pow (frequency, e);
+  double u1 = getPropertyDouble ("v1") / k / kB / T0 / 4 / z0;
+  double u2 = getPropertyDouble ("v2") / k / kB / T0 / 4 / z0;
+  double cu = C * std::sqrt (u1 * u2);
 
   // entries of source 1
   setN (NODE_V1P, NODE_V1P, +u1); setN (NODE_V1N, NODE_V1N, +u1);
@@ -81,15 +79,15 @@ void vvnoise::initAC (void) {
   initDC ();
 }
 
-void vvnoise::calcNoiseAC (nr_double_t frequency) {
-  nr_double_t C = getPropertyDouble ("C");
-  nr_double_t e = getPropertyDouble ("e");
-  nr_double_t c = getPropertyDouble ("c");
-  nr_double_t a = getPropertyDouble ("a");
-  nr_double_t k = a + c * qucs::pow (frequency, e);
-  nr_double_t u1 = getPropertyDouble ("v1") / k / kB / T0;
-  nr_double_t u2 = getPropertyDouble ("v2") / k / kB / T0;
-  nr_double_t cu = C * std::sqrt (u1 * u2);
+void vvnoise::calcNoiseAC (double frequency) {
+  double C = getPropertyDouble ("C");
+  double e = getPropertyDouble ("e");
+  double c = getPropertyDouble ("c");
+  double a = getPropertyDouble ("a");
+  double k = a + c * qucs::pow (frequency, e);
+  double u1 = getPropertyDouble ("v1") / k / kB / T0;
+  double u2 = getPropertyDouble ("v2") / k / kB / T0;
+  double cu = C * std::sqrt (u1 * u2);
   setN (NODE_5, NODE_5, u1); setN (NODE_6, NODE_6, u2);
   setN (NODE_5, NODE_6, cu); setN (NODE_6, NODE_5, cu);
 }

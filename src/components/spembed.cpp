@@ -21,8 +21,6 @@
  *
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "matvec.h"
 #include "dataset.h"
@@ -91,7 +89,7 @@ void spembed::initSP (void) {
   }
 }
 
-void spembed::calcSP (nr_double_t frequency) {
+void spembed::calcSP (double frequency) {
 
   // nothing to do if the given file type had errors
   if (spara == NULL || sfreq == NULL) return;
@@ -100,16 +98,16 @@ void spembed::calcSP (nr_double_t frequency) {
   setMatrixS (expandSParaMatrix (getInterpolMatrixS (frequency)));
 }
 
-void spembed::calcNoiseSP (nr_double_t frequency) {
+void spembed::calcNoiseSP (double frequency) {
   // nothing to do if the given file type had errors
   if (spara == NULL || nfreq == NULL) return;
   setMatrixN (calcMatrixCs (frequency));
 }
 
-matrix spembed::calcMatrixCs (nr_double_t frequency) {
+matrix spembed::calcMatrixCs (double frequency) {
   // set interpolated noise correlation matrix
-  nr_double_t r = real (RN->interpolate (frequency));
-  nr_double_t f = real (FMIN->interpolate (frequency));
+  double r = real (RN->interpolate (frequency));
+  double f = real (FMIN->interpolate (frequency));
   nr_complex_t g = SOPT->interpolate (frequency);
   matrix s = getInterpolMatrixS (frequency);
   matrix n = correlationMatrix (f, g, r, s);
@@ -125,9 +123,9 @@ matrix spembed::calcMatrixCs (nr_double_t frequency) {
 matrix spembed::expandNoiseMatrix (matrix n, matrix s) {
   assert (s.getCols () == s.getRows () && n.getCols () == n.getRows () &&
 	  n.getCols () == s.getCols () - 1);
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   int r, c, ports = n.getCols () + 1;
-  nr_double_t g = -1;
+  double g = -1;
 
   // create K matrix
   matrix k (ports, ports - 1);
@@ -163,8 +161,8 @@ matrix spembed::shrinkNoiseMatrix (matrix n, matrix s) {
   assert (s.getCols () == s.getRows () && n.getCols () == n.getRows () &&
 	  n.getCols () == s.getCols () && n.getCols () > 0);
   int r, ports = n.getCols ();
-  nr_double_t g = -1;
-  nr_double_t T = getPropertyDouble ("Temp");
+  double g = -1;
+  double T = getPropertyDouble ("Temp");
 
   // create K' matrix
   matrix k (ports - 1, ports);
@@ -187,8 +185,8 @@ matrix spembed::shrinkNoiseMatrix (matrix n, matrix s) {
 /* This function computes the noise correlation matrix of a twoport
    based upon the noise parameters and the given S-parameter
    matrix. */
-matrix spembed::correlationMatrix (nr_double_t Fmin, nr_complex_t Sopt,
-				  nr_double_t Rn, matrix s) {
+matrix spembed::correlationMatrix (double Fmin, nr_complex_t Sopt,
+				  double Rn, matrix s) {
   assert (s.getCols () == s.getRows () && s.getCols () == 2);
   matrix c (2);
   nr_complex_t Kx = 4 * Rn / z0 / norm (1.0 + Sopt);
@@ -203,8 +201,8 @@ matrix spembed::correlationMatrix (nr_double_t Fmin, nr_complex_t Sopt,
 
 /* The function computes the noise figure and noise parameters for the
    given S-parameter and noise correlation matrices of a twoport. */
-nr_double_t spembed::noiseFigure (matrix s, matrix c, nr_double_t& Fmin,
-				 nr_complex_t& Sopt, nr_double_t& Rn) {
+double spembed::noiseFigure (matrix s, matrix c, double& Fmin,
+				 nr_complex_t& Sopt, double& Rn) {
   assert (s.getCols () == s.getRows () && c.getCols () == c.getRows () &&
 	  s.getCols () == 2 && c.getCols () == 2);
   nr_complex_t n1, n2;
@@ -235,7 +233,7 @@ nr_double_t spembed::noiseFigure (matrix s, matrix c, nr_double_t& Fmin,
   return real (1.0 + c.get (1, 1) / norm (s.get (1, 0)));
 }
 
-void spembed::calcNoiseAC (nr_double_t frequency) {
+void spembed::calcNoiseAC (double frequency) {
   // nothing to do if the given file type had errors
   if (spara == NULL || nfreq == NULL) return;
   setMatrixN (cstocy (calcMatrixCs (frequency), getMatrixY () * z0) / z0);
@@ -286,7 +284,7 @@ void spembed::initAC (void) {
   initSP ();
 }
 
-void spembed::calcAC (nr_double_t frequency) {
+void spembed::calcAC (double frequency) {
   // nothing to do if the given file type had errors
   if (spara == NULL || sfreq == NULL) return;
   // calculate interpolated S-parameters

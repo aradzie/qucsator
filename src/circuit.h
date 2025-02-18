@@ -118,26 +118,26 @@ class circuit : public object, public integrator
    * to set up the S-Parameter matrix.
    */
   virtual void initSP (void) { allocMatrixS (); }
-  virtual void calcSP (nr_double_t) { }
+  virtual void calcSP (double) { }
   virtual void initDC (void) { allocMatrixMNA (); }
   virtual void calcDC (void) { }
   virtual void restartDC (void) { }
   virtual void initNoiseSP (void) { allocMatrixN (); }
-  virtual void calcNoiseSP (nr_double_t) { }
+  virtual void calcNoiseSP (double) { }
   virtual void initNoiseAC (void) { allocMatrixN (vsources); }
-  virtual void calcNoiseAC (nr_double_t) { }
+  virtual void calcNoiseAC (double) { }
   virtual void initAC (void) { allocMatrixMNA (); }
-  virtual void calcAC (nr_double_t) { }
+  virtual void calcAC (double) { }
   virtual void initTR (void) { allocMatrixMNA (); }
-  virtual void calcTR (nr_double_t) { }
+  virtual void calcTR (double) { }
   virtual void initHB (void) { allocMatrixMNA (); }
-  virtual void calcHB (nr_double_t) { }
+  virtual void calcHB (double) { }
   virtual void initHB (int) { allocMatrixMNA (); }
   virtual void calcHB (int) { }
   virtual void calcOperatingPoints (void) { }
   virtual void saveOperatingPoints (void) { }
-  virtual void calcCharacteristics (nr_double_t) { }
-  virtual void saveCharacteristics (nr_double_t) { }
+  virtual void calcCharacteristics (double) { }
+  virtual void saveCharacteristics (double) { }
   virtual void saveCharacteristics (nr_complex_t) { }
 
   // basic circuit element functionality
@@ -197,7 +197,7 @@ class circuit : public object, public integrator
   int  getVoltageSource (void) { return vsource; }
   int  getVoltageSources (void);
   void setVoltageSources (int);
-  void voltageSource (int, int, int, nr_double_t value = 0.0);
+  void voltageSource (int, int, int, double value = 0.0);
   bool isVSource (void) { return RETFLAG (CIRCUIT_VSOURCE); }
   void setVSource (bool v) { MODFLAG (v, CIRCUIT_VSOURCE); }
   bool isISource (void) { return RETFLAG (CIRCUIT_ISOURCE); }
@@ -206,33 +206,33 @@ class circuit : public object, public integrator
   void setNoiseSources (int);
 
   // transient analyses helpers
-  void transientCapacitance (int, int, int, nr_double_t, nr_double_t,
-			     nr_double_t);
-  void transientCapacitance (int, int, nr_double_t, nr_double_t, nr_double_t);
-  void transientCapacitanceQ (int, int, int, nr_double_t);
-  void transientCapacitanceQ (int, int, nr_double_t);
-  void transientCapacitanceC (int, int, int, int, nr_double_t, nr_double_t);
-  void transientCapacitanceC (int, int, nr_double_t, nr_double_t);
-  void transientCapacitanceC2V (int, int, int, nr_double_t, nr_double_t);
-  void transientCapacitanceC2Q (int, int, int, nr_double_t, nr_double_t);
-  void setDelta (nr_double_t * d) { deltas = d; }
-  nr_double_t * getDelta (void) { return deltas; }
+  void transientCapacitance (int, int, int, double, double,
+			     double);
+  void transientCapacitance (int, int, double, double, double);
+  void transientCapacitanceQ (int, int, int, double);
+  void transientCapacitanceQ (int, int, double);
+  void transientCapacitanceC (int, int, int, int, double, double);
+  void transientCapacitanceC (int, int, double, double);
+  void transientCapacitanceC2V (int, int, int, double, double);
+  void transientCapacitanceC2Q (int, int, int, double, double);
+  void setDelta (double * d) { deltas = d; }
+  double * getDelta (void) { return deltas; }
 
   // history specific functionality
   bool hasHistory (void) { return RETFLAG (CIRCUIT_HISTORY); }
   void setHistory (bool h) { MODFLAG (h, CIRCUIT_HISTORY); }
-  void initHistory (nr_double_t);
+  void initHistory (double);
   void deleteHistory (void);
-  void truncateHistory (nr_double_t);
-  void appendHistory (int, nr_double_t);
+  void truncateHistory (double);
+  void appendHistory (int, double);
   void applyHistory (history *);
-  nr_double_t getV (int, nr_double_t);
-  nr_double_t getV (int, int);
-  nr_double_t getJ (int, nr_double_t);
-  nr_double_t getHistoryAge (void);
-  void setHistoryAge (nr_double_t);
+  double getV (int, double);
+  double getV (int, int);
+  double getJ (int, double);
+  double getHistoryAge (void);
+  void setHistoryAge (double);
   int getHistorySize (void);
-  nr_double_t getHistoryTFromIndex (int);
+  double getHistoryTFromIndex (int);
 
   // s-parameter helpers
   int  getPort (void) { return pacport; }
@@ -261,7 +261,7 @@ class circuit : public object, public integrator
   nr_complex_t getJ (int);
   nr_complex_t getV (int);
   nr_complex_t getQ (int);
-  nr_double_t getG (int, int);
+  double getG (int, int);
   void setS (int, int, nr_complex_t);
   void setN (int, int, nr_complex_t);
   void setY (int, int, nr_complex_t);
@@ -276,7 +276,7 @@ class circuit : public object, public integrator
   void setJ (int, nr_complex_t);
   void setV (int, nr_complex_t);
   void setQ (int, nr_complex_t);
-  void setG (int, int, nr_double_t);
+  void setG (int, int, double);
   void clearB (void);
   void clearC (void);
   void clearD (void);
@@ -286,21 +286,21 @@ class circuit : public object, public integrator
   void clearV (void);
   void clearY (void);
   void addY (int, int, nr_complex_t);
-  void addY (int, int, nr_double_t);
+  void addY (int, int, double);
   void addI (int, nr_complex_t);
-  void addI (int, nr_double_t);
+  void addI (int, double);
 
   // operating point functionality
-  void        addOperatingPoint (const std::string &name, nr_double_t);
-  nr_double_t getOperatingPoint (const std::string &name);
-  void        setOperatingPoint (const std::string &name, nr_double_t);
+  void        addOperatingPoint (const std::string &name, double);
+  double getOperatingPoint (const std::string &name);
+  void        setOperatingPoint (const std::string &name, double);
   int         hasOperatingPoint (const std::string &name);
   valuelist<operatingpoint> & getOperatingPoints (void) { return oper; }
 
   // characteristics functionality
-  void        addCharacteristic (const std::string &name, nr_double_t);
-  nr_double_t getCharacteristic (const std::string &name);
-  void        setCharacteristic (const std::string &name, nr_double_t);
+  void        addCharacteristic (const std::string &name, double);
+  double getCharacteristic (const std::string &name);
+  void        setCharacteristic (const std::string &name, double);
   int         hasCharacteristic (const std::string &name);
   valuelist<characteristic> & getCharacteristics (void) { return charac; }
 
@@ -327,7 +327,7 @@ class circuit : public object, public integrator
   void   setMatrixY (matrix);
   matrix getMatrixY (void);
 
-  static const nr_double_t z0;
+  static const double z0;
 
  protected:
   int type;
@@ -362,7 +362,7 @@ class circuit : public object, public integrator
   valuelist<characteristic> charac;
   net * subnet;
   environment * env;
-  nr_double_t * deltas;
+  double * deltas;
   int nHistories;
   history * histories;
 };

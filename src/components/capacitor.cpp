@@ -26,8 +26,6 @@
 */
 
 
-#include "config.h"
-
 #include "component.h"
 #include "capacitor.h"
 
@@ -52,8 +50,8 @@ capacitor::capacitor () : circuit (2) {
 
   \param[in] frequency frequency for S parameters simulation
 */
-void capacitor::calcSP (nr_double_t frequency) {
-  nr_double_t c = getPropertyDouble ("C") * z0;
+void capacitor::calcSP (double frequency) {
+  double c = getPropertyDouble ("C") * z0;
   nr_complex_t y = 2.0 * nr_complex_t (0, 2.0 * pi * frequency * c);
   setS (NODE_1, NODE_1, 1.0 / (1.0 + y));
   setS (NODE_2, NODE_2, 1.0 / (1.0 + y));
@@ -79,8 +77,8 @@ void capacitor::initDC (void) {
 
    \param[in] frequency frequency used for AC simulation
 */
-void capacitor::calcAC (nr_double_t frequency) {
-  nr_double_t c = getPropertyDouble ("C");
+void capacitor::calcAC (double frequency) {
+  double c = getPropertyDouble ("C");
   nr_complex_t y = nr_complex_t (0, 2.0 * pi * frequency * c);
   setY (NODE_1, NODE_1, +y); setY (NODE_2, NODE_2, +y);
   setY (NODE_1, NODE_2, -y); setY (NODE_2, NODE_1, -y);
@@ -99,14 +97,14 @@ void capacitor::initTR (void) {
   initDC ();
 }
 
-void capacitor::calcTR (nr_double_t) {
+void capacitor::calcTR (double) {
 
   /* if this is a controlled capacitance then do nothing here */
   if (hasProperty ("Controlled")) return;
 
-  nr_double_t c = getPropertyDouble ("C");
-  nr_double_t g, i;
-  nr_double_t v = real (getV (NODE_1) - getV (NODE_2));
+  double c = getPropertyDouble ("C");
+  double g, i;
+  double v = real (getV (NODE_1) - getV (NODE_2));
 
   /* apply initial condition if requested */
   if (getMode () == MODE_INIT && isPropertyGiven ("V")) {
@@ -125,7 +123,7 @@ void capacitor::initHB (void) {
   initAC ();
 }
 
-void capacitor::calcHB (nr_double_t frequency) {
+void capacitor::calcHB (double frequency) {
   calcAC (frequency);
 }
 

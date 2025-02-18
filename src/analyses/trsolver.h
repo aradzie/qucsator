@@ -31,7 +31,7 @@ class sweep;
 class circuit;
 class history;
 
-class trsolver : public nasolver<nr_double_t>, public states<nr_double_t>
+class trsolver : public nasolver<double>, public states<double>
 {
 public:
     ACREATOR (trsolver);
@@ -45,7 +45,7 @@ public:
     void fillStates (void);
     void setMode (int);
     void setDelta (void);
-    void adjustDelta (nr_double_t);
+    void adjustDelta (double);
     void adjustOrder (int reduce = 0);
     void initTR (void);
     void deinitTR (void);
@@ -53,29 +53,29 @@ public:
     void initDC (void);
     static void calcDC (trsolver *);
     void initSteps (void);
-    void saveAllResults (nr_double_t);
-    nr_double_t checkDelta (void);
-    void updateCoefficients (nr_double_t);
-    void initHistory (nr_double_t);
-    void updateHistory (nr_double_t);
+    void saveAllResults (double);
+    double checkDelta (void);
+    void updateCoefficients (double);
+    void initHistory (double);
+    void updateHistory (double);
     void saveHistory (circuit *);
     void predictBashford (void);
     void predictEuler (void);
     void predictGear (void);
     void initCircuitTR (circuit *);
-    void fillSolution (tvector<nr_double_t> *);
+    void fillSolution (tvector<double> *);
     int  dcAnalysis (void);
 
 protected:
     sweep * swp;
-    nr_double_t predCoeff[8];
-    nr_double_t corrCoeff[8];
-    nr_double_t deltas[8];
-    nr_double_t delta;
-    nr_double_t deltaMax;
-    nr_double_t deltaMin;
-    nr_double_t deltaOld;
-    nr_double_t stepDelta;
+    double predCoeff[8];
+    double corrCoeff[8];
+    double deltas[8];
+    double delta;
+    double deltaMax;
+    double deltaMin;
+    double deltaOld;
+    double stepDelta;
     int CMethod;      // user specified corrector method
     int PMethod;      // user specified predictor method
     int corrMaxOrder; // maximum corrector order
@@ -86,8 +86,8 @@ protected:
     int predOrder;    // current predictor order
     int rejected;
     int converged;
-    tvector<nr_double_t> * solution[8];
-    nr_double_t current;
+    tvector<double> * solution[8];
+    double current;
     int statSteps;
     int statRejected;
     int statIterations;

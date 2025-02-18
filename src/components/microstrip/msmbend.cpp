@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "msmbend.h"
@@ -32,23 +30,23 @@ msmbend::msmbend () : circuit (2) {
   type = CIR_MSMBEND;
 }
 
-void msmbend::calcSP (nr_double_t frequency) {
+void msmbend::calcSP (double frequency) {
   setMatrixS (ztos (calcMatrixZ (frequency)));
 }
 
-matrix msmbend::calcMatrixZ (nr_double_t frequency) {
+matrix msmbend::calcMatrixZ (double frequency) {
 
   /* how to get properties of this component, e.g. W */
-  nr_double_t W = getPropertyDouble ("W");
+  double W = getPropertyDouble ("W");
 
   /* how to get properties of the substrate, e.g. Er, H */
   substrate * subst = getSubstrate ();
-  nr_double_t er    = subst->getPropertyDouble ("er");
-  nr_double_t h     = subst->getPropertyDouble ("h");
+  double er    = subst->getPropertyDouble ("er");
+  double h     = subst->getPropertyDouble ("h");
 
   /* local variables */
   nr_complex_t z11, z21;
-  nr_double_t L, C, Wh = W / h;
+  double L, C, Wh = W / h;
 
   // check validity
   if ((Wh < 0.2) || (Wh > 6.0)) {
@@ -94,7 +92,7 @@ void msmbend::initAC (void) {
   allocMatrixMNA ();
 }
 
-void msmbend::calcAC (nr_double_t frequency) {
+void msmbend::calcAC (double frequency) {
   setMatrixY (ztoy (calcMatrixZ (frequency)));
 }
 

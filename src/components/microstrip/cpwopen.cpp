@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "cpwline.h"
@@ -33,22 +31,22 @@ cpwopen::cpwopen () : circuit (1) {
 }
 
 // Returns the coplanar open end capacitance.
-nr_double_t cpwopen::calcCend (nr_double_t frequency) {
+double cpwopen::calcCend (double frequency) {
 
   // get properties of substrate and coplanar open
-  nr_double_t W =  getPropertyDouble ("W");
-  nr_double_t s =  getPropertyDouble ("S");
+  double W =  getPropertyDouble ("W");
+  double s =  getPropertyDouble ("S");
   substrate * subst = getSubstrate ();
-  nr_double_t er = subst->getPropertyDouble ("er");
-  nr_double_t h  = subst->getPropertyDouble ("h");
-  nr_double_t t  = subst->getPropertyDouble ("t");
+  double er = subst->getPropertyDouble ("er");
+  double h  = subst->getPropertyDouble ("h");
+  double t  = subst->getPropertyDouble ("t");
   int backMetal  = !strcmp (getPropertyString ("Backside"), "Metal");
 
-  nr_double_t ZlEff, ErEff, ZlEffFreq, ErEffFreq;
+  double ZlEff, ErEff, ZlEffFreq, ErEffFreq;
   cpwline::analyseQuasiStatic (W, s, h, t, er, backMetal, ZlEff, ErEff);
   cpwline::analyseDispersion  (W, s, h, er, ZlEff, ErEff, frequency,
 			       ZlEffFreq, ErEffFreq);
-  nr_double_t dl = (W / 2 + s) / 2;
+  double dl = (W / 2 + s) / 2;
   return dl * ErEffFreq / C0 / ZlEffFreq;
 }
 
@@ -57,28 +55,28 @@ void cpwopen::initSP (void) {
   checkProperties ();
 }
 
-void cpwopen::calcSP (nr_double_t frequency) {
+void cpwopen::calcSP (double frequency) {
   setS (NODE_1, NODE_1, ztor (1.0 / calcY (frequency)));
 }
 
 void cpwopen::checkProperties (void) {
-  nr_double_t W = getPropertyDouble ("W");
-  nr_double_t s = getPropertyDouble ("S");
-  nr_double_t g = getPropertyDouble ("G");
+  double W = getPropertyDouble ("W");
+  double s = getPropertyDouble ("S");
+  double g = getPropertyDouble ("G");
   if (g <= W + s + s) {
     logprint (LOG_ERROR, "WARNING: Model for coplanar open end valid for "
 	      "g > 2b (2b = %g)\n", W + s + s);
   }
-  nr_double_t ab = W / (W + s + s);
+  double ab = W / (W + s + s);
   if (ab < 0.2 || ab > 0.8) {
     logprint (LOG_ERROR, "WARNING: Model for coplanar open end valid for "
 	      "0.2 < a/b < 0.8 (a/b = %g)\n", ab);
   }
 }
 
-nr_complex_t cpwopen::calcY (nr_double_t frequency) {
-  nr_double_t o = 2 * pi * frequency;
-  nr_double_t c = calcCend (frequency);
+nr_complex_t cpwopen::calcY (double frequency) {
+  double o = 2 * pi * frequency;
+  double c = calcCend (frequency);
   return nr_complex_t (0, c * o);
 }
 
@@ -92,7 +90,7 @@ void cpwopen::initAC (void) {
   checkProperties ();
 }
 
-void cpwopen::calcAC (nr_double_t frequency) {
+void cpwopen::calcAC (double frequency) {
   setY (NODE_1, NODE_1, calcY (frequency));
 }
 

@@ -29,29 +29,29 @@ class bondwire : public qucs::circuit
  public:
   CREATOR (bondwire);
   void initSP (void);
-  void calcSP (const nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (const double);
+  void calcNoiseSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  qucs::matrix calcMatrixY (nr_double_t);
-  void saveCharacteristics (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
+  qucs::matrix calcMatrixY (double);
+  void saveCharacteristics (double);
 
  private:
   void getProperties (void);
-  nr_double_t resistance (const nr_double_t f) const;
-  nr_double_t Lfreespace (const nr_double_t f) const;
-  nr_double_t Lmirror () const;
+  double resistance (const double f) const;
+  double Lfreespace (const double f) const;
+  double Lmirror () const;
 
-  nr_double_t l;     /*!< length of bond wire (m) */
-  nr_double_t d;     /*!< diameter of bond wire (m) */
-  nr_double_t h;     /*!< height from ground plane only used in mirror model */
-  nr_double_t rho;   /*!< resistivity */
-  nr_double_t mur;   /*!< relative magnetic permeabilty */
+  double l;     /*!< length of bond wire (m) */
+  double d;     /*!< diameter of bond wire (m) */
+  double h;     /*!< height from ground plane only used in mirror model */
+  double rho;   /*!< resistivity */
+  double mur;   /*!< relative magnetic permeabilty */
   int model;         /*!< model number */
-  nr_double_t R, L;
-  nr_double_t temp;  /*!< ambient temperature */
+  double R, L;
+  double temp;  /*!< ambient temperature */
 };
 
 #endif /* __BONDWIRE_H__ */

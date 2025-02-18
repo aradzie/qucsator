@@ -37,17 +37,17 @@ class devstates
   void deviceState (int);
   int  deviceStates (void);
   void deviceStates (int, int);
-  nr_double_t  operator () (int) const;
-  nr_double_t& operator () (int);
-  nr_double_t  deviceVar (int) const;
-  nr_double_t& deviceVar (int);
+  double  operator () (int) const;
+  double& operator () (int);
+  double  deviceVar (int) const;
+  double& deviceVar (int);
 
  private:
   int nstates;
   int nvars;
   int nstate;
-  nr_double_t * states;
-  nr_double_t * pstate;
+  double * states;
+  double * pstate;
 };
 
 } // namespace qucs

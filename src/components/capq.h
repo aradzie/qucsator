@@ -28,16 +28,16 @@ class capq : public qucs::circuit
 {
  public:
   CREATOR (capq);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void initDC (void);
   void initAC (void);
   void initSP (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
 
  private:
-  void calcYp (nr_double_t);
+  void calcYp (double);
   nr_complex_t Yp;
 };
 

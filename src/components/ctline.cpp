@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "ctline.h"
 
@@ -30,15 +28,15 @@ ctline::ctline () : circuit (4) {
   type = CIR_CTLINE;
 }
 
-void ctline::calcSP (nr_double_t frequency) {
-  nr_double_t l   = getPropertyDouble ("L");
-  nr_double_t ze  = getPropertyDouble ("Ze");
-  nr_double_t zo  = getPropertyDouble ("Zo");
-  nr_double_t ere = getPropertyDouble ("Ere");
-  nr_double_t ero = getPropertyDouble ("Ero");
-  nr_double_t ae  = getPropertyDouble ("Ae");
-  nr_double_t ao  = getPropertyDouble ("Ao");
-  nr_double_t o   = 2.0 * pi * frequency;
+void ctline::calcSP (double frequency) {
+  double l   = getPropertyDouble ("L");
+  double ze  = getPropertyDouble ("Ze");
+  double zo  = getPropertyDouble ("Zo");
+  double ere = getPropertyDouble ("Ere");
+  double ero = getPropertyDouble ("Ero");
+  double ae  = getPropertyDouble ("Ae");
+  double ao  = getPropertyDouble ("Ao");
+  double o   = 2.0 * pi * frequency;
 
   nr_complex_t ge = nr_complex_t (std::log (ae) / 2, o / C0 * std::sqrt (ere)) * l;
   nr_complex_t go = nr_complex_t (std::log (ao) / 2, o / C0 * std::sqrt (ero)) * l;
@@ -59,21 +57,21 @@ void ctline::calcSP (nr_double_t frequency) {
   setS (NODE_2, NODE_4, ye-yo); setS (NODE_4, NODE_2, ye-yo);
 }
 
-void ctline::calcNoiseSP (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void ctline::calcNoiseSP (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
 }
 
-void ctline::calcNoiseAC (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void ctline::calcNoiseAC (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 
@@ -85,7 +83,7 @@ void ctline::initDC (void) {
 }
 
 void ctline::initAC (void) {
-  nr_double_t l = getPropertyDouble ("L");
+  double l = getPropertyDouble ("L");
   if (l != 0.0) {
     setVoltageSources (0);
     allocMatrixMNA ();
@@ -97,15 +95,15 @@ void ctline::initAC (void) {
   }
 }
 
-void ctline::calcAC (nr_double_t frequency) {
-  nr_double_t l   = getPropertyDouble ("L");
-  nr_double_t ze  = getPropertyDouble ("Ze");
-  nr_double_t zo  = getPropertyDouble ("Zo");
-  nr_double_t ere = getPropertyDouble ("Ere");
-  nr_double_t ero = getPropertyDouble ("Ero");
-  nr_double_t ae  = getPropertyDouble ("Ae");
-  nr_double_t ao  = getPropertyDouble ("Ao");
-  nr_double_t o   = 2.0 * pi * frequency;
+void ctline::calcAC (double frequency) {
+  double l   = getPropertyDouble ("L");
+  double ze  = getPropertyDouble ("Ze");
+  double zo  = getPropertyDouble ("Zo");
+  double ere = getPropertyDouble ("Ere");
+  double ero = getPropertyDouble ("Ero");
+  double ae  = getPropertyDouble ("Ae");
+  double ao  = getPropertyDouble ("Ao");
+  double o   = 2.0 * pi * frequency;
 
   if (l != 0.0) {
     nr_complex_t y11, y12, y13, y14;

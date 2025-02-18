@@ -43,31 +43,31 @@ class spline
  public:
   spline ();
   spline (int);
-  spline (tvector<nr_double_t>, tvector<nr_double_t>);
+  spline (tvector<double>, tvector<double>);
   spline (qucs::vector, qucs::vector);
-  spline (std::vector<nr_double_t>, std::vector<nr_double_t>);
+  spline (std::vector<double>, std::vector<double>);
   ~spline ();
 
   void vectors (qucs::vector, qucs::vector);
-  void vectors (tvector<nr_double_t>, tvector<nr_double_t>);
-  void vectors (std::vector<nr_double_t>, std::vector<nr_double_t>);
-  void vectors (nr_double_t *, nr_double_t *, int);
+  void vectors (tvector<double>, tvector<double>);
+  void vectors (std::vector<double>, std::vector<double>);
+  void vectors (double *, double *, int);
   void construct (void);
-  poly evaluate (nr_double_t);
+  poly evaluate (double);
   void setBoundary (int b) { boundary = b; }
-  void setDerivatives (nr_double_t l, nr_double_t r) { d0 = l; dn = r; }
+  void setDerivatives (double l, double r) { d0 = l; dn = r; }
 
  private:
-  nr_double_t * upper_bound (nr_double_t *, nr_double_t *, nr_double_t);
+  double * upper_bound (double *, double *, double);
   void realloc (int);
 
  private:
-  nr_double_t * x;
-  nr_double_t * f0;
-  nr_double_t * f1;
-  nr_double_t * f2;
-  nr_double_t * f3;
-  nr_double_t d0, dn;
+  double * x;
+  double * f0;
+  double * f1;
+  double * f2;
+  double * f3;
+  double d0, dn;
   int n;
   int boundary;
 };

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "itrafo.h"
 
@@ -32,8 +30,8 @@ itrafo::itrafo () : circuit (3) {
 
 void itrafo::initSP (void) {
   allocMatrixS ();
-  nr_double_t z = getPropertyDouble ("Z");
-  nr_double_t n = 2 * z0 + z;
+  double z = getPropertyDouble ("Z");
+  double n = 2 * z0 + z;
   setS (NODE_1, NODE_1,  (2.0 * z0 - z) / n);
   setS (NODE_1, NODE_2,  (2.0 * std::sqrt (z0 * z)) / n);
   setS (NODE_1, NODE_3, -(2.0 * std::sqrt (z0 * z)) / n);

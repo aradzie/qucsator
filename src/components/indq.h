@@ -29,17 +29,17 @@ class indq : public qucs::circuit
 {
  public:
   CREATOR (indq);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void initDC (void);
   void calcDC (void);
   void initAC (void);
   void initSP (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
 
  private:
-  void calcZs (nr_double_t);
+  void calcZs (double);
   nr_complex_t Zs;
 };
 

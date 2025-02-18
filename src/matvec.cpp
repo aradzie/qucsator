@@ -24,8 +24,6 @@
  * \brief Vector of matrices class implementation
  */
 
-#include "config.h"
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -314,14 +312,14 @@ matvec operator + (nr_complex_t z, matvec a) {
 }
 
 // Matrix vector scalar addition.
-matvec operator + (matvec a, nr_double_t d) {
+matvec operator + (matvec a, double d) {
   matvec res (a.getSize (), a.getRows (), a.getCols ());
   for (int i = 0; i < a.getSize (); i++) res.set (a.get (i) + d, i);
   return res;
 }
 
 // Matrix vector scalar addition in different order.
-matvec operator + (nr_double_t d, matvec a) {
+matvec operator + (double d, matvec a) {
   matvec res (a.getSize (), a.getRows (), a.getCols ());
   for (int i = 0; i < a.getSize (); i++) res.set (d + a.get (i), i);
   return res;
@@ -342,14 +340,14 @@ matvec operator - (nr_complex_t z, matvec a) {
 }
 
 // Matrix vector scalar subtraction.
-matvec operator - (matvec a, nr_double_t d) {
+matvec operator - (matvec a, double d) {
   matvec res (a.getSize (), a.getRows (), a.getCols ());
   for (int i = 0; i < a.getSize (); i++) res.set (a.get (i) - d, i);
   return res;
 }
 
 // Matrix vector scalar subtraction in different order.
-matvec operator - (nr_double_t d, matvec a) {
+matvec operator - (double d, matvec a) {
   matvec res (a.getSize (), a.getRows (), a.getCols ());
   for (int i = 0; i < a.getSize (); i++) res.set (d - a.get (i), i);
   return res;
@@ -423,14 +421,14 @@ matvec operator * (nr_complex_t z, matvec a) {
 }
 
 // Scalar matrix vector scaling.
-matvec operator * (matvec a, nr_double_t d) {
+matvec operator * (matvec a, double d) {
   matvec res (a.getSize (), a.getRows (), a.getCols ());
   for (int i = 0; i < a.getSize (); i++) res.set (a.get (i) * d, i);
   return res;
 }
 
 // Scalar matrix vector scaling in different order.
-matvec operator * (nr_double_t d, matvec a) {
+matvec operator * (double d, matvec a) {
   return a * d;
 }
 
@@ -455,7 +453,7 @@ matvec operator / (matvec a, nr_complex_t z) {
 }
 
 // Scalar matrix vector scaling.
-matvec operator / (matvec a, nr_double_t d) {
+matvec operator / (matvec a, double d) {
   matvec res (a.getSize (), a.getRows (), a.getCols ());
   for (int i = 0; i < a.getSize (); i++) res.set (a.get (i) / d, i);
   return res;
@@ -598,7 +596,7 @@ matvec stos (matvec s, nr_complex_t zref, nr_complex_t z0) {
   return stos (s, qucs::vector (d, zref), qucs::vector (d, z0));
 }
 
-matvec stos (matvec s, nr_double_t zref, nr_double_t z0) {
+matvec stos (matvec s, double zref, double z0) {
   return stos (s, nr_complex_t (zref, 0), nr_complex_t (z0, 0));
 }
 

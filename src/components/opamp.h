@@ -31,11 +31,11 @@ class opamp : public qucs::circuit
   void calcDC (void);
   void initAC (void);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
   void calcOperatingPoints (void);
 
  private:
-  nr_double_t gv;
+  double gv;
 };
 
 #endif /* __OPAMP_H__ */

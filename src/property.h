@@ -46,11 +46,11 @@ class property
   virtual ~property ();
 
   qucs::vector * getVector (void) const;
-  nr_double_t getDouble (void) const;
+  double getDouble (void) const;
   int getInteger (void) const;
   const char * getString (void) const;
   const char * getReference (void) const;
-  void set (const nr_double_t);
+  void set (const double);
   void set (int);
   void set (const std::string &);
   void set (variable *);
@@ -62,7 +62,7 @@ class property
   bool def;
   int type;
   std::string str;
-  nr_double_t value;
+  double value;
   variable * var;
 };
 

@@ -83,7 +83,7 @@ class eqnsys
   int * rMap;
   int * cMap;
   int N;
-  nr_double_t * nPvt;
+  double * nPvt;
 
   tmatrix<nr_type_t> * A;
   tmatrix<nr_type_t> * V;
@@ -91,8 +91,8 @@ class eqnsys
   tvector<nr_type_t> * X;
   tvector<nr_type_t> * R;
   tvector<nr_type_t> * T;
-  tvector<nr_double_t> * S;
-  tvector<nr_double_t> * E;
+  tvector<double> * S;
+  tvector<double> * E;
 
   void solve_inverse (void);
   void solve_gauss (void);
@@ -118,10 +118,10 @@ class eqnsys
   void householder_apply_right (int, nr_type_t);
   void householder_apply_right_extern (int, nr_type_t);
   nr_type_t householder_right (int);
-  nr_double_t euclidian_c (int, int r = 1);
-  nr_double_t euclidian_r (int, int c = 1);
-  void givens_apply_u (int, int, nr_double_t, nr_double_t);
-  void givens_apply_v (int, int, nr_double_t, nr_double_t);
+  double euclidian_c (int, int r = 1);
+  double euclidian_r (int, int c = 1);
+  void givens_apply_u (int, int, double, double);
+  void givens_apply_v (int, int, double, double);
   void solve_svd (void);
   void chop_svd (void);
   void factorize_svd (void);
@@ -129,7 +129,7 @@ class eqnsys
   void diagonalize_svd (void);
   void solve_iterative (void);
   void solve_sor (void);
-  nr_double_t convergence_criteria (void);
+  double convergence_criteria (void);
   void ensure_diagonal (void);
   void ensure_diagonal_MNA (void);
   int countPairs (int, int&, int&);

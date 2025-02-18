@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,7 +45,7 @@ nodeset::nodeset (char * n) {
 
 /* This full qualified constructor creates an instance of the node set
    class containing both the key and the value of the node set. */
-nodeset::nodeset (char * n, nr_double_t val) {
+nodeset::nodeset (char * n, double val) {
   name = n ? strdup (n) : NULL;
   value = val;
   next = NULL;

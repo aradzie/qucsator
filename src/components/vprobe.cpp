@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vprobe.h"
 
@@ -44,8 +42,8 @@ void vprobe::initDC (void) {
 }
 
 void vprobe::saveOperatingPoints (void) {
-  nr_double_t Vr = real (getV (NODE_1) - getV (NODE_2));
-  nr_double_t Vi = imag (getV (NODE_1) - getV (NODE_2));
+  double Vr = real (getV (NODE_1) - getV (NODE_2));
+  double Vi = imag (getV (NODE_1) - getV (NODE_2));
   setOperatingPoint ("Vr", Vr);
   setOperatingPoint ("Vi", Vi);
 }

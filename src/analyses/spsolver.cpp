@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -119,9 +117,9 @@ circuit * spsolver::interconnectJoin (node * n1, node * n2) {
     s->getS (k, k) * s->getS (l, l);
 
   // avoid singularity when two full reflective ports are interconnected
-  nr_double_t tiny1 = (d == 0) ? 1.0 - TINYS : 1.0;
-  nr_double_t tiny2 = tiny1 * tiny1;
-  nr_double_t tiny3 = tiny1 * tiny2;
+  double tiny1 = (d == 0) ? 1.0 - TINYS : 1.0;
+  double tiny2 = tiny1 * tiny1;
+  double tiny3 = tiny1 * tiny2;
   d = (1.0 - s->getS (k, l) * tiny1) * (1.0 - s->getS (l, k) * tiny1) -
     s->getS (k, k) * s->getS (l, l) * tiny2;
 
@@ -181,9 +179,9 @@ circuit * spsolver::connectedJoin (node * n1, node * n2) {
   nr_complex_t d = 1.0 - s->getS (k, k) * t->getS (l, l);
 
   // avoid singularity when two full reflective ports are connected
-  nr_double_t tiny1 = (d == 0) ? 1.0 - TINYS : 1.0;
-  nr_double_t tiny2 = tiny1 * tiny1;
-  nr_double_t tiny3 = tiny1 * tiny2;
+  double tiny1 = (d == 0) ? 1.0 - TINYS : 1.0;
+  double tiny2 = tiny1 * tiny1;
+  double tiny3 = tiny1 * tiny2;
   d = 1.0 - s->getS (k, k) * t->getS (l, l) * tiny2;
 
   int j2; // column index for resulting matrix
@@ -282,8 +280,8 @@ void spsolver::noiseInterconnect (circuit * result, node * n1, node * n2) {
     c->getS (k, k) * c->getS (l, l);
 
   // avoid singularity when two full reflective ports are interconnected
-  nr_double_t tiny1 = (t == 0) ? 1.0 - TINYS : 1.0;
-  nr_double_t tiny2 = tiny1 * tiny1;
+  double tiny1 = (t == 0) ? 1.0 - TINYS : 1.0;
+  double tiny2 = tiny1 * tiny1;
   t = (1.0 - c->getS (k, l) * tiny1) * (1.0 - c->getS (l, k) * tiny1) -
     c->getS (k, k) * c->getS (l, l) * tiny2;
 
@@ -348,10 +346,10 @@ void spsolver::noiseConnect (circuit * result, node * n1, node * n2) {
   nr_complex_t t = 1.0 - c->getS (k, k) * d->getS (l, l);
 
   // avoid singularity when two full reflective ports are connected
-  nr_double_t tiny1 = (t == 0) ? 1.0 - TINYS : 1.0;
-  nr_double_t tiny2 = tiny1 * tiny1;
-  nr_double_t tiny3 = tiny1 * tiny2;
-  nr_double_t tiny4 = tiny1 * tiny3;
+  double tiny1 = (t == 0) ? 1.0 - TINYS : 1.0;
+  double tiny2 = tiny1 * tiny1;
+  double tiny3 = tiny1 * tiny2;
+  double tiny4 = tiny1 * tiny3;
   t = 1.0 - c->getS (k, k) * d->getS (l, l) * tiny2;
 
   int j2; // column index for resulting matrix
@@ -441,7 +439,7 @@ void spsolver::noiseConnect (circuit * result, node * n1, node * n2) {
 
 /* Goes through the list of circuit objects and runs its frequency
    dependent calcSP() function. */
-void spsolver::calc (nr_double_t freq) {
+void spsolver::calc (double freq) {
   circuit * root = subnet->getRoot ();
   for (circuit * c = root; c != NULL; c = (circuit *) c->getNext ()) {
     c->calcSP (freq);
@@ -560,7 +558,7 @@ void spsolver::init (void) {
 /* This is the netlist solver.  It prepares the circuit list for each
    requested frequency and solves it then. */
 int spsolver::solve (void) {
-  nr_double_t freq;
+  double freq;
   int ports;
   runs++;
 
@@ -960,7 +958,7 @@ void spsolver::dropDifferentialPort (circuit * c) {
 
 /* This function saves the results of a single solve() functionality
    (for the given frequency) into the output dataset. */
-void spsolver::saveResults (nr_double_t freq) {
+void spsolver::saveResults (double freq) {
 
   vector * f;
   node * sig_i, * sig_j;
@@ -970,7 +968,7 @@ void spsolver::saveResults (nr_double_t freq) {
 
   // temporary noise matrices and input port impedance
   nr_complex_t noise_c[4], noise_s[4];
-  nr_double_t z0 = circuit::z0;
+  double z0 = circuit::z0;
 
   // add current frequency to the dependency of the output dataset
   if ((f = data->findDependency ("frequency")) == NULL) {
@@ -1029,7 +1027,7 @@ void spsolver::saveResults (nr_double_t freq) {
    correlation matrix and computes the noise parameters based upon
    these values.  Then it save the results into the dataset. */
 void spsolver::saveNoiseResults (nr_complex_t s[4], nr_complex_t c[4],
-				 nr_double_t z0, vector * f) {
+				 double z0, vector * f) {
   nr_complex_t c22 = c[3], c11 = c[0], c12 = c[1];
   nr_complex_t s11 = s[0], s21 = s[2];
   nr_complex_t n1, n2, F, Sopt, Fmin, Rn;
@@ -1078,7 +1076,7 @@ const char * spsolver::createCV (const std::string &c, const std::string &n) {
 /* Goes through the list of circuit objects and runs its
    saveCharacteristics() function.  Then puts these values into the
    dataset. */
-void spsolver::saveCharacteristics (nr_double_t freq) {
+void spsolver::saveCharacteristics (double freq) {
   circuit * root = subnet->getRoot ();
   const char * n;
   vector * f = data->findDependency ("frequency");

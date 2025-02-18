@@ -29,7 +29,6 @@ Dean A. Frickey. IEEE Transaction on Microwave Theory and Techniques. Vol 42. No
 [3] "Handbook of Mathematical functions with Formulas, Graphs and Mathematical Tables". Milton Abramowitz.
 US department of commerce (1964). Link: http://people.math.sfu.ca/~cbm/aands/page_375.htm
 */
-#include "config.h"
 
 #include "component.h"
 #include "taperedline.h"
@@ -42,17 +41,17 @@ taperedline::taperedline () : circuit (2) {
 //------------------------------------------------------------------
 // This function calculates the ABCD matrix of an arbitrarily tapered
 // line by diving it into differential slots and calculating their ABCD matrix.
-void taperedline::calcABCDparams(nr_double_t frequency)
+void taperedline::calcABCDparams(double frequency)
 {
-  nr_double_t L = getPropertyDouble ("L");//Length
-  nr_double_t alpha = getPropertyDouble ("Alpha");//Loss coefficient
+  double L = getPropertyDouble ("L");//Length
+  double alpha = getPropertyDouble ("Alpha");//Loss coefficient
   alpha = std::log(alpha) *.5;//The attenuation coefficient needs to be converted into Neper/m units
-  nr_double_t lstep = L/Nsteps; //Size of the differential elements
-  nr_double_t beta = 2*pi*frequency/C0; //Propagation constant
+  double lstep = L/Nsteps; //Size of the differential elements
+  double beta = 2*pi*frequency/C0; //Propagation constant
   nr_complex_t gamma = nr_complex_t (alpha, beta); //Complex propagation constant
   matrix ABCD_ = eye(2);//Overall ABCD matrix
   matrix ABCDaux = eye(2);//Auxiliary matrix for performing the iterative product
-  nr_double_t Zi;
+  double Zi;
   nr_complex_t a, b, c, d;
   // ABCD coefficients
   a = cosh(gamma*lstep);
@@ -60,7 +59,7 @@ void taperedline::calcABCDparams(nr_double_t frequency)
   c = sinh(gamma*lstep); // need to be divided by Zi
   d = cosh(gamma*lstep);
 
-  nr_double_t l = lstep/2.0; // compute impedance in the middle of the section
+  double l = lstep/2.0; // compute impedance in the middle of the section
   for (int idx = 0 ; idx < Nsteps; idx++)
   {
     // The line is discretized in finite elements. The size of these elements can be considered a differential
@@ -82,22 +81,22 @@ void taperedline::calcABCDparams(nr_double_t frequency)
 
 //------------------------------------------------------------------
 // Exponential impedance profile
-nr_double_t taperedline::calcExponential(nr_double_t l, nr_double_t L, nr_double_t Z1, nr_double_t Z2)
+double taperedline::calcExponential(double l, double L, double Z1, double Z2)
 {
-   nr_double_t a = (1/L)*std::log(Z2/Z1);
+   double a = (1/L)*std::log(Z2/Z1);
    return Z1*std::exp(a*l);
 }
 
 //------------------------------------------------------------------
 // Linear impedance profile
-nr_double_t taperedline::calcLinear(nr_double_t l, nr_double_t L, nr_double_t Z1, nr_double_t Z2)
+double taperedline::calcLinear(double l, double L, double Z1, double Z2)
 {
    return Z1+l*(Z2-Z1)/L;
 }
 
 //------------------------------------------------------------------
 // Triangular impedance profile
-nr_double_t taperedline::calcTriangular(nr_double_t l, nr_double_t L, nr_double_t Z1, nr_double_t Z2)
+double taperedline::calcTriangular(double l, double L, double Z1, double Z2)
 {
    if (l < L/2)
    {
@@ -109,32 +108,32 @@ nr_double_t taperedline::calcTriangular(nr_double_t l, nr_double_t L, nr_double_
 
 //------------------------------------------------------------------
 // Klopfenstein impedance profile
-nr_double_t taperedline::calcKlopfenstein(nr_double_t l, nr_double_t L, nr_double_t Z1, nr_double_t Z2, nr_double_t gamma_max)
+double taperedline::calcKlopfenstein(double l, double L, double Z1, double Z2, double gamma_max)
 {
-   nr_double_t gamma0 = 0.5*std::log(Z2/Z1);
-   nr_double_t A = std::acosh(gamma0/gamma_max);
+   double gamma0 = 0.5*std::log(Z2/Z1);
+   double A = std::acosh(gamma0/gamma_max);
    return (std::exp(0.5*std::log(Z1*Z2) + (gamma0/std::cosh(A))*A*A*phi(2.*(l/L)-1., A)));
 }
 
 void taperedline::calcImpedanceProfile()
 {
-nr_double_t L = getPropertyDouble ("L");//Length
-  nr_double_t Z1 = getPropertyDouble ("Z1");//Port 1 impedance
-  nr_double_t Z2 = getPropertyDouble ("Z2");//Port 2 impedance
+double L = getPropertyDouble ("L");//Length
+  double Z1 = getPropertyDouble ("Z1");//Port 1 impedance
+  double Z2 = getPropertyDouble ("Z2");//Port 2 impedance
 
   if (Z1 > Z2)//Handling Z1 > Z2 case
   {
      logprint (LOG_ERROR, "WARNING: The impedance at port 1 is bigger than the impedance at port 2 ((Z1 = %g Ohm ) > (Z2 = %g Ohm))\n", Z1, Z2);
-     nr_double_t Zaux = Z2;
+     double Zaux = Z2;
      Z2 = Z1;
      Z1 = Zaux;
   }
 
-  nr_double_t gamma_max = getPropertyDouble ("Gamma_max");;//Maximum ripple (Klopfenstein weighting only)
-  nr_double_t lstep = L/Nsteps; //Size of the differential elements
+  double gamma_max = getPropertyDouble ("Gamma_max");;//Maximum ripple (Klopfenstein weighting only)
+  double lstep = L/Nsteps; //Size of the differential elements
 
   int idx=0;
-  nr_double_t l = lstep/2.0;
+  double l = lstep/2.0;
   for (idx = 0, l = lstep/2.0 ; idx < Nsteps; idx++, l += lstep)
   {
     // The line is discretized in finite elements. The size of these elements can be considered a differential
@@ -173,12 +172,12 @@ nr_double_t L = getPropertyDouble ("L");//Length
 //   impedance taper," IEEE Proc., vol.56, no.9, pp.1629-1630, Sept. 1968
 //
 // In practice less than 10 iterations are needed in most cases
-nr_double_t taperedline::phi(nr_double_t x, nr_double_t A)
+double taperedline::phi(double x, double A)
 {
-  nr_double_t ak = 1.0;
-  nr_double_t bk = x *.5;
-  nr_double_t ck = bk;
-  nr_double_t phi = bk;
+  double ak = 1.0;
+  double bk = x *.5;
+  double ck = bk;
+  double phi = bk;
   for (int k = 1; k < 20; k++) {
     ck *= (1.0 - x*x);
     bk = (ck + 2.0*k*bk) / (2.0*k + 1.0);
@@ -189,9 +188,9 @@ nr_double_t taperedline::phi(nr_double_t x, nr_double_t A)
   return phi;
 }
 
-void taperedline::calcSP (nr_double_t frequency) {
-  nr_double_t Z1 = getPropertyDouble ("Z1");//Port 1 impedance
-  nr_double_t Z2 = getPropertyDouble ("Z2");//Port 2 impedance
+void taperedline::calcSP (double frequency) {
+  double Z1 = getPropertyDouble ("Z1");//Port 1 impedance
+  double Z2 = getPropertyDouble ("Z2");//Port 2 impedance
   calcABCDparams(frequency);
   matrix Stmp = qucs::atos(ABCD, z0, z0);
   if (Z1 > Z2)
@@ -202,21 +201,21 @@ void taperedline::calcSP (nr_double_t frequency) {
   setMatrixS(Stmp);
 }
 
-void taperedline::calcNoiseSP (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void taperedline::calcNoiseSP (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
 }
 
-void taperedline::calcNoiseAC (nr_double_t) {
- nr_double_t l = getPropertyDouble ("L");
+void taperedline::calcNoiseAC (double) {
+ double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4.0 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 
@@ -242,9 +241,9 @@ void taperedline::initSP(void)
   calcImpedanceProfile();
 }
 
-void taperedline::calcAC (nr_double_t frequency) {
+void taperedline::calcAC (double frequency) {
   calcABCDparams(frequency);
-  nr_double_t L = getPropertyDouble ("L");
+  double L = getPropertyDouble ("L");
   if (L != 0.0) {
     nr_complex_t y11 = ABCD.get(1,1)/ABCD.get(0,1);
     nr_complex_t y12 = -det(ABCD)/ABCD.get(0,1);

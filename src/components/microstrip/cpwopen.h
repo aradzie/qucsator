@@ -27,14 +27,14 @@ class cpwopen : public qucs::circuit
  public:
   CREATOR (cpwopen);
   void initSP (void);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
 
   void checkProperties (void);
-  nr_double_t calcCend (nr_double_t);
-  nr_complex_t calcY (nr_double_t);
+  double calcCend (double);
+  nr_complex_t calcY (double);
 };
 
 #endif /* __CPWOPEN_H__ */

@@ -26,16 +26,16 @@ class mutualx : public qucs::circuit
 {
  public:
   CREATOR (mutualx);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 
  private:
-  qucs::matrix calcMatrixZ (nr_double_t);
-  qucs::matrix calcMatrixY (nr_double_t);
+  qucs::matrix calcMatrixZ (double);
+  qucs::matrix calcMatrixY (double);
 };
 
 #endif /* __MUTUALX_H__ */

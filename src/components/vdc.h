@@ -32,7 +32,7 @@ class vdc : public qucs::circuit
   void initAC (void);
   void initTR (void);
   void initHB (void);
-  void calcHB (nr_double_t);
+  void calcHB (double);
 };
 
 #endif /* __VDC_H__ */

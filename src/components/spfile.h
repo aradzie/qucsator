@@ -37,7 +37,7 @@ class spfile_vector
 
  public:
   void prepare (qucs::vector *, qucs::vector *, bool, int, int);
-  nr_complex_t interpolate (nr_double_t);
+  nr_complex_t interpolate (double);
 
  public:
   qucs::vector * v;
@@ -58,7 +58,7 @@ class spfile
   void createVector (int, int);
   qucs::matrix expandSParaMatrix (qucs::matrix);
   qucs::matrix shrinkSParaMatrix (qucs::matrix);
-  qucs::matrix getInterpolMatrixS (nr_double_t);
+  qucs::matrix getInterpolMatrixS (double);
 
   int nPorts;
   qucs::dataset * data;

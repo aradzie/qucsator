@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "msline.h"
@@ -32,41 +30,41 @@ mscoupled::mscoupled () : circuit (4) {
   type = CIR_MSCOUPLED;
 }
 
-void mscoupled::calcPropagation (nr_double_t frequency) {
+void mscoupled::calcPropagation (double frequency) {
 
   // fetch line properties
-  nr_double_t W = getPropertyDouble ("W");
-  nr_double_t s = getPropertyDouble ("S");
+  double W = getPropertyDouble ("W");
+  double s = getPropertyDouble ("S");
   const char * SModel = getPropertyString ("Model");
   const char * DModel = getPropertyString ("DispModel");
 
   // fetch substrate properties
   substrate * subst = getSubstrate ();
-  nr_double_t er    = subst->getPropertyDouble ("er");
-  nr_double_t h     = subst->getPropertyDouble ("h");
-  nr_double_t t     = subst->getPropertyDouble ("t");
-  nr_double_t tand  = subst->getPropertyDouble ("tand");
-  nr_double_t rho   = subst->getPropertyDouble ("rho");
-  nr_double_t D     = subst->getPropertyDouble ("D");
+  double er    = subst->getPropertyDouble ("er");
+  double h     = subst->getPropertyDouble ("h");
+  double t     = subst->getPropertyDouble ("t");
+  double tand  = subst->getPropertyDouble ("tand");
+  double rho   = subst->getPropertyDouble ("rho");
+  double D     = subst->getPropertyDouble ("D");
 
   // quasi-static analysis
-  nr_double_t Zle, ErEffe, Zlo, ErEffo;
+  double Zle, ErEffe, Zlo, ErEffo;
   analysQuasiStatic (W, h, s, t, er, SModel, Zle, Zlo, ErEffe, ErEffo);
 
   // analyse dispersion of Zl and Er
-  nr_double_t ZleFreq, ErEffeFreq, ZloFreq, ErEffoFreq;
+  double ZleFreq, ErEffeFreq, ZloFreq, ErEffoFreq;
   analyseDispersion (W, h, s, er, Zle, Zlo, ErEffe, ErEffo, frequency, DModel,
 		     ZleFreq, ZloFreq, ErEffeFreq, ErEffoFreq);
 
   // analyse losses of line
-  nr_double_t ace, aco, ade, ado;
+  double ace, aco, ade, ado;
   msline::analyseLoss (W, t, er, rho, D, tand, Zle, Zlo, ErEffe,
 		       frequency, "Hammerstad", ace, ade);
   msline::analyseLoss (W, t, er, rho, D, tand, Zlo, Zle, ErEffo,
 		       frequency, "Hammerstad", aco, ado);
 
   // compute propagation constants for even and odd mode
-  nr_double_t k0 = 2 * pi * frequency / C0;
+  double k0 = 2 * pi * frequency / C0;
   ae = ace + ade;
   ao = aco + ado;
   be = qucs::sqrt (ErEffeFreq) * k0;
@@ -77,16 +75,16 @@ void mscoupled::calcPropagation (nr_double_t frequency) {
   eo = ErEffoFreq;
 }
 
-void mscoupled::saveCharacteristics (nr_double_t) {
+void mscoupled::saveCharacteristics (double) {
   setCharacteristic ("ZlEven", ze);
   setCharacteristic ("ErEven", ee);
   setCharacteristic ("ZlOdd", zo);
   setCharacteristic ("ErOdd", eo);
 }
 
-void mscoupled::calcSP (nr_double_t frequency) {
+void mscoupled::calcSP (double frequency) {
   // fetch line properties
-  nr_double_t l = getPropertyDouble ("L");
+  double l = getPropertyDouble ("L");
 
   // compute propagation constants for even and odd mode
   calcPropagation (frequency);
@@ -118,9 +116,9 @@ void mscoupled::calcSP (nr_double_t frequency) {
   setS (NODE_2, NODE_4, Ye - Yo); setS (NODE_4, NODE_2, Ye - Yo);
 }
 
-void mscoupled::calcNoiseSP (nr_double_t) {
+void mscoupled::calcNoiseSP (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
@@ -130,23 +128,23 @@ void mscoupled::calcNoiseSP (nr_double_t) {
    characteristic impedances for the even and odd mode based upon the
    given line and substrate properties for parallel coupled microstrip
    lines. */
-void mscoupled::analysQuasiStatic (nr_double_t W, nr_double_t h, nr_double_t s,
-				   nr_double_t t, nr_double_t er,
-				   const char * const SModel, nr_double_t& Zle,
-				   nr_double_t& Zlo, nr_double_t& ErEffe,
-				   nr_double_t& ErEffo) {
+void mscoupled::analysQuasiStatic (double W, double h, double s,
+				   double t, double er,
+				   const char * const SModel, double& Zle,
+				   double& Zlo, double& ErEffe,
+				   double& ErEffo) {
   // initialize default return values
   ErEffe = ErEffo = er;
   Zlo = 42.2; Zle = 55.7;
 
   // normalized width and gap
-  nr_double_t u = W / h;
-  nr_double_t g = s / h;
+  double u = W / h;
+  double g = s / h;
 
   // HAMMERSTAD and JENSEN
   if (!strcmp (SModel, "Hammerstad")) {
-    nr_double_t Zl1, Fe, Fo, a, b, fo, Mu, Alpha, Beta, ErEff;
-    nr_double_t Pe, Po, r, fo1, q, p, n, Psi, Phi, m, Theta;
+    double Zl1, Fe, Fo, a, b, fo, Mu, Alpha, Beta, ErEff;
+    double Pe, Po, r, fo1, q, p, n, Psi, Phi, m, Theta;
 
     // modifying equations for even mode
     m = 0.2175 + qucs::pow (4.113 + qucs::pow (20.36 / g, 6.), -0.251) +
@@ -198,23 +196,23 @@ void mscoupled::analysQuasiStatic (nr_double_t W, nr_double_t h, nr_double_t s,
   }
   // KIRSCHNING and JANSEN
   else if (!strcmp (SModel, "Kirschning")) {
-    nr_double_t a, b, ae, be, ao, bo, v, co, d, ErEff, Zl1;
-    nr_double_t q1, q2, q3, q4, q5, q6, q7, q8, q9, q10;
+    double a, b, ae, be, ao, bo, v, co, d, ErEff, Zl1;
+    double q1, q2, q3, q4, q5, q6, q7, q8, q9, q10;
 
     // consider effect of finite strip thickness (JANSEN only)
-    nr_double_t ue = u;
-    nr_double_t uo = u;
+    double ue = u;
+    double uo = u;
     if (t != 0 && s > 10 * (2 * t)) {
-      nr_double_t dW = 0;
+      double dW = 0;
       // SCHNEIDER, referred by JANSEN
       if (u >= one_over_pi / 2 && one_over_pi / 2 > 2 * t / h)
 	dW = t * (1 + qucs::log (2 * h / t)) / pi;
       else if (W > 2 * t)
 	dW = t * (1 + qucs::log (4 * pi * W / t)) / pi;
       // JANSEN
-      nr_double_t dt = 2 * t * h / s / er;
-      nr_double_t We = W + dW * (1 - 0.5 * qucs::exp (-0.69 * dW / dt));
-      nr_double_t Wo = We + dt;
+      double dt = 2 * t * h / s / er;
+      double We = W + dW * (1 - 0.5 * qucs::exp (-0.69 * dW / dt));
+      double Wo = We + dt;
       ue = We / h;
       uo = Wo / h;
     }
@@ -261,14 +259,14 @@ void mscoupled::analysQuasiStatic (nr_double_t W, nr_double_t h, nr_double_t s,
 /* The function computes the dispersion effects on the dielectric
    constants and characteristic impedances for the even and odd mode
    of parallel coupled microstrip lines. */
-void mscoupled::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t s,
-				   nr_double_t er, nr_double_t Zle,
-				   nr_double_t Zlo, nr_double_t ErEffe,
-				   nr_double_t ErEffo, nr_double_t frequency,
-				   const char * const DModel, nr_double_t& ZleFreq,
-				   nr_double_t& ZloFreq,
-				   nr_double_t& ErEffeFreq,
-				   nr_double_t& ErEffoFreq) {
+void mscoupled::analyseDispersion (double W, double h, double s,
+				   double er, double Zle,
+				   double Zlo, double ErEffe,
+				   double ErEffo, double frequency,
+				   const char * const DModel, double& ZleFreq,
+				   double& ZloFreq,
+				   double& ErEffeFreq,
+				   double& ErEffoFreq) {
 
   // initialize default return values
   ZleFreq = Zle;
@@ -277,8 +275,8 @@ void mscoupled::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t s,
   ErEffoFreq = ErEffo;
 
   // normalized width and gap
-  nr_double_t u = W / h;
-  nr_double_t g = s / h;
+  double u = W / h;
+  double g = s / h;
 
   // GETSINGER
   if (!strcmp (DModel, "Getsinger")) {
@@ -293,8 +291,8 @@ void mscoupled::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t s,
   }
   // KIRSCHNING and JANSEN
   else if (!strcmp (DModel, "Kirschning")) {
-    nr_double_t p1, p2, p3, p4, p5, p6, p7, Fe;
-    nr_double_t fn = frequency * h * 1e-6;
+    double p1, p2, p3, p4, p5, p6, p7, Fe;
+    double fn = frequency * h * 1e-6;
 
     // even relative dielectric constant dispersion
     p1 = 0.27488 * (0.6315 + 0.525 / qucs::pow (1 + 0.0157 * fn, 20.)) * u -
@@ -310,7 +308,7 @@ void mscoupled::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t s,
     ErEffeFreq = er - (er - ErEffe) / (1 + Fe);
 
     // odd relative dielectric constant dispersion
-    nr_double_t p8, p9, p10, p11, p12, p13, p14, p15, Fo;
+    double p8, p9, p10, p11, p12, p13, p14, p15, Fo;
     p8 = 0.7168 * (1 + 1.076 / (1 + 0.0576 * (er - 1)));
     p9 = p8 - 0.7913 * (1 - qucs::exp (- qucs::pow (fn / 20, 1.424))) *
       qucs::atan (2.481 * qucs::pow (er / 8, 0.946));
@@ -326,7 +324,7 @@ void mscoupled::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t s,
     ErEffoFreq = er - (er - ErEffo) / (1 + Fo);
 
     // dispersion of even characteristic impedance
-    nr_double_t t, q11, q12, q13, q14, q15, q16, q17, q18, q19, q20, q21;
+    double t, q11, q12, q13, q14, q15, q16, q17, q18, q19, q20, q21;
     q11 = 0.893 * (1 - 0.3 / (1 + 0.7 * (er - 1)));
     t = qucs::pow (fn / 20, 4.91);
     q12 = 2.121 * t / (1 + q11 * t) * qucs::exp (-2.87 * g) * qucs::pow (g, 0.902);
@@ -348,7 +346,7 @@ void mscoupled::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t s,
     q21 = fabs (1 - 42.54 * qucs::pow (g, 0.133) * qucs::exp (-0.812 * g) * t /
 		(1 + 0.033 * t));
 
-    nr_double_t re, qe, pe, de, Ce, q0, ZlFreq, ErEffFreq;
+    double re, qe, pe, de, Ce, q0, ZlFreq, ErEffFreq;
     msline::Kirschning_er (u, fn, er, ErEffe, ErEffFreq);
     msline::Kirschning_zl (u, fn, er, ErEffe, ErEffFreq, Zle, q0, ZlFreq);
     re = qucs::pow (fn / 28.843, 12.);
@@ -363,7 +361,7 @@ void mscoupled::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t s,
 			 ((0.9408 - de) * qucs::pow (ErEffe, Ce) - 0.9603), q0);
 
     // dispersion of odd characteristic impedance
-    nr_double_t q22, q23, q24, q25, q26, q27, q28, q29;
+    double q22, q23, q24, q25, q26, q27, q28, q29;
     msline::Kirschning_er (u, fn, er, ErEffo, ErEffFreq);
     msline::Kirschning_zl (u, fn, er, ErEffo, ErEffFreq, Zlo, q0, ZlFreq);
     q29 = 15.16 / (1 + 0.196 * sqr (er - 1));
@@ -388,15 +386,15 @@ void mscoupled::analyseDispersion (nr_double_t W, nr_double_t h, nr_double_t s,
 }
 
 void mscoupled::initDC (void) {
-  nr_double_t l     = getPropertyDouble ("L");
-  nr_double_t W     = getPropertyDouble ("W");
+  double l     = getPropertyDouble ("L");
+  double W     = getPropertyDouble ("W");
   substrate * subst = getSubstrate ();
-  nr_double_t t     = subst->getPropertyDouble ("t");
-  nr_double_t rho   = subst->getPropertyDouble ("rho");
+  double t     = subst->getPropertyDouble ("t");
+  double rho   = subst->getPropertyDouble ("rho");
 
   if (t != 0.0 && rho != 0.0) {
     // tiny resistances
-    nr_double_t g = t * W / rho / l;
+    double g = t * W / rho / l;
     setVoltageSources (0);
     allocMatrixMNA ();
     setY (NODE_1, NODE_1, +g); setY (NODE_2, NODE_2, +g);
@@ -421,9 +419,9 @@ void mscoupled::initAC (void) {
   allocMatrixMNA ();
 }
 
-void mscoupled::calcAC (nr_double_t frequency) {
+void mscoupled::calcAC (double frequency) {
   // fetch line properties
-  nr_double_t l = getPropertyDouble ("L");
+  double l = getPropertyDouble ("L");
 
   // compute propagation constants for even and odd mode
   calcPropagation (frequency);
@@ -452,9 +450,9 @@ void mscoupled::calcAC (nr_double_t frequency) {
   setY (NODE_3, NODE_2, y4); setY (NODE_4, NODE_1, y4);
 }
 
-void mscoupled::calcNoiseAC (nr_double_t) {
+void mscoupled::calcNoiseAC (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

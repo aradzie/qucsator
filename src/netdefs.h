@@ -83,13 +83,13 @@ struct property_t {
   const char * key; // key name
   int type;         // type of property
   struct {
-    nr_double_t d;  // default value
+    double d;  // default value
     const char * s; // default string
   } defaultval;
   struct {
     char il;        // interval boundary
-    nr_double_t l;  // lower bound of the value
-    nr_double_t h;  // upper bound of the value
+    double l;  // lower bound of the value
+    double h;  // upper bound of the value
     char ih;        // interval boundary
     const char * str[8]; // possible string list
   } range;
@@ -121,8 +121,8 @@ struct define_t {
 #define PROP_NO_VAL       0.0
 #define PROP_NO_STR       ((char *) -1)
 #define PROP_NO_RANGE     { '.', 0, 0, '.', { NULL } }
-#define PROP_VAL_MAX      std::numeric_limits<nr_double_t>::max()
-#define PROP_VAL_MIN      std::numeric_limits<nr_double_t>::min()
+#define PROP_VAL_MAX      std::numeric_limits<double>::max()
+#define PROP_VAL_MIN      std::numeric_limits<double>::min()
 #define PROP_POS_RANGE    { '[', 0, 0, '.', { NULL } }
 #define PROP_NEG_RANGE    { '.', 0, 0, ']', { NULL } }
 #define PROP_POS_RANGEX   { ']', 0, 0, '.', { NULL } }

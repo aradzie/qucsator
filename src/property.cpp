@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -92,7 +90,7 @@ const char * property::getReference (void) const {
 }
 
 // Returns the property's value as double.
-nr_double_t property::getDouble (void) const {
+double property::getDouble (void) const {
   if (var != NULL) {
     if (var->getType () == VAR_CONSTANT)
       return D (var->getConstant ());
@@ -109,7 +107,7 @@ int property::getInteger (void) const {
 }
 
 // Sets the property's value being a double.
-void property::set (const nr_double_t val) {
+void property::set (const double val) {
   type = PROPERTY_DOUBLE;
   value = val;
 }

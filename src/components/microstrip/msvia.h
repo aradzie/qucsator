@@ -26,18 +26,18 @@ class msvia : public qucs::circuit
 {
  public:
   CREATOR (msvia);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initSP (void);
-  void calcNoiseSP (nr_double_t);
+  void calcNoiseSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  nr_double_t calcResistance (void);
-  nr_complex_t calcImpedance (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
+  double calcResistance (void);
+  nr_complex_t calcImpedance (double);
 
  private:
-  nr_double_t R;
+  double R;
   nr_complex_t Z;
 };
 

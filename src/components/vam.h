@@ -30,7 +30,7 @@ class vam : public qucs::circuit
   void initDC (void);
   void initAC (void);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 };
 
 #endif /* __VAM_H__ */

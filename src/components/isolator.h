@@ -27,10 +27,10 @@ class isolator : public qucs::circuit
  public:
   CREATOR (isolator);
   void initSP (void);
-  void calcNoiseSP (nr_double_t);
+  void calcNoiseSP (double);
   void initDC (void);
   void initAC (void);
-  void calcNoiseAC (nr_double_t);
+  void calcNoiseAC (double);
   void initTR (void);
 };
 

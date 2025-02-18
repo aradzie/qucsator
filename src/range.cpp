@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,7 +35,7 @@ range::range () {
 }
 
 // Constructor creates an fully qualified instance of the range class.
-range::range (char ilo, nr_double_t lo, nr_double_t hi, char ihi) {
+range::range (char ilo, double lo, double hi, char ihi) {
   il = ilo;
   ih = ihi;
   if (lo > hi) {
@@ -61,12 +59,12 @@ range::range (const range & r) {
 }
 
 /* Checks whether the given value is outside the range. */
-bool range::outside (nr_double_t value) {
+bool range::outside (double value) {
   return !inside (value);
 }
 
 /* Checks whether the given value is inside the range. */
-bool range::inside (nr_double_t value) {
+bool range::inside (double value) {
   int err = 0;
   if (il == '[' &&  (value < l))
     err++;

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -191,7 +189,7 @@ void tmatrix<nr_type_t>::exchangeCols (int c1, int c2) {
 // Compute inverse matrix of the given matrix by Gauss-Jordan elimination.
 template <class nr_type_t>
 tmatrix<nr_type_t> inverse (tmatrix<nr_type_t> a) {
-  nr_double_t MaxPivot;
+  double MaxPivot;
   nr_type_t f;
   tmatrix<nr_type_t> b;
   tmatrix<nr_type_t> e;

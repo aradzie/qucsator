@@ -70,7 +70,7 @@ void tvector<nr_type_t>::clear (void) {
 /* The function returns the number of entries with the given value
    deviating no more than the given epsilon. */
 template <class nr_type_t>
-int tvector<nr_type_t>::contains (nr_type_t val, nr_double_t eps) {
+int tvector<nr_type_t>::contains (nr_type_t val, double eps) {
   int count = 0;
   for (int i = 0; i < (int)data.size (); i++) if (abs ((data)[i] - val) <= eps) count++;
   return count;
@@ -133,7 +133,7 @@ tvector<nr_type_t> tvector<nr_type_t>::operator -= (tvector<nr_type_t> a) {
 
 // Intrinsic scalar multiplication.
 template <class nr_type_t>
-tvector<nr_type_t> tvector<nr_type_t>::operator *= (nr_double_t s) {
+tvector<nr_type_t> tvector<nr_type_t>::operator *= (double s) {
   std::vector<nr_type_t> * dst = data;
   for (int i = 0; i < (int)data.size (); i++) (*dst)[i] *= s;
   return *this;
@@ -141,7 +141,7 @@ tvector<nr_type_t> tvector<nr_type_t>::operator *= (nr_double_t s) {
 
 // Intrinsic scalar division.
 template <class nr_type_t>
-tvector<nr_type_t> tvector<nr_type_t>::operator /= (nr_double_t s) {
+tvector<nr_type_t> tvector<nr_type_t>::operator /= (double s) {
   std::vector<nr_type_t> * dst = data;
   for (int i = 0; i < (int)data.size (); i++) (*dst)[i] /= s;
   return *this;
@@ -149,7 +149,7 @@ tvector<nr_type_t> tvector<nr_type_t>::operator /= (nr_double_t s) {
 
 // Scalar multiplication.
 template <class nr_type_t>
-tvector<nr_type_t> operator * (nr_double_t s, tvector<nr_type_t> a) {
+tvector<nr_type_t> operator * (double s, tvector<nr_type_t> a) {
   int n = a.size ();
   tvector<nr_type_t> res (n);
   for (int i = 0; i < n; i++) res.set (i, s * a.get (i));
@@ -157,7 +157,7 @@ tvector<nr_type_t> operator * (nr_double_t s, tvector<nr_type_t> a) {
 }
 
 template <class nr_type_t>
-tvector<nr_type_t> operator * (tvector<nr_type_t> a, nr_double_t s) {
+tvector<nr_type_t> operator * (tvector<nr_type_t> a, double s) {
   return s * a;
 }
 
@@ -238,13 +238,13 @@ tvector<nr_type_t> operator + (tvector<nr_type_t> a, nr_type_t s) {
 
 // Mean square norm.
 template <class nr_type_t>
-nr_double_t norm (tvector<nr_type_t> a) {
+double norm (tvector<nr_type_t> a) {
 #if 0
-  nr_double_t k = 0;
+  double k = 0;
   for (int i = 0; i < a.size (); i++) k += norm (a.get (i));
   return n;
 #else
-  nr_double_t scale = 0, n = 1, x, ax;
+  double scale = 0, n = 1, x, ax;
   for (int i = 0; i < a.size (); i++) {
     if ((x = real (a (i))) != 0) {
       ax = fabs (x);
@@ -277,8 +277,8 @@ nr_double_t norm (tvector<nr_type_t> a) {
 
 // Maximum norm.
 template <class nr_type_t>
-nr_double_t maxnorm (tvector<nr_type_t> a) {
-  nr_double_t nMax = 0, n;
+double maxnorm (tvector<nr_type_t> a) {
+  double nMax = 0, n;
   for (int i = 0; i < a.size (); i++) {
     n = norm (a.get (i));
     if (n > nMax) nMax = n;

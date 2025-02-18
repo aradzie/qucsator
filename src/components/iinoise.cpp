@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "iinoise.h"
 
@@ -43,19 +41,19 @@ void iinoise::initSP (void) {
   setS (NODE_I2N, NODE_I2N, 1.0);
 }
 
-void iinoise::calcNoiseSP (nr_double_t frequency) {
+void iinoise::calcNoiseSP (double frequency) {
   setMatrixN (cytocs (calcMatrixCy (frequency) * z0, getMatrixS ()));
 }
 
-matrix iinoise::calcMatrixCy (nr_double_t frequency) {
-  nr_double_t C = getPropertyDouble ("C");
-  nr_double_t e = getPropertyDouble ("e");
-  nr_double_t c = getPropertyDouble ("c");
-  nr_double_t a = getPropertyDouble ("a");
-  nr_double_t k = a + c * qucs::pow (frequency, e);
-  nr_double_t i1 = getPropertyDouble ("i1") / k / kB / T0;
-  nr_double_t i2 = getPropertyDouble ("i2") / k / kB / T0;
-  nr_double_t ci = C * std::sqrt (i1 * i2);
+matrix iinoise::calcMatrixCy (double frequency) {
+  double C = getPropertyDouble ("C");
+  double e = getPropertyDouble ("e");
+  double c = getPropertyDouble ("c");
+  double a = getPropertyDouble ("a");
+  double k = a + c * qucs::pow (frequency, e);
+  double i1 = getPropertyDouble ("i1") / k / kB / T0;
+  double i2 = getPropertyDouble ("i2") / k / kB / T0;
+  double ci = C * std::sqrt (i1 * i2);
 
   matrix cy = matrix (4);
   // entries of source 1
@@ -72,7 +70,7 @@ matrix iinoise::calcMatrixCy (nr_double_t frequency) {
   return cy;
 }
 
-void iinoise::calcNoiseAC (nr_double_t frequency) {
+void iinoise::calcNoiseAC (double frequency) {
   setMatrixN (calcMatrixCy (frequency));
 }
 

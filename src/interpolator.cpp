@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,16 +59,16 @@ void interpolator::cleanup (void) {
 }
 
 // Pass real interpolation datapoints as pointers.
-void interpolator::vectors (nr_double_t * y, nr_double_t * x, int len) {
+void interpolator::vectors (double * y, double * x, int len) {
   int len1 = len;
-  int len2 = 2 + len * sizeof (nr_double_t);
+  int len2 = 2 + len * sizeof (double);
   if (len > 0) {
-    ry = (nr_double_t *) malloc (len2 * sizeof (nr_double_t));
-    memcpy (ry, y, len1 * sizeof (nr_double_t));
+    ry = (double *) malloc (len2 * sizeof (double));
+    memcpy (ry, y, len1 * sizeof (double));
   }
   if (len > 0) {
-    rx = (nr_double_t *) malloc (len2 * sizeof (nr_double_t));
-    memcpy (rx, x, len1 * sizeof (nr_double_t));
+    rx = (double *) malloc (len2 * sizeof (double));
+    memcpy (rx, x, len1 * sizeof (double));
   }
 
   dataType = (DATA_REAL & DATA_MASK_TYPE);
@@ -81,14 +79,14 @@ void interpolator::vectors (nr_double_t * y, nr_double_t * x, int len) {
 void interpolator::rvectors (vector * y, vector * x) {
   int len  = y->getSize ();
   int len1 = len;
-  int len2 = 2 + len * sizeof (nr_double_t);
+  int len2 = 2 + len * sizeof (double);
   cleanup ();
   if (len > 0) {
-    ry = (nr_double_t *) malloc (len2 * sizeof (nr_double_t));
+    ry = (double *) malloc (len2 * sizeof (double));
     for (int i = 0; i < len1; i++) ry[i] = real (y->get (i));
   }
   if (len > 0) {
-    rx = (nr_double_t *) malloc (len2 * sizeof (nr_double_t));
+    rx = (double *) malloc (len2 * sizeof (double));
     for (int i = 0; i < len1; i++) rx[i] = real (x->get (i));
   }
 
@@ -97,7 +95,7 @@ void interpolator::rvectors (vector * y, vector * x) {
 }
 
 // Pass complex interpolation datapoints as pointers.
-void interpolator::vectors (nr_complex_t * y, nr_double_t * x, int len) {
+void interpolator::vectors (nr_complex_t * y, double * x, int len) {
   int len1 = len;
   int len2 = 2 + len;
   cleanup ();
@@ -106,8 +104,8 @@ void interpolator::vectors (nr_complex_t * y, nr_double_t * x, int len) {
     memcpy (cy, y, len1 * sizeof (nr_complex_t));
   }
   if (len > 0) {
-    rx = (nr_double_t *) malloc (len2 * sizeof (nr_double_t));
-    memcpy (rx, x, len1 * sizeof (nr_double_t));
+    rx = (double *) malloc (len2 * sizeof (double));
+    memcpy (rx, x, len1 * sizeof (double));
   }
 
   dataType = (DATA_COMPLEX & DATA_MASK_TYPE);
@@ -125,7 +123,7 @@ void interpolator::cvectors (vector * y, vector * x) {
     for (int i = 0; i < len1; i++) cy[i] = y->get (i);
   }
   if (len > 0) {
-    rx = (nr_double_t *) malloc (len2 * sizeof (nr_double_t));
+    rx = (double *) malloc (len2 * sizeof (double));
     for (int i = 0; i < len1; i++) rx[i] = real (x->get (i));
   }
 
@@ -203,7 +201,7 @@ void interpolator::prepare (int interpol, int repitition, int domain) {
 /* The function performs a binary search on the ascending sorted
    x-vector in order to return the left-hand-side index pointer into
    the x-vector based on the given value. */
-int interpolator::findIndex (nr_double_t x) {
+int interpolator::findIndex (double x) {
   int lo = 0;
   int hi = length;
   int av;
@@ -226,7 +224,7 @@ int interpolator::findIndex (nr_double_t x) {
 /* Return the left-hand-side index pointer into the x-vector based on
    the given value.  Returns 0 or 'length' if the value is beyond the
    x-vectors scope. */
-int interpolator::findIndex_old (nr_double_t x) {
+int interpolator::findIndex_old (double x) {
   int idx = 0;
   for (int i = 0; i < length; i++) {
     if (x >= rx[i]) idx = i;
@@ -235,9 +233,9 @@ int interpolator::findIndex_old (nr_double_t x) {
 }
 
 /* Computes simple linear interpolation value for the given values. */
-nr_double_t interpolator::linear (nr_double_t x,
-				  nr_double_t x1, nr_double_t x2,
-				  nr_double_t y1, nr_double_t y2) {
+double interpolator::linear (double x,
+				  double x1, double x2,
+				  double y1, double y2) {
   if (x1 == x2)
     return (y1 + y2) / 2;
   else
@@ -245,13 +243,13 @@ nr_double_t interpolator::linear (nr_double_t x,
 }
 
 /* Returns real valued linear interpolation. */
-nr_double_t interpolator::rlinear (nr_double_t x, int idx) {
+double interpolator::rlinear (double x, int idx) {
   return linear (x, rx[idx], rx[idx+1], ry[idx], ry[idx+1]);
 }
 
 /* Returns complex valued linear interpolation. */
-nr_complex_t interpolator::clinear (nr_double_t x, int idx) {
-  nr_double_t x1, x2, r, i;
+nr_complex_t interpolator::clinear (double x, int idx) {
+  double x1, x2, r, i;
   nr_complex_t y1, y2;
   x1 = rx[idx]; x2 = rx[idx+1];
   y1 = cy[idx]; y2 = cy[idx+1];
@@ -263,9 +261,9 @@ nr_complex_t interpolator::clinear (nr_double_t x, int idx) {
 /* This function interpolates for real values.  Returns the linear
    interpolation of the real y-vector for the given value in the
    x-vector. */
-nr_double_t interpolator::rinterpolate (nr_double_t x) {
+double interpolator::rinterpolate (double x) {
   int idx = -1;
-  nr_double_t res = 0.0;
+  double res = 0.0;
 
   // no chance to interpolate
   if (length <= 0) {
@@ -307,7 +305,7 @@ nr_double_t interpolator::rinterpolate (nr_double_t x) {
 /* This function interpolates for complex values.  Returns the complex
    interpolation of the real y-vector for the given value in the
    x-vector. */
-nr_complex_t interpolator::cinterpolate (nr_double_t x) {
+nr_complex_t interpolator::cinterpolate (double x) {
   int idx = -1;
   nr_complex_t res = 0.0;
 
@@ -338,8 +336,8 @@ nr_complex_t interpolator::cinterpolate (nr_double_t x) {
   // cubic spline interpolation
   else if (interpolType & INTERPOL_CUBIC) {
     // evaluate spline functions
-    nr_double_t r = rsp->evaluate (x).f0;
-    nr_double_t i = isp->evaluate (x).f0;
+    double r = rsp->evaluate (x).f0;
+    double i = isp->evaluate (x).f0;
     res = nr_complex_t (r, i);
   }
   else if (interpolType & INTERPOL_HOLD) {

@@ -26,10 +26,10 @@ class cpwgap : public qucs::circuit
 {
  public:
   CREATOR (cpwgap);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
-  void calcAC (nr_double_t);
-  qucs::matrix calcMatrixY (nr_double_t);
+  void calcAC (double);
+  qucs::matrix calcMatrixY (double);
 };
 
 #endif /* __CPWGAP_H__ */

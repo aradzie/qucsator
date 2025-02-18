@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "resistor.h"
 
@@ -35,30 +33,30 @@ void resistor::initSP (void) {
   allocMatrixS ();
 }
 
-void resistor::calcSP (nr_double_t) {
+void resistor::calcSP (double) {
   // calculate S-parameters
-  nr_double_t z = getScaledProperty ("R") / z0;
+  double z = getScaledProperty ("R") / z0;
   setS (NODE_1, NODE_1, z / (z + 2));
   setS (NODE_2, NODE_2, z / (z + 2));
   setS (NODE_1, NODE_2, 2 / (z + 2));
   setS (NODE_2, NODE_1, 2 / (z + 2));
 }
 
-void resistor::calcNoiseSP (nr_double_t) {
+void resistor::calcNoiseSP (double) {
   // calculate noise correlation matrix
-  nr_double_t r = getScaledProperty ("R");
-  nr_double_t T = getPropertyDouble ("Temp");
-  nr_double_t f = celsius2kelvin (T) * 4.0 * r * z0 / sqr (2.0 * z0 + r) / T0;
+  double r = getScaledProperty ("R");
+  double T = getPropertyDouble ("Temp");
+  double f = celsius2kelvin (T) * 4.0 * r * z0 / sqr (2.0 * z0 + r) / T0;
   setN (NODE_1, NODE_1, +f); setN (NODE_2, NODE_2, +f);
   setN (NODE_1, NODE_2, -f); setN (NODE_2, NODE_1, -f);
 }
 
-void resistor::calcNoiseAC (nr_double_t) {
+void resistor::calcNoiseAC (double) {
   // calculate noise current correlation matrix
-  nr_double_t r = getScaledProperty ("R");
+  double r = getScaledProperty ("R");
   if (r > 0.0 || r < 0.0) {
-    nr_double_t T = getPropertyDouble ("Temp");
-    nr_double_t f = celsius2kelvin (T) / T0 * 4.0 / r;
+    double T = getPropertyDouble ("Temp");
+    double f = celsius2kelvin (T) / T0 * 4.0 / r;
     setN (NODE_1, NODE_1, +f); setN (NODE_2, NODE_2, +f);
     setN (NODE_1, NODE_2, -f); setN (NODE_2, NODE_1, -f);
   }
@@ -68,25 +66,25 @@ void resistor::initModel (void) {
   /* if this is a controlled resistor then do nothing here */
   if (hasProperty ("Controlled")) return;
 
-  nr_double_t T  = getPropertyDouble ("Temp");
-  nr_double_t Tn = getPropertyDouble ("Tnom");
-  nr_double_t R  = getPropertyDouble ("R");
-  nr_double_t DT = T - Tn;
+  double T  = getPropertyDouble ("Temp");
+  double Tn = getPropertyDouble ("Tnom");
+  double R  = getPropertyDouble ("R");
+  double DT = T - Tn;
 
   // compute R temperature dependency
-  nr_double_t Tc1 = getPropertyDouble ("Tc1");
-  nr_double_t Tc2 = getPropertyDouble ("Tc2");
+  double Tc1 = getPropertyDouble ("Tc1");
+  double Tc2 = getPropertyDouble ("Tc2");
   R = R * (1 + DT * (Tc1 + Tc2 * DT));
   setScaledProperty ("R", R);
 }
 
 void resistor::initDC (void) {
   initModel ();
-  nr_double_t r = getScaledProperty ("R");
+  double r = getScaledProperty ("R");
 
   // for non-zero resistances usual MNA entries
   if (r != 0.0) {
-    nr_double_t g = 1.0 / r;
+    double g = 1.0 / r;
     setVoltageSources (0);
     allocMatrixMNA ();
     setY (NODE_1, NODE_1, +g); setY (NODE_2, NODE_2, +g);
@@ -104,11 +102,11 @@ void resistor::initDC (void) {
 /* The calcDC() function is here partly implemented again because the
    circuit can be used to simulate controlled non-zero resistances. */
 void resistor::calcDC (void) {
-  nr_double_t r = getScaledProperty ("R");
+  double r = getScaledProperty ("R");
 
   // for non-zero resistances usual MNA entries
   if (r != 0.0) {
-    nr_double_t g = 1.0 / r;
+    double g = 1.0 / r;
     setY (NODE_1, NODE_1, +g); setY (NODE_2, NODE_2, +g);
     setY (NODE_1, NODE_2, -g); setY (NODE_2, NODE_1, -g);
   }
@@ -118,7 +116,7 @@ void resistor::initAC (void) {
   initDC ();
 }
 
-void resistor::calcAC (nr_double_t) {
+void resistor::calcAC (double) {
   calcDC ();
 }
 
@@ -126,14 +124,14 @@ void resistor::initTR (void) {
   initDC ();
 }
 
-void resistor::calcTR (nr_double_t) {
+void resistor::calcTR (double) {
   calcDC ();
 }
 
 // Initialize computation of MNA matrix entries for HB.
 void resistor::initHB (void) {
   initModel ();
-  nr_double_t r = getScaledProperty ("R");
+  double r = getScaledProperty ("R");
   setVoltageSources (1);
   setInternalVoltageSource (1);
   allocMatrixMNA ();

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "equation.h"
 #include "environment.h"
@@ -112,7 +110,7 @@ char * rfedd::createVariable (const char * base, bool pfx) {
 }
 
 // Saves the given real value into the equation result.
-void rfedd::setResult (void * eqn, nr_double_t val) {
+void rfedd::setResult (void * eqn, double val) {
   A(eqn)->evaluate ();
   constant * c = A(eqn)->getResult ();
   c->d = val;
@@ -189,7 +187,7 @@ void rfedd::prepareModel (void) {
 }
 
 // Update local variable equations.
-void rfedd::updateLocals (nr_double_t frequency) {
+void rfedd::updateLocals (double frequency) {
 
   // update frequency variables for equations
   setResult (seqn, nr_complex_t (0, 2 * pi * frequency));
@@ -249,7 +247,7 @@ void rfedd::initMNA (void) {
 }
 
 // Calculates MNA representation depending on parameter type.
-void rfedd::calcMNA (nr_double_t frequency) {
+void rfedd::calcMNA (double frequency) {
   const char * const type = getPropertyString ("Type");
   int r, c, ports = getSize ();
   matrix p = calcMatrix (frequency);
@@ -305,12 +303,12 @@ void rfedd::initAC (void) {
 }
 
 // Callback for AC analysis.
-void rfedd::calcAC (nr_double_t frequency) {
+void rfedd::calcAC (double frequency) {
   calcMNA (frequency);
 }
 
 // Computes parameter matrix.
-matrix rfedd::calcMatrix (nr_double_t frequency) {
+matrix rfedd::calcMatrix (double frequency) {
   int i, j, k, ports = getSize ();
   matrix p (ports);
 
@@ -333,7 +331,7 @@ void rfedd::initTR (void) {
 }
 
 // Callback for the TR analysis.
-void rfedd::calcTR (nr_double_t) {
+void rfedd::calcTR (double) {
   calcDC ();
 }
 
@@ -344,7 +342,7 @@ void rfedd::initSP (void) {
 }
 
 // Callback for S-parameter analysis.
-void rfedd::calcSP (nr_double_t frequency) {
+void rfedd::calcSP (double frequency) {
   const char * const type = getPropertyString ("Type");
   matrix p = calcMatrix (frequency);
   switch (type[0]) {

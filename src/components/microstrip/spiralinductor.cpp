@@ -21,8 +21,6 @@
  */
 
 
-#include "config.h"
-
 #include "component.h"
 #include "spiralinductor.h"
 #include "substrate.h"
@@ -41,26 +39,26 @@ spiralinductor::spiralinductor () : circuit (2) {
 }
 //------------------------------------------------------------------
 // This function calculates the ABCD matrix of the spiral inductance
-void spiralinductor::calcABCDparams(nr_double_t frequency)
+void spiralinductor::calcABCDparams(double frequency)
 {
- nr_double_t N = getPropertyDouble ("N");//Number of turns
- nr_double_t Di = getPropertyDouble ("Di");//Inner diameter
- nr_double_t W = getPropertyDouble ("W");//Width
- nr_double_t S = getPropertyDouble ("S");//Spacing between turns
+ double N = getPropertyDouble ("N");//Number of turns
+ double Di = getPropertyDouble ("Di");//Inner diameter
+ double W = getPropertyDouble ("W");//Width
+ double S = getPropertyDouble ("S");//Spacing between turns
  substrate * subst = getSubstrate ();
 
- nr_double_t Do = Di + 2.*N*W + (2.*N-1)*S;
- nr_double_t chi = (Do - Di) / (Do + Di);//Fill ratio
- nr_double_t a = (Di+Do)/4.;
- nr_double_t Dav = .5*(Do+Di);
+ double Do = Di + 2.*N*W + (2.*N-1)*S;
+ double chi = (Do - Di) / (Do + Di);//Fill ratio
+ double a = (Di+Do)/4.;
+ double Dav = .5*(Do+Di);
 
- nr_double_t rho = subst->getPropertyDouble ("rho");
- nr_double_t t = subst->getPropertyDouble ("t");
+ double rho = subst->getPropertyDouble ("rho");
+ double t = subst->getPropertyDouble ("t");
 
- nr_double_t K = 1.+0.333*qucs::pow(1.+S/W, -1.7);// Crowding effect in the corners. The following relies on the assumption that
+ double K = 1.+0.333*qucs::pow(1.+S/W, -1.7);// Crowding effect in the corners. The following relies on the assumption that
 // square, hexagonal and octogonal inductors have the same crowding effect as the spiral inductor
 
- nr_double_t c1, c2, c3, c4;
+ double c1, c2, c3, c4;
 
 
  if (!strcmp (getPropertyString ("Geometry"), "Circular"))
@@ -76,10 +74,10 @@ void spiralinductor::calcABCDparams(nr_double_t frequency)
  {c1 = 1.07; c2 = 2.29; c3 = 0; c4 = 0.19;}
 
 
- nr_double_t L = 2.*pi*1e-7*N*N*Dav*c1*(qucs::log(c2/chi) + c3*chi + c4*chi*chi);
- nr_double_t Rs = rho/t;
+ double L = 2.*pi*1e-7*N*N*Dav*c1*(qucs::log(c2/chi) + c3*chi + c4*chi*chi);
+ double Rs = rho/t;
  R = K*pi*a*N*Rs/W;//The resistance is a global variable since it is used in the DC analysis too
- nr_double_t C = (3.5e-5*Do+0.06)*1e-12;
+ double C = (3.5e-5*Do+0.06)*1e-12;
 
 
  //ABCD matrix
@@ -90,15 +88,15 @@ void spiralinductor::calcABCDparams(nr_double_t frequency)
  ABCD.set(1,1, nr_complex_t(-4.*pi*pi*C*L*frequency*frequency+1., 2.*pi*C*R*frequency));
 }
 
-void spiralinductor::calcSP (nr_double_t frequency) {
+void spiralinductor::calcSP (double frequency) {
   calcABCDparams(frequency);
   matrix Stmp = qucs::atos(ABCD, z0, z0);
   setMatrixS(Stmp);
 }
 
-void spiralinductor::calcNoiseSP (nr_double_t) {
+void spiralinductor::calcNoiseSP (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
@@ -109,7 +107,7 @@ void spiralinductor::calcNoiseSP (nr_double_t) {
 void spiralinductor::initDC (void) {
   allocMatrixMNA ();
   if (R != 0.0) {
-    nr_double_t g = 1.0 / R;
+    double g = 1.0 / R;
     setVoltageSources (0);
     allocMatrixMNA ();
     setY (NODE_1, NODE_1, +g); setY (NODE_2, NODE_2, +g);
@@ -135,7 +133,7 @@ void spiralinductor::initSP(void)
   allocMatrixS ();
 }
 
-void spiralinductor::calcAC (nr_double_t frequency) {
+void spiralinductor::calcAC (double frequency) {
   calcABCDparams(frequency);
   nr_complex_t y11 = ABCD.get(1,1)/ABCD.get(0,1);
   nr_complex_t y12 = -det(ABCD)/ABCD.get(0,1);
@@ -145,9 +143,9 @@ void spiralinductor::calcAC (nr_double_t frequency) {
   setY (NODE_1, NODE_2, y12); setY (NODE_2, NODE_1, y21);
 }
 
-void spiralinductor::calcNoiseAC (nr_double_t) {
+void spiralinductor::calcNoiseAC (double) {
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

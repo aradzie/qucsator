@@ -29,7 +29,7 @@ class iac : public qucs::circuit
   void initSP (void);
   void initDC (void);
   void initAC (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 };
 
 #endif /* __IAC_H__ */

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "ivnoise.h"
 
@@ -44,15 +42,15 @@ void ivnoise::initSP (void) {
   setS (NODE_V2N, NODE_V2P, 1.0);
 }
 
-void ivnoise::calcNoiseSP (nr_double_t frequency) {
-  nr_double_t C = getPropertyDouble ("C");
-  nr_double_t e = getPropertyDouble ("e");
-  nr_double_t c = getPropertyDouble ("c");
-  nr_double_t a = getPropertyDouble ("a");
-  nr_double_t k = a + c * qucs::pow (frequency, e);
-  nr_double_t i1 = getPropertyDouble ("i1") / k / kB / T0;
-  nr_double_t u2 = getPropertyDouble ("v2") / k / kB / T0;
-  nr_double_t ci = C * std::sqrt (i1 * u2) / 2;
+void ivnoise::calcNoiseSP (double frequency) {
+  double C = getPropertyDouble ("C");
+  double e = getPropertyDouble ("e");
+  double c = getPropertyDouble ("c");
+  double a = getPropertyDouble ("a");
+  double k = a + c * qucs::pow (frequency, e);
+  double i1 = getPropertyDouble ("i1") / k / kB / T0;
+  double u2 = getPropertyDouble ("v2") / k / kB / T0;
+  double ci = C * std::sqrt (i1 * u2) / 2;
 
   // entries of source 1
   setN (NODE_I1P, NODE_I1P, +i1 * z0); setN (NODE_I1N, NODE_I1N, +i1 * z0);
@@ -80,15 +78,15 @@ void ivnoise::initTR (void) {
   initDC ();
 }
 
-void ivnoise::calcNoiseAC (nr_double_t frequency) {
-  nr_double_t C = getPropertyDouble ("C");
-  nr_double_t e = getPropertyDouble ("e");
-  nr_double_t c = getPropertyDouble ("c");
-  nr_double_t a = getPropertyDouble ("a");
-  nr_double_t k = a + c * qucs::pow (frequency, e);
-  nr_double_t i1 = getPropertyDouble ("i1") / k / kB / T0;
-  nr_double_t u2 = getPropertyDouble ("v2") / k / kB / T0;
-  nr_double_t ci = C * std::sqrt (i1 * u2);
+void ivnoise::calcNoiseAC (double frequency) {
+  double C = getPropertyDouble ("C");
+  double e = getPropertyDouble ("e");
+  double c = getPropertyDouble ("c");
+  double a = getPropertyDouble ("a");
+  double k = a + c * qucs::pow (frequency, e);
+  double i1 = getPropertyDouble ("i1") / k / kB / T0;
+  double u2 = getPropertyDouble ("v2") / k / kB / T0;
+  double ci = C * std::sqrt (i1 * u2);
   setN (NODE_I1P, NODE_I1P, +i1); setN (NODE_I1N, NODE_I1N, +i1);
   setN (NODE_I1P, NODE_I1N, -i1); setN (NODE_I1N, NODE_I1P, -i1);
   setN (NODE_5, NODE_I1P, ci);

@@ -30,14 +30,14 @@ class tswitch : public qucs::circuit
   void initDC (void);
   void initAC (void);
   void initTR (void);
-  void calcTR (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcTR (double);
+  void calcNoiseAC (double);
+  void calcNoiseSP (double);
 
  private:
-  nr_double_t initState (void);
-  nr_double_t T;
-  nr_double_t duration;
+  double initState (void);
+  double T;
+  double duration;
   bool repeat;
 };
 

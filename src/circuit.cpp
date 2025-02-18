@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,7 +42,7 @@
 namespace qucs {
 
 // normalising impedance
-const nr_double_t circuit::z0 = 50.0;
+const double circuit::z0 = 50.0;
 
 // Constructor creates an unnamed instance of the circuit class.
 circuit::circuit () : object (), integrator () {
@@ -402,7 +400,7 @@ void circuit::addI (int port, nr_complex_t i) {
 }
 
 /* Same as above with different argument type. */
-void circuit::addI (int port, nr_double_t i) {
+void circuit::addI (int port, double i) {
   VectorI[port] += i;
 }
 
@@ -457,19 +455,19 @@ void circuit::addY (int r, int c, nr_complex_t y) {
 }
 
 /* Same as above with different argument type. */
-void circuit::addY (int r, int c, nr_double_t y) {
+void circuit::addY (int r, int c, double y) {
   MatrixY[r * size + c] += y;
 }
 
 /* Returns the circuits G-MNA matrix value depending on the port
    numbers. */
-nr_double_t circuit::getG (int r, int c) {
+double circuit::getG (int r, int c) {
   return real (MatrixY[r * size + c]);
 }
 
 /* Sets the circuits G-MNA matrix value depending on the port
    numbers. */
-void circuit::setG (int r, int c, nr_double_t y) {
+void circuit::setG (int r, int c, double y) {
   MatrixY[r * size + c] = y;
 }
 
@@ -511,7 +509,7 @@ void circuit::setCV (int port, nr_complex_t cv) {
 
 /* This function adds a operating point consisting of a key and a
    value to the circuit. */
-void circuit::addOperatingPoint (const std::string &n, nr_double_t val) {
+void circuit::addOperatingPoint (const std::string &n, double val) {
   operatingpoint p(n, val);
   oper.insert ({{n,p}});
 }
@@ -519,7 +517,7 @@ void circuit::addOperatingPoint (const std::string &n, nr_double_t val) {
 /* Returns the requested operating point value which has been
    previously added as its double representation.  If there is no such
    operating point the function returns zero. */
-nr_double_t circuit::getOperatingPoint (const std::string &n) {
+double circuit::getOperatingPoint (const std::string &n) {
   const auto it = oper.find(n);
   if (it != oper.end())
     return (*it).second.getValue();
@@ -528,7 +526,7 @@ nr_double_t circuit::getOperatingPoint (const std::string &n) {
 
 /* This function sets the operating point specified by the given name
    to the value passed to the function. */
-void circuit::setOperatingPoint (const std::string& n, nr_double_t val) {
+void circuit::setOperatingPoint (const std::string& n, double val) {
   auto it = oper.find(n);
   if (it != oper.end())
     (*it).second.setValue (val);
@@ -545,7 +543,7 @@ int circuit::hasOperatingPoint (const std::string& n) {
 
 /* This function adds a characteristic point consisting of a key and a
    value to the circuit. */
-void circuit::addCharacteristic (const std::string &n, nr_double_t val) {
+void circuit::addCharacteristic (const std::string &n, double val) {
   characteristic p(n, val);
   charac.insert({{n, p}});
 }
@@ -553,7 +551,7 @@ void circuit::addCharacteristic (const std::string &n, nr_double_t val) {
 /* Returns the requested characteristic value which has been
    previously added as its double representation.  If there is no such
    characteristic value the function returns zero. */
-nr_double_t circuit::getCharacteristic (const std::string &n) {
+double circuit::getCharacteristic (const std::string &n) {
   const auto it = charac.find(n);
   if (it != charac.end())
     return (*it).second.getValue ();
@@ -562,7 +560,7 @@ nr_double_t circuit::getCharacteristic (const std::string &n) {
 
 /* This function sets the characteristic value specified by the given
    name to the value passed to the function. */
-void circuit::setCharacteristic (const std::string &n, nr_double_t val) {
+void circuit::setCharacteristic (const std::string &n, double val) {
   auto it = charac.find(n);
   if (it != charac.end())
     (*it).second.setValue (val);
@@ -741,7 +739,7 @@ void circuit::clearY (void) {
    the n-th voltage source between node 'pos' and node 'neg' with the
    given value.  Remember to indicate this voltage source using the
    function setVoltageSources(). */
-void circuit::voltageSource (int n, int pos, int neg, nr_double_t value) {
+void circuit::voltageSource (int n, int pos, int neg, double value) {
   setC (n, pos, +1.0); setC (n, neg, -1.0);
   setB (pos, n, +1.0); setB (neg, n, -1.0);
   setD (n, n, 0.0);
@@ -753,9 +751,9 @@ void circuit::voltageSource (int n, int pos, int neg, nr_double_t value) {
    in between the given nodes.  It is assumed that the appropriate
    charge only depends on the voltage between these nodes. */
 void circuit::transientCapacitance (int qstate, int pos, int neg,
-				    nr_double_t cap, nr_double_t voltage,
-				    nr_double_t charge) {
-  nr_double_t g, i;
+				    double cap, double voltage,
+				    double charge) {
+  double g, i;
   int cstate = qstate + 1;
   setState (qstate, charge);
   integrate (qstate, cap, g, i);
@@ -768,9 +766,9 @@ void circuit::transientCapacitance (int qstate, int pos, int neg,
 
 /* This is the one-node variant of the above function.  It performs
    the same steps for a single node related to ground. */
-void circuit::transientCapacitance (int qstate, int node, nr_double_t cap,
-				    nr_double_t voltage, nr_double_t charge) {
-  nr_double_t g, i;
+void circuit::transientCapacitance (int qstate, int node, double cap,
+				    double voltage, double charge) {
+  double g, i;
   int cstate = qstate + 1;
   setState (qstate, charge);
   integrate (qstate, cap, g, i);
@@ -784,8 +782,8 @@ void circuit::transientCapacitance (int qstate, int node, nr_double_t cap,
    contributions of the charge itself and considers the polarity of
    the circuit. */
 void circuit::transientCapacitanceQ (int qstate, int qpos, int qneg,
-				     nr_double_t charge) {
-  nr_double_t unused, i;
+				     double charge) {
+  double unused, i;
   int cstate = qstate + 1;
   setState (qstate, charge);
   integrate (qstate, 0, unused, unused);
@@ -797,8 +795,8 @@ void circuit::transientCapacitanceQ (int qstate, int qpos, int qneg,
 /* This is the one-node variant of the above function.  It performs
    the same steps for a single node related to ground. */
 void circuit::transientCapacitanceQ (int qstate, int qpos,
-				     nr_double_t charge) {
-  nr_double_t unused, i;
+				     double charge) {
+  double unused, i;
   int cstate = qstate + 1;
   setState (qstate, charge);
   integrate (qstate, 0, unused, unused);
@@ -813,8 +811,8 @@ void circuit::transientCapacitanceQ (int qstate, int qpos,
    saves the current contributions which are necessary for the NR
    iteration and considers the polarity of the circuit. */
 void circuit::transientCapacitanceC (int qpos, int qneg, int vpos, int vneg,
-				     nr_double_t cap, nr_double_t voltage) {
-  nr_double_t g, i;
+				     double cap, double voltage) {
+  double g, i;
   conductor (cap, g);
   addY (qpos, vpos, +g); addY (qneg, vneg, +g);
   addY (qpos, vneg, -g); addY (qneg, vpos, -g);
@@ -827,8 +825,8 @@ void circuit::transientCapacitanceC (int qpos, int qneg, int vpos, int vneg,
    function.  It performs the same steps for a single charge node
    related to ground. */
 void circuit::transientCapacitanceC2V (int qpos, int vpos, int vneg,
-				       nr_double_t cap, nr_double_t voltage) {
-  nr_double_t g, i;
+				       double cap, double voltage) {
+  double g, i;
   conductor (cap, g);
   addY (qpos, vpos, +g);
   addY (qpos, vneg, -g);
@@ -840,8 +838,8 @@ void circuit::transientCapacitanceC2V (int qpos, int vpos, int vneg,
    function.  It performs the same steps for a single voltage node
    related to ground. */
 void circuit::transientCapacitanceC2Q (int qpos, int qneg, int vpos,
-				       nr_double_t cap, nr_double_t voltage) {
-  nr_double_t g, i;
+				       double cap, double voltage) {
+  double g, i;
   conductor (cap, g);
   addY (qpos, vpos, +g); addY (qneg, vpos, -g);
   i = pol * (g * voltage);
@@ -853,8 +851,8 @@ void circuit::transientCapacitanceC2Q (int qpos, int qneg, int vpos,
    function.  It performs the same steps for a single voltage node and
    charge node related to ground. */
 void circuit::transientCapacitanceC (int qpos, int vpos,
-				     nr_double_t cap, nr_double_t voltage) {
-  nr_double_t g, i;
+				     double cap, double voltage) {
+  double g, i;
   conductor (cap, g);
   addY (qpos, vpos, +g);
   i = pol * (g * voltage);
@@ -862,14 +860,14 @@ void circuit::transientCapacitanceC (int qpos, int vpos,
 }
 
 // The function initializes the histories of a circuit having the given age.
-void circuit::initHistory (nr_double_t age) {
+void circuit::initHistory (double age) {
   nHistories = getSize () + getVoltageSources ();
   histories = new history[nHistories];
   setHistoryAge (age);
 }
 
 // Sets the age of all circuit histories
-void circuit::setHistoryAge (nr_double_t age) {
+void circuit::setHistoryAge (double age) {
   for (int i = 0; i < nHistories; i++)
   {
     histories[i].setAge (age);
@@ -889,7 +887,7 @@ void circuit::deleteHistory (void) {
 
 // Truncates the transient analysis history (i.e. removes values newer
 // newer than time tcut).
-void circuit::truncateHistory (nr_double_t tcut) {
+void circuit::truncateHistory (double tcut) {
   if (histories != NULL) {
     for (int i = 0; i < nHistories; i++)
     {
@@ -899,12 +897,12 @@ void circuit::truncateHistory (nr_double_t tcut) {
 }
 
 // Appends a history value.
-void circuit::appendHistory (int n, nr_double_t val) {
+void circuit::appendHistory (int n, double val) {
   histories[n].push_back (val);
 }
 
 // Returns the required age of the history.
-nr_double_t circuit::getHistoryAge (void) {
+double circuit::getHistoryAge (void) {
   if (histories) return histories[0].getAge ();
   return 0.0;
 }
@@ -915,7 +913,7 @@ int circuit::getHistorySize (void) {
 }
 
 // Returns the time with the specified index
-nr_double_t circuit::getHistoryTFromIndex (int idx)
+double circuit::getHistoryTFromIndex (int idx)
 {
   return histories[0].getTfromidx (idx);
 }
@@ -931,17 +929,17 @@ void circuit::applyHistory (history * h) {
 }
 
 // Returns voltage at the given time for the given node.
-nr_double_t circuit::getV (int port, nr_double_t t) {
+double circuit::getV (int port, double t) {
   return histories[port].nearest (t);
 }
 
 // Returns voltage at the given index from the history for the given node.
-nr_double_t circuit::getV (int port, int idx) {
+double circuit::getV (int port, int idx) {
   return histories[port].getValfromidx (idx);
 }
 
 // Returns current at the given time for the given voltage source.
-nr_double_t circuit::getJ (int nr, nr_double_t t) {
+double circuit::getJ (int nr, double t) {
   return histories[nr + getSize ()].nearest (t);
 }
 

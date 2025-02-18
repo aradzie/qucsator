@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <algorithm>
 
 #include "component.h"
@@ -75,7 +73,7 @@ void mstee::initLines (void) {
   line2->setSubstrate (getSubstrate ());
 }
 
-void mstee::calcSP (nr_double_t frequency) {
+void mstee::calcSP (double frequency) {
   calcPropagation (frequency);
 
   lineA->setProperty ("L", La);
@@ -102,22 +100,22 @@ void mstee::calcSP (nr_double_t frequency) {
 			       std::sqrt (Ta2 / Tb2) + std::sqrt (Tb2 / Ta2)));
 }
 
-void mstee::calcPropagation (nr_double_t f) {
+void mstee::calcPropagation (double f) {
 
   const char * SModel = getPropertyString ("MSModel");
   const char * DModel = getPropertyString ("MSDispModel");
   substrate * subst = getSubstrate ();
-  nr_double_t er = subst->getPropertyDouble ("er");
-  nr_double_t h  = subst->getPropertyDouble ("h");
-  nr_double_t t  = subst->getPropertyDouble ("t");
-  nr_double_t Wa = getPropertyDouble ("W1");
-  nr_double_t Wb = getPropertyDouble ("W2");
-  nr_double_t W2 = getPropertyDouble ("W3");
+  double er = subst->getPropertyDouble ("er");
+  double h  = subst->getPropertyDouble ("h");
+  double t  = subst->getPropertyDouble ("t");
+  double Wa = getPropertyDouble ("W1");
+  double Wb = getPropertyDouble ("W2");
+  double W2 = getPropertyDouble ("W3");
 
-  nr_double_t Zla, Zlb, Zl2, Era, Erb, Er2;
+  double Zla, Zlb, Zl2, Era, Erb, Er2;
 
   // computation of impedances and effective dielectric constants
-  nr_double_t ZlEff, ErEff, WEff;
+  double ZlEff, ErEff, WEff;
   msline::analyseQuasiStatic (Wa, h, t, er, SModel, ZlEff, ErEff, WEff);
   msline::analyseDispersion  (Wa, h, er, ZlEff, ErEff, f, DModel,
 			      Zla, Era);
@@ -129,7 +127,7 @@ void mstee::calcPropagation (nr_double_t f) {
 			      Zl2, Er2);
 
   // local variables
-  nr_double_t Da, Db, D2, fpa, fpb, lda, ldb, da, db, d2, r, q;
+  double Da, Db, D2, fpa, fpb, lda, ldb, da, db, d2, r, q;
 
   // equivalent parallel plate line widths
   Da = Z0 / Zla * h / std::sqrt (Era);
@@ -248,7 +246,7 @@ void mstee::initNoiseAC (void) {
   line2->initNoiseAC ();
 }
 
-void mstee::calcAC (nr_double_t frequency) {
+void mstee::calcAC (double frequency) {
   calcPropagation (frequency);
 
   lineA->setProperty ("L", La);

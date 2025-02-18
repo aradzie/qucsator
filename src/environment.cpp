@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <list>
 
 #include <stdio.h>
@@ -321,7 +319,7 @@ void environment::updateReferences (environment * up) {
     if (var->getType () == VAR_REFERENCE) {
       reference * r = var->getReference ();
       // possible because no self-referring subcircuit types possible
-      nr_double_t d = up->getDouble (r->n);
+      double d = up->getDouble (r->n);
       constant * c = r->getResult ();
       c->d = d;
       setDouble (var->getName (), d);
@@ -335,17 +333,17 @@ qucs::vector environment::getVector (const char * const ident) const {
 }
 
 // Returns double value of an assignment in the equation checker.
-nr_double_t environment::getDouble (const char * const ident) const {
+double environment::getDouble (const char * const ident) const {
   return checkee->getDouble (ident);
 }
 
 // Sets the double value of an assignment in the equation checker.
-void environment::setDouble (const char * const ident, const nr_double_t val) {
+void environment::setDouble (const char * const ident, const double val) {
   checkee->setDouble (ident, val);
 }
 
 // Return double value of a variable in the environment.
-nr_double_t environment::getDoubleConstant (const char * const ident) const {
+double environment::getDoubleConstant (const char * const ident) const {
   variable * var = getVariable (ident);
   if (var != NULL && var->getType () == VAR_CONSTANT) {
     constant * c = var->getConstant ();
@@ -355,7 +353,7 @@ nr_double_t environment::getDoubleConstant (const char * const ident) const {
 }
 
 // Sets the double value of a variable in the environment.
-void environment::setDoubleConstant (const char * const ident, nr_double_t val) {
+void environment::setDoubleConstant (const char * const ident, double val) {
   variable * var = getVariable (ident);
   if (var != NULL && var->getType () == VAR_CONSTANT) {
     constant * c = var->getConstant ();

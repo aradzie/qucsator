@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "mutual.h"
 
@@ -30,15 +28,15 @@ mutual::mutual () : circuit (4) {
   type = CIR_MUTUAL;
 }
 
-void mutual::calcSP (nr_double_t frequency) {
+void mutual::calcSP (double frequency) {
 #if 0
   setMatrixS (ytos (calcMatrixY (frequency)));
 #else
-  nr_double_t l1 = getPropertyDouble ("L1");
-  nr_double_t l2 = getPropertyDouble ("L2");
-  nr_double_t k = getPropertyDouble ("k");
-  nr_double_t o = 2 * pi * frequency;
-  nr_double_t a = k * k - 1;
+  double l1 = getPropertyDouble ("L1");
+  double l2 = getPropertyDouble ("L2");
+  double k = getPropertyDouble ("k");
+  double o = 2 * pi * frequency;
+  double a = k * k - 1;
   nr_complex_t d = nr_complex_t (o * o * l1 * l2 * a / 2 / z0 + 2 * z0, o * (l1 + l2));
   nr_complex_t r;
   r = nr_complex_t (2 * z0, o * l2) / d;
@@ -58,12 +56,12 @@ void mutual::calcSP (nr_double_t frequency) {
 #endif
 }
 
-matrix mutual::calcMatrixY (nr_double_t frequency) {
-  nr_double_t l1 = getPropertyDouble ("L1");
-  nr_double_t l2 = getPropertyDouble ("L2");
-  nr_double_t k = getPropertyDouble ("k");
-  nr_double_t o = 2 * pi * frequency;
-  nr_double_t a = 1 - k * k;
+matrix mutual::calcMatrixY (double frequency) {
+  double l1 = getPropertyDouble ("L1");
+  double l2 = getPropertyDouble ("L2");
+  double k = getPropertyDouble ("k");
+  double o = 2 * pi * frequency;
+  double a = 1 - k * k;
   nr_complex_t z1 = nr_complex_t (0, o * l1 * a);
   nr_complex_t z2 = nr_complex_t (0, o * l2 * a);
   nr_complex_t y3 = nr_complex_t (0, k / (o * std::sqrt (l1 * l2) * a));
@@ -85,7 +83,7 @@ void mutual::initAC (void) {
   allocMatrixMNA ();
 }
 
-void mutual::calcAC (nr_double_t frequency) {
+void mutual::calcAC (double frequency) {
   setMatrixY (calcMatrixY (frequency));
 }
 
@@ -110,14 +108,14 @@ void mutual::initTR (void) {
 #define fState21 6
 #define vState21 7
 
-void mutual::calcTR (nr_double_t) {
-  nr_double_t k  = getPropertyDouble ("k");
-  nr_double_t l1 = getPropertyDouble ("L1");
-  nr_double_t l2 = getPropertyDouble ("L2");
-  nr_double_t i1 = real (getJ (VSRC_1));
-  nr_double_t i2 = real (getJ (VSRC_2));
-  nr_double_t r11, r12, r21, r22, v11, v22, v12, v21;
-  nr_double_t M12 = k * std::sqrt (l1 * l2);
+void mutual::calcTR (double) {
+  double k  = getPropertyDouble ("k");
+  double l1 = getPropertyDouble ("L1");
+  double l2 = getPropertyDouble ("L2");
+  double i1 = real (getJ (VSRC_1));
+  double i2 = real (getJ (VSRC_2));
+  double r11, r12, r21, r22, v11, v22, v12, v21;
+  double M12 = k * std::sqrt (l1 * l2);
 
   // self inductances
   setState  (fState11, i1 * l1);

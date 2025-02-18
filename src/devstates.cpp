@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,7 +52,7 @@ void devstates::deviceStates (int vars, int stats) {
   nvars = vars;
   nstates = stats;
   free (states);
-  states = (nr_double_t *) malloc (sizeof (nr_double_t) * nvars * nstates);
+  states = (double *) malloc (sizeof (double) * nvars * nstates);
   nstate = 0;
   pstate = states;
 }
@@ -76,22 +74,22 @@ int devstates::deviceState (void) {
 }
 
 // Access operator for the given variable in the current state.
-nr_double_t devstates::operator () (int var) const {
+double devstates::operator () (int var) const {
   return pstate[var];
 }
 
 // Reference access operator for the given variable in the current state.
-nr_double_t& devstates::operator () (int var) {
+double& devstates::operator () (int var) {
   return pstate[var];
 }
 
 // Returns the given variable in the current state.
-nr_double_t devstates::deviceVar (int var) const {
+double devstates::deviceVar (int var) const {
   return pstate[var];
 }
 
 // Returns a reference to the given variable in the current state.
-nr_double_t& devstates::deviceVar (int var) {
+double& devstates::deviceVar (int var) {
   return pstate[var];
 }
 

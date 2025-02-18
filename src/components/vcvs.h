@@ -26,12 +26,12 @@ class vcvs : public qucs::circuit
 {
  public:
   CREATOR (vcvs);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 };
 
 #endif /* __VCVS_H__ */

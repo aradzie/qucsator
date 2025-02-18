@@ -21,8 +21,6 @@
 
 #include <cstring>
 
-#include "config.h"
-
 #include "object.h"
 #include "vector.h"
 #include "matrix.h"
@@ -67,7 +65,7 @@ void spfile_vector::prepare (qucs::vector * _v, qucs::vector * _f,
 }
 
 // Returns interpolated data.
-nr_complex_t spfile_vector::interpolate (nr_double_t x) {
+nr_complex_t spfile_vector::interpolate (double x) {
   if (isreal)
     return inter->rinterpolate (x);
   else
@@ -100,7 +98,7 @@ spfile::~spfile () {
 /* This function returns the S-parameter matrix of the circuit for the
    given frequency.  It uses interpolation for frequency points which
    are not part of the original touchstone file. */
-matrix spfile::getInterpolMatrixS (nr_double_t frequency) {
+matrix spfile::getInterpolMatrixS (double frequency) {
 
   // first interpolate the matrix values
   matrix s (nPorts);
@@ -135,7 +133,7 @@ matrix spfile::getInterpolMatrixS (nr_double_t frequency) {
 matrix spfile::expandSParaMatrix (matrix s) {
   assert (s.getCols () == s.getRows ());
   int r, c, ports = s.getCols () + 1;
-  nr_double_t g = -1;
+  double g = -1;
   nr_complex_t fr, ss, sr, sc, sa;
   matrix res (ports);
 
@@ -175,7 +173,7 @@ matrix spfile::expandSParaMatrix (matrix s) {
 matrix spfile::shrinkSParaMatrix (matrix s) {
   assert (s.getCols () == s.getRows () && s.getCols () > 0);
   int r, c, ports = s.getCols ();
-  nr_double_t g = -1;
+  double g = -1;
   matrix res (ports - 1);
 
   // compute S'ij

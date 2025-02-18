@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "inductor.h"
 
@@ -31,8 +29,8 @@ inductor::inductor () : circuit (2) {
   setISource (true);
 }
 
-void inductor::calcSP (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L") / z0;
+void inductor::calcSP (double frequency) {
+  double l = getPropertyDouble ("L") / z0;
   nr_complex_t z = nr_complex_t (0, 2.0 * pi * frequency * l);
   setS (NODE_1, NODE_1, z / (z + 2.0));
   setS (NODE_2, NODE_2, z / (z + 2.0));
@@ -51,7 +49,7 @@ void inductor::calcDC (void) {
 }
 
 void inductor::initAC (void) {
-  nr_double_t l = getPropertyDouble ("L");
+  double l = getPropertyDouble ("L");
 
   // for non-zero inductance usual MNA entries
   if (l != 0.0) {
@@ -65,8 +63,8 @@ void inductor::initAC (void) {
   }
 }
 
-void inductor::calcAC (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
+void inductor::calcAC (double frequency) {
+  double l = getPropertyDouble ("L");
 
   // for non-zero inductance usual MNA entries
   if (l != 0.0) {
@@ -85,10 +83,10 @@ void inductor::initTR (void) {
 #define fState 0 // flux state
 #define vState 1 // voltage state
 
-void inductor::calcTR (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
-  nr_double_t r, v;
-  nr_double_t i = real (getJ (VSRC_1));
+void inductor::calcTR (double) {
+  double l = getPropertyDouble ("L");
+  double r, v;
+  double i = real (getJ (VSRC_1));
 
   /* apply initial condition if requested */
   if (getMode () == MODE_INIT && isPropertyGiven ("I")) {
@@ -108,8 +106,8 @@ void inductor::initHB (void) {
   voltageSource (VSRC_1, NODE_1, NODE_2);
 }
 
-void inductor::calcHB (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
+void inductor::calcHB (double frequency) {
+  double l = getPropertyDouble ("L");
   setD (VSRC_1, VSRC_1, -l * 2 * pi * frequency);
 }
 

@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "rectline.h"
 
@@ -55,7 +53,7 @@ rectline::rectline () : circuit (2) {
   type = CIR_RECTANGULAR;
 }
 
-void rectline::calcResistivity (const char * const Mat, nr_double_t T) {
+void rectline::calcResistivity (const char * const Mat, double T) {
   if (!strcmp (Mat, "Copper")) {
     if (T < 7) {
       rho = 2e-11;
@@ -145,18 +143,18 @@ void rectline::calcResistivity (const char * const Mat, nr_double_t T) {
     Z = \frac{k Z_0}{\beta}
     \f]
 */
-void rectline::calcPropagation (nr_double_t frequency) {
-  nr_double_t er   = getPropertyDouble ("er");
-  nr_double_t mur  = getPropertyDouble ("mur");
-  nr_double_t tand = getPropertyDouble ("tand");
-  nr_double_t a    = getPropertyDouble ("a");
-  nr_double_t b    = getPropertyDouble ("b");
+void rectline::calcPropagation (double frequency) {
+  double er   = getPropertyDouble ("er");
+  double mur  = getPropertyDouble ("mur");
+  double tand = getPropertyDouble ("tand");
+  double a    = getPropertyDouble ("a");
+  double b    = getPropertyDouble ("b");
 
   /* wave number */
-  nr_double_t k0;
-  nr_double_t kc;
+  double k0;
+  double kc;
   /* dielectric loss */
-  nr_double_t ad, ac, rs;
+  double ad, ac, rs;
 
   // check cutoff frequency
   if (frequency >= fc_high) {
@@ -194,11 +192,11 @@ void rectline::calcPropagation (nr_double_t frequency) {
 }
 
 /*! Compute noise parameter */
-void rectline::calcNoiseSP (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void rectline::calcNoiseSP (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
@@ -208,21 +206,21 @@ void rectline::calcNoiseSP (nr_double_t) {
     \note do not check validity of epsr or mur because some research stuff could use epsr < 1 (plasma)
 */
 void rectline::initCheck (void) {
-  nr_double_t a = getPropertyDouble ("a");
-  nr_double_t b = getPropertyDouble ("b");
-  nr_double_t epsr = getPropertyDouble ("er");
-  nr_double_t mur = getPropertyDouble ("mur");
+  double a = getPropertyDouble ("a");
+  double b = getPropertyDouble ("b");
+  double epsr = getPropertyDouble ("er");
+  double mur = getPropertyDouble ("mur");
   // check validity
   if (a < b) {
     logprint (LOG_ERROR, "ERROR: a < b should be a >= b.\n");
   }
-  nr_double_t c = std::sqrt (epsr * mur);
+  double c = std::sqrt (epsr * mur);
   fc_low =  C0 / (2.0 * a * c);
   /* min of second TE mode and first TM mode */
   fc_high = std::min (C0 / (a * c),  C0 / (2.0  * b * c));
   // calculation of resistivity
   rho  = getPropertyDouble ("rho");
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   calcResistivity (getPropertyString ("Material"), celsius2kelvin (T));
 }
 
@@ -238,8 +236,8 @@ void rectline::initSP (void) {
 }
 
 /*! Compute S parameter use generic transmission line formulae */
-void rectline::calcSP (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
+void rectline::calcSP (double frequency) {
+  double l = getPropertyDouble ("L");
 
   // calculate propagation constants
   calcPropagation (frequency);
@@ -272,8 +270,8 @@ void rectline::initAC (void) {
 }
 
 /*! calc propagation using classical transmission line formulae */
-void rectline::calcAC (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
+void rectline::calcAC (double frequency) {
+  double l = getPropertyDouble ("L");
 
   // calculate propagation constants
   calcPropagation (frequency);
@@ -287,11 +285,11 @@ void rectline::calcAC (nr_double_t frequency) {
 }
 
 /*! Compute noise */
-void rectline::calcNoiseAC (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void rectline::calcNoiseAC (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4.0 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

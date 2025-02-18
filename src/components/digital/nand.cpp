@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "digital.h"
 #include "nand.h"
@@ -33,9 +31,9 @@ logicnand::logicnand () : digital () {
 }
 
 void logicnand::calcOutput (void) {
-  nr_double_t v = getPropertyDouble ("V");
-  nr_double_t n = getSize () - 1;
-  nr_double_t x;
+  double v = getPropertyDouble ("V");
+  double n = getSize () - 1;
+  double x;
   for (x = 0, i = 0; i < n; i++) {
     x += 2 / (1 + calcTransfer (i));
   }
@@ -43,8 +41,8 @@ void logicnand::calcOutput (void) {
 }
 
 void logicnand::calcDerivatives (void) {
-  nr_double_t n = getSize () - 1;
-  nr_double_t x;
+  double n = getSize () - 1;
+  double x;
   for (int k = 0; k < n; k++) {
     for (x = 0, i = 0; i < n; i++) {
       x += 2 / (1 + calcTransfer (i));

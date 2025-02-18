@@ -40,9 +40,9 @@ class ecvs : public qucs::circuit
 //  void calcDC (void);
   void initAC (void);
 //  void initHB (void);
-//  void calcHB (nr_double_t frequency);
+//  void calcHB (double frequency);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 };
 
 #endif /* __ECVS_H__ */

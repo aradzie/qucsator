@@ -30,24 +30,24 @@ class rfedd : public qucs::circuit
   void initDC (void);
   void calcDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initSP (void);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 
  private:
   void initModel (void);
   char * createVariable (const char *, int, int, bool prefix = true);
   char * createVariable (const char *, bool prefix = true);
-  void setResult (void *, nr_double_t);
+  void setResult (void *, double);
   void setResult (void *, nr_complex_t);
   nr_complex_t getResult (void *);
-  qucs::matrix calcMatrix (nr_double_t);
-  void updateLocals (nr_double_t);
+  qucs::matrix calcMatrix (double);
+  void updateLocals (double);
   void prepareModel (void);
   void initMNA (void);
-  void calcMNA (nr_double_t);
+  void calcMNA (double);
 
  private:
   void ** peqn;

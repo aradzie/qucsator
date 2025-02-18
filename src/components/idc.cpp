@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "idc.h"
 
@@ -40,14 +38,14 @@ void idc::initSP (void) {
 }
 
 void idc::initDC (void) {
-  nr_double_t i = getPropertyDouble ("I");
+  double i = getPropertyDouble ("I");
   allocMatrixMNA ();
   setI (NODE_1, +i); setI (NODE_2, -i);
 }
 
 void idc::calcDC (void) {
-  nr_double_t i = getPropertyDouble ("I");
-  nr_double_t f = getNet()->getSrcFactor ();
+  double i = getPropertyDouble ("I");
+  double f = getNet()->getSrcFactor ();
   setI (NODE_1, +i * f); setI (NODE_2, -i * f);
 }
 

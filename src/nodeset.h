@@ -29,20 +29,20 @@ class nodeset
  public:
   MCREATOR (nodeset);
   nodeset (char *);
-  nodeset (char *, nr_double_t);
+  nodeset (char *, double);
   nodeset (const nodeset &);
   virtual ~nodeset ();
   nodeset * getNext (void) { return next; }
   void setNext (nodeset * p) { next = p; }
   void setName (char *);
   char * getName (void);
-  nr_double_t getValue (void) { return value; }
-  void setValue (nr_double_t val) { value = val; }
+  double getValue (void) { return value; }
+  void setValue (double val) { value = val; }
   nodeset * findNodeset (char *);
 
  private:
   char * name;
-  nr_double_t value;
+  double value;
   nodeset * next;
 };
 

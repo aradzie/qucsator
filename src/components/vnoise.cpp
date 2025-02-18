@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vnoise.h"
 
@@ -39,12 +37,12 @@ void vnoise::initSP (void) {
   setS (NODE_2, NODE_2, 0.0);
 }
 
-void vnoise::calcNoiseSP (nr_double_t frequency) {
-  nr_double_t u = getPropertyDouble ("u");
-  nr_double_t e = getPropertyDouble ("e");
-  nr_double_t c = getPropertyDouble ("c");
-  nr_double_t a = getPropertyDouble ("a");
-  nr_double_t vpsd = u / (a + c * qucs::pow (frequency, e)) / kB / T0 / 4 / z0;
+void vnoise::calcNoiseSP (double frequency) {
+  double u = getPropertyDouble ("u");
+  double e = getPropertyDouble ("e");
+  double c = getPropertyDouble ("c");
+  double a = getPropertyDouble ("a");
+  double vpsd = u / (a + c * qucs::pow (frequency, e)) / kB / T0 / 4 / z0;
   setN (NODE_1, NODE_1, +vpsd); setN (NODE_2, NODE_2, +vpsd);
   setN (NODE_1, NODE_2, -vpsd); setN (NODE_2, NODE_1, -vpsd);
 }
@@ -62,12 +60,12 @@ void vnoise::initAC (void) {
   initDC ();
 }
 
-void vnoise::calcNoiseAC (nr_double_t frequency) {
-  nr_double_t u = getPropertyDouble ("u");
-  nr_double_t e = getPropertyDouble ("e");
-  nr_double_t c = getPropertyDouble ("c");
-  nr_double_t a = getPropertyDouble ("a");
-  nr_double_t ipsd = u / (a + c * qucs::pow (frequency, e)) / kB / T0;
+void vnoise::calcNoiseAC (double frequency) {
+  double u = getPropertyDouble ("u");
+  double e = getPropertyDouble ("e");
+  double c = getPropertyDouble ("c");
+  double a = getPropertyDouble ("a");
+  double ipsd = u / (a + c * qucs::pow (frequency, e)) / kB / T0;
   setN (NODE_3, NODE_3, +ipsd);
 }
 

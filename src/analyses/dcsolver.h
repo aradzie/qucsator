@@ -26,7 +26,7 @@
 
 namespace qucs {
 
-class dcsolver : public nasolver<nr_double_t>
+class dcsolver : public nasolver<double>
 {
  public:
   ACREATOR (dcsolver);

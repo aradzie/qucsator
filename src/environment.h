@@ -79,10 +79,10 @@ class environment
 
   // subcircuit specific
   qucs::vector getVector (const char * const) const ;
-  void setDoubleConstant (const char * const, const nr_double_t);
-  nr_double_t getDoubleConstant (const char * const) const;
-  void setDouble (const char * const , nr_double_t);
-  nr_double_t getDouble (const char * const) const;
+  void setDoubleConstant (const char * const, const double);
+  double getDoubleConstant (const char * const) const;
+  void setDouble (const char * const , double);
+  double getDouble (const char * const) const;
   void setDoubleReference (const char * const, char *);
   char * getDoubleReference (const char * const) const;
   void updateReferences (environment *);

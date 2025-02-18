@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "mscorner.h"
@@ -34,13 +32,13 @@ mscorner::mscorner () : circuit (2) {
 
 void mscorner::initCheck (void) {
   // get properties of substrate and corner
-  nr_double_t W = getPropertyDouble ("W");
+  double W = getPropertyDouble ("W");
   substrate * subst = getSubstrate ();
-  nr_double_t er = subst->getPropertyDouble ("er");
+  double er = subst->getPropertyDouble ("er");
   h = subst->getPropertyDouble ("h");
 
   // local variables
-  nr_double_t Wh = W/h;
+  double Wh = W/h;
 
   // check validity
   if (Wh < 0.2 || Wh > 6.0) {
@@ -64,11 +62,11 @@ void mscorner::initSP (void) {
   initCheck ();
 }
 
-void mscorner::calcSP (nr_double_t frequency) {
+void mscorner::calcSP (double frequency) {
   setMatrixS (ztos (calcMatrixZ (frequency)));
 }
 
-matrix mscorner::calcMatrixZ (nr_double_t frequency) {
+matrix mscorner::calcMatrixZ (double frequency) {
   // check frequency validity
   if (frequency * h > 12e6) {
     logprint (LOG_ERROR, "WARNING: Model for microstrip corner defined for "
@@ -100,7 +98,7 @@ void mscorner::initAC (void) {
   initCheck ();
 }
 
-void mscorner::calcAC (nr_double_t frequency) {
+void mscorner::calcAC (double frequency) {
   setMatrixY (ztoy (calcMatrixZ (frequency)));
 }
 

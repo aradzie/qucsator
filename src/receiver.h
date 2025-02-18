@@ -31,18 +31,18 @@ namespace emi {
 
   // receiver setting
   struct settings {
-    nr_double_t start;
-    nr_double_t stop;
-    nr_double_t stepsize;
-    nr_double_t bandwidth;
+    double start;
+    double stop;
+    double stepsize;
+    double bandwidth;
   };
 
   // internal helper functions
   int32_t nearestbin32 (int);
-  nr_double_t f_2ndorder (nr_double_t, nr_double_t, nr_double_t);
-  nr_double_t f_gauss (nr_double_t, nr_double_t, nr_double_t);
-  nr_double_t f_ideal (nr_double_t, nr_double_t, nr_double_t);
-  qucs::vector * receiver (nr_double_t *, nr_double_t, int);
+  double f_2ndorder (double, double, double);
+  double f_gauss (double, double, double);
+  double f_ideal (double, double, double);
+  qucs::vector * receiver (double *, double, int);
 
   // external functionality
   qucs::vector * receiver (qucs::vector *, qucs::vector *, int len = -1);

@@ -26,14 +26,14 @@ class tline4p : public qucs::circuit
 {
  public:
   CREATOR (tline4p);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
-  void calcNoiseAC (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcTR (double);
+  void calcNoiseAC (double);
+  void calcNoiseSP (double);
 };
 
 #endif /* __TLINE4P_H__ */

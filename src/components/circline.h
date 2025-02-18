@@ -31,30 +31,30 @@ class circline : public qucs::circuit
  public:
   CREATOR (circline);
   void initSP (void);
-  void calcSP (nr_double_t);
-  void calcNoiseSP (nr_double_t);
+  void calcSP (double);
+  void calcNoiseSP (double);
   void initDC (void);
   void initAC (void);
-  void calcAC (nr_double_t);
-  void calcNoiseAC (nr_double_t);
+  void calcAC (double);
+  void calcNoiseAC (double);
   void saveCharacteristics (nr_complex_t);
 
  private:
-  void calcPropagation (nr_double_t);
+  void calcPropagation (double);
   void initCheck (void);
-  void calcResistivity (const char * const, nr_double_t);
+  void calcResistivity (const char * const, double);
   /*! attenuation constant */
-  nr_double_t alpha;
+  double alpha;
   /*! propagation constant */
-  nr_double_t beta;
+  double beta;
   /*! wave impedance */
   nr_complex_t zl;
   /*! cut off frequency lower bound */
-  nr_double_t fc_low;
+  double fc_low;
   /*! cut off frequency higher mode */
-  nr_double_t fc_high;
+  double fc_high;
   /*! resistivity */
-  nr_double_t rho;
+  double rho;
 };
 
 #endif /* __CIRCLINE_H__ */

@@ -38,105 +38,105 @@ namespace qucs {
 //
 // trigonometric
 //
-nr_double_t    cos (const nr_double_t);
-nr_double_t    sin (const nr_double_t);
-nr_double_t    tan (const nr_double_t);
-nr_double_t   acos (const nr_double_t);
-nr_double_t   asin (const nr_double_t);
-nr_double_t   atan (const nr_double_t);
-nr_double_t  atan2 (const nr_double_t, const nr_double_t); //not used?, only for complex
+double    cos (const double);
+double    sin (const double);
+double    tan (const double);
+double   acos (const double);
+double   asin (const double);
+double   atan (const double);
+double  atan2 (const double, const double); //not used?, only for complex
 
 
 //
 // hyperbolic
 //
-nr_double_t   cosh (const nr_double_t);
-nr_double_t   sinh (const nr_double_t);
-nr_double_t   tanh (const nr_double_t);
-nr_double_t  acosh (const nr_double_t); // c++11
-nr_double_t  asinh (const nr_double_t); // c++11
-nr_double_t  atanh (const nr_double_t); // c++11, not used?, only for complex
+double   cosh (const double);
+double   sinh (const double);
+double   tanh (const double);
+double  acosh (const double); // c++11
+double  asinh (const double); // c++11
+double  atanh (const double); // c++11, not used?, only for complex
 
 
 //
 // exponential and logarithmic functions
 //
-nr_double_t exp (const nr_double_t);
-nr_double_t log (const nr_double_t);
-nr_double_t log10 (const nr_double_t);
+double exp (const double);
+double log (const double);
+double log10 (const double);
 
 
 //
 // power functions
 //
-nr_double_t pow (const nr_double_t, const nr_double_t );
-nr_double_t sqrt (const nr_double_t );
-nr_double_t xhypot (const nr_double_t, const nr_double_t ); // same hypot in c++11?
+double pow (const double, const double );
+double sqrt (const double );
+double xhypot (const double, const double ); // same hypot in c++11?
 
 
 //
 // error functions
 //
-nr_double_t erf(const nr_double_t );
+double erf(const double );
 
 
 //
 // rounding and remainder functions
 //
-nr_double_t ceil(const nr_double_t );
-nr_double_t floor(const nr_double_t );
-nr_double_t fmod(const nr_double_t ); //FIXME
-nr_double_t trunc(const nr_double_t ); // c++11
-nr_double_t round(const nr_double_t ); // c++11
+double ceil(const double );
+double floor(const double );
+double fmod(const double ); //FIXME
+double trunc(const double ); // c++11
+double round(const double ); // c++11
 
 //
 // Qucs extra trigonometric helper
 //
-nr_double_t coth (const nr_double_t );
-nr_double_t sech (const nr_double_t );
-nr_double_t cosech (const nr_double_t );
+double coth (const double );
+double sech (const double );
+double cosech (const double );
 
 
 //
 // Qucs extra math functions
 //
-nr_double_t  sqr (const nr_double_t );
+double  sqr (const double );
 unsigned int sqr (unsigned int);
-nr_double_t  quadr (const nr_double_t );
+double  quadr (const double );
 
-nr_double_t rad2deg (const nr_double_t );
-nr_double_t deg2rad (const nr_double_t x );
+double rad2deg (const double );
+double deg2rad (const double x );
 
 /*!\brief Compute the third power of input */
-static inline nr_double_t cubic (const nr_double_t x)  { return (x * x * x); }
+static inline double cubic (const double x)  { return (x * x * x); }
 
 /*!\brief Convert Celsius to Kelvin */
-static inline nr_double_t celsius2kelvin (const nr_double_t x)  { return (x - K); }
+static inline double celsius2kelvin (const double x)  { return (x - K); }
 
 /*!\brief Convert Kelvin to Celsius */
-static inline nr_double_t kelvin2celsius (const nr_double_t x)  { return (x + K); }
+static inline double kelvin2celsius (const double x)  { return (x + K); }
 
 
 //
 // extra math functions
 //
-nr_double_t limexp (const nr_double_t);
-nr_double_t signum (const nr_double_t);
-nr_double_t   sign (const nr_double_t);
-nr_double_t   sinc (const nr_double_t);
-nr_double_t    fix (const nr_double_t);
-nr_double_t   step (const nr_double_t);
+double limexp (const double);
+double signum (const double);
+double   sign (const double);
+double   sinc (const double);
+double    fix (const double);
+double   step (const double);
 unsigned int factorial (unsigned int);
 
 
 //
 // overload complex manipulations on reals
 //
-nr_double_t   real (const nr_double_t);
-nr_double_t   imag (const nr_double_t);
-nr_double_t   norm (const nr_double_t);
-nr_double_t   conj (const nr_double_t);
-nr_double_t   abs (const nr_double_t);
+double   real (const double);
+double   imag (const double);
+double   norm (const double);
+double   conj (const double);
+double   abs (const double);
 
 } // namespace qucs
 

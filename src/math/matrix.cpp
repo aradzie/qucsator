@@ -78,15 +78,12 @@
       http://authors.library.caltech.edu/6226/01/WEDieeetmtt92.pdf
 
 */
-#include "config.h"
-
 #include <assert.h>
 #include <stdio.h>
 #include <cstdlib>
 #include <string.h>
 #include <cmath>
 
-#include "logging.h"
 #include "object.h"
 #include "complex.h"
 #include "vector.h"
@@ -317,7 +314,7 @@ matrix operator * (nr_complex_t z, matrix a) {
    \return Scaled matrix
    \todo Why not d and a const
 */
-matrix operator * (matrix a, nr_double_t d) {
+matrix operator * (matrix a, double d) {
   matrix res (a.getRows (), a.getCols ());
   for (int r = 0; r < a.getRows (); r++)
     for (int c = 0; c < a.getCols (); c++)
@@ -332,7 +329,7 @@ matrix operator * (matrix a, nr_double_t d) {
    \todo Why not inline?
    \todo Why not d and a const
 */
-matrix operator * (nr_double_t d, matrix a) {
+matrix operator * (double d, matrix a) {
   return a * d;
 }
 
@@ -356,7 +353,7 @@ matrix operator / (matrix a, nr_complex_t z) {
    \return Scaled matrix
    \todo Why not a and d const
 */
-matrix operator / (matrix a, nr_double_t d) {
+matrix operator / (matrix a, double d) {
   matrix res (a.getRows (), a.getCols ());
   for (int r = 0; r < a.getRows (); r++)
     for (int c = 0; c < a.getCols (); c++)
@@ -418,7 +415,7 @@ matrix operator + (nr_complex_t z, matrix a) {
    \todo Move near other +
    \todo a and d are const
 */
-matrix operator + (matrix a, nr_double_t d) {
+matrix operator + (matrix a, double d) {
   matrix res (a.getRows (), a.getCols ());
   for (int r = 0; r < a.getRows (); r++)
     for (int c = 0; c < a.getCols (); c++)
@@ -433,7 +430,7 @@ matrix operator + (matrix a, nr_double_t d) {
    \todo a and d are const
    \todo Why not inline
 */
-matrix operator + (nr_double_t d, matrix a) {
+matrix operator + (double d, matrix a) {
   return a + d;
 }
 
@@ -466,7 +463,7 @@ matrix operator - (nr_complex_t z, matrix a) {
    \todo a and z are const
    \todo Why not inline
 */
-matrix operator - (matrix a, nr_double_t d) {
+matrix operator - (matrix a, double d) {
   return -d + a;
 }
 
@@ -477,7 +474,7 @@ matrix operator - (matrix a, nr_double_t d) {
    \todo a and z are const
    \todo Why not inline
 */
-matrix operator - (nr_double_t d, matrix a) {
+matrix operator - (double d, matrix a) {
   return -a + d;
 }
 
@@ -713,7 +710,7 @@ nr_complex_t detLaplace (matrix a) {
    */
 nr_complex_t detGauss (matrix a) {
   assert (a.getRows () == a.getCols ());
-  nr_double_t MaxPivot;
+  double MaxPivot;
   nr_complex_t f, res;
   matrix b;
   int i, c, r, pivot, n = a.getCols ();
@@ -793,7 +790,7 @@ matrix inverseLaplace (matrix a) {
    \param[in] a matrix to invert
 */
 matrix inverseGaussJordan (matrix a) {
-  nr_double_t MaxPivot;
+  double MaxPivot;
   nr_complex_t f;
   matrix b, e;
   int i, c, r, pivot, n = a.getCols ();
@@ -919,7 +916,7 @@ matrix stos (matrix s, nr_complex_t zref, nr_complex_t z0) {
   \return Renormalized scattering matrix
   \todo s, zref and z0 const
 */
-matrix stos (matrix s, nr_double_t zref, nr_double_t z0) {
+matrix stos (matrix s, double zref, double z0) {
   return stos (s, nr_complex_t (zref, 0), nr_complex_t (z0, 0));
 }
 
@@ -1982,18 +1979,18 @@ matrix twoport (matrix m, char in, char out) {
    \todo m const?
    \todo Rewrite with abs and expand det. It is cleaner.
 */
-nr_double_t rollet (matrix m) {
+double rollet (matrix m) {
   assert (m.getRows () >= 2 && m.getCols () >= 2);
-  nr_double_t res;
+  double res;
   res = (1 - norm (m (0, 0)) - norm (m (1, 1)) + norm (det (m))) /
     2 / abs (m (0, 1) * m (1, 0));
   return res;
 }
 
 /* Computes stability measure B1 of the given S-parameter matrix. */
-nr_double_t b1 (matrix m) {
+double b1 (matrix m) {
   assert (m.getRows () >= 2 && m.getCols () >= 2);
-  nr_double_t res;
+  double res;
   res = 1 + norm (m (0, 0)) - norm (m (1, 1)) - norm (det (m));
   return res;
 }

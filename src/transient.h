@@ -38,23 +38,23 @@ class integrator;
 
 namespace transient {
 
-  void calcCorrectorCoeff (int, int, nr_double_t *, nr_double_t *);
-  void calcPredictorCoeff (int, int, nr_double_t *, nr_double_t *);
-  void getConductance (integrator *, nr_double_t, nr_double_t&);
-  void integrateEuler (integrator *, int, nr_double_t, nr_double_t&,
-		       nr_double_t&);
-  void integrateBilinear (integrator *, int, nr_double_t, nr_double_t&,
-			  nr_double_t&);
-  void integrateGear (integrator *, int, nr_double_t, nr_double_t&,
-		      nr_double_t&);
-  void integrateMoulton (integrator *, int, nr_double_t, nr_double_t&,
-			 nr_double_t&);
+  void calcCorrectorCoeff (int, int, double *, double *);
+  void calcPredictorCoeff (int, int, double *, double *);
+  void getConductance (integrator *, double, double&);
+  void integrateEuler (integrator *, int, double, double&,
+		       double&);
+  void integrateBilinear (integrator *, int, double, double&,
+			  double&);
+  void integrateGear (integrator *, int, double, double&,
+		      double&);
+  void integrateMoulton (integrator *, int, double, double&,
+			 double&);
   void setIntegrationMethod (circuit *, int);
   int  correctorType (const char * const, int&);
   int  correctorType (int, int);
   int  predictorType (int, int, int&);
-  nr_double_t getCorrectorError (int, int);
-  nr_double_t getPredictorError (int, int);
+  double getCorrectorError (int, int);
+  double getPredictorError (int, int);
 
 } // namespace transient
 

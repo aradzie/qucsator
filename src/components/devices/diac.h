@@ -28,23 +28,23 @@ class diac : public qucs::circuit, public qucs::devstates
 {
  public:
   CREATOR (diac);
-  void calcSP (nr_double_t);
+  void calcSP (double);
   void initDC (void);
   void calcDC (void);
   void saveOperatingPoints (void);
   void loadOperatingPoints (void);
   void calcOperatingPoints (void);
   void initAC (void);
-  void calcAC (nr_double_t);
+  void calcAC (double);
   void initTR (void);
-  void calcTR (nr_double_t);
+  void calcTR (double);
 
  private:
-  nr_double_t Ud, gd, Id, Qi, gi, Ui, Ud_last, time_prev;
+  double Ud, gd, Id, Qi, gi, Ui, Ud_last, time_prev;
 
  private:
   void calcTheModel (bool);
-  qucs::matrix calcMatrixY (nr_double_t);
+  qucs::matrix calcMatrixY (double);
 };
 
 #endif /* __DIAC_H__ */

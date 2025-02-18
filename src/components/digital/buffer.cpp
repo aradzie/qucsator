@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "digital.h"
 #include "buffer.h"
@@ -33,7 +31,7 @@ buffer::buffer () : digital () {
 }
 
 void buffer::calcOutput (void) {
-  nr_double_t v = getPropertyDouble ("V");
+  double v = getPropertyDouble ("V");
   Vout = v / 2 * (1 + calcTransferX (0));
 }
 

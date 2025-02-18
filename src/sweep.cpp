@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -64,21 +62,21 @@ sweep::sweep (sweep & s) : object (s) {
   type = s.type;
   size = s.size;
   counter = s.counter;
-  data = (nr_double_t *) malloc (sizeof (nr_double_t) * size);
+  data = (double *) malloc (sizeof (double) * size);
   if (s.data)
-    memcpy (data, s.data, sizeof (nr_double_t) * size);
+    memcpy (data, s.data, sizeof (double) * size);
   else
-    memset (data, 0, sizeof (nr_double_t) * size);
+    memset (data, 0, sizeof (double) * size);
 }
 
 // The function returns the value at the given position.
-nr_double_t sweep::get (int idx) {
+double sweep::get (int idx) {
   assert (idx >= 0 && idx < size && data != NULL);
   return data[idx];
 }
 
 // The function sets the given value at the given position.
-void sweep::set (int idx, nr_double_t val) {
+void sweep::set (int idx, double val) {
   assert (idx >= 0 && idx < size && data != NULL);
   data[idx] = val;
 }
@@ -89,13 +87,13 @@ void sweep::set (int idx, nr_double_t val) {
 void sweep::setSize (int points) {
   assert (points > 0);
   if (data != NULL) {
-    data = (nr_double_t *) realloc (data, sizeof (nr_double_t) * points);
+    data = (double *) realloc (data, sizeof (double) * points);
     if (points > size)
-      memset (&data[size], 0, sizeof (nr_double_t) * (points - size));
+      memset (&data[size], 0, sizeof (double) * (points - size));
   }
   else {
-    data = (nr_double_t *) malloc (sizeof (nr_double_t) * points);
-    memset (data, 0, sizeof (nr_double_t) * points);
+    data = (double *) malloc (sizeof (double) * points);
+    memset (data, 0, sizeof (double) * points);
   }
   size = points;
   counter = 0;
@@ -123,7 +121,7 @@ char * sweep::toString (void) {
    definition. */
 void sweep::reverse (void) {
   if (data != NULL && size > 0) {
-    nr_double_t * buf = (nr_double_t *) malloc (sizeof (nr_double_t) * size);
+    double * buf = (double *) malloc (sizeof (double) * size);
     for (int i = 0; i < size; i++) buf[i] = data[size - 1 - i];
     free (data);
     data = buf;
@@ -132,8 +130,8 @@ void sweep::reverse (void) {
 
 /* The function returns the current sweep value and afterwards steps
    one value forward.  It wraps around at the end of sweep. */
-nr_double_t sweep::next (void) {
-  nr_double_t res = data[counter];
+double sweep::next (void) {
+  double res = data[counter];
   if (++counter >= size) counter = 0;
   return res;
 }
@@ -141,7 +139,7 @@ nr_double_t sweep::next (void) {
 /* This function returns the sweep value before the current value and
    thereby steps one value back.  It wraps around at the beginning of
    the sweep. */
-nr_double_t sweep::prev (void) {
+double sweep::prev (void) {
   if (--counter < 0) counter = size - 1;
   return data[counter];
 }
@@ -159,7 +157,7 @@ linsweep::linsweep (const std::string &n) : sweep (n) {
 /* This function creates a linear stepped vector of values starting at
    the given start value, ending with the given stop value and
    containing points elements. */
-void linsweep::create (nr_double_t start, nr_double_t stop, int points) {
+void linsweep::create (double start, double stop, int points) {
   vector v = linspace (start, stop, points);
   setSize (points);
   for (int i = 0; i < points; i++) set (i, real (v.get (i)));
@@ -182,7 +180,7 @@ logsweep::logsweep (const std::string &n) : sweep (n) {
 /* This function creates a logarithmic stepped vector of values
    starting at the given start value, ending with the given stop value
    and containing points elements. */
-void logsweep::create (nr_double_t start, nr_double_t stop, int points) {
+void logsweep::create (double start, double stop, int points) {
   vector v = logspace (start, stop, points);
   setSize (points);
   for (int i = 0; i < points; i++) set (i, real (v.get (i)));
@@ -204,7 +202,7 @@ consweep::consweep () : sweep () {
 
 /* This function creates a constant value in a sweep containing one
    element only. */
-void consweep::create (nr_double_t val) {
+void consweep::create (double val) {
   setSize (1);
   set (0, val);
 }

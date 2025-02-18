@@ -40,7 +40,7 @@ class spsolver : public analysis
   spsolver (char *);
   spsolver (spsolver &);
   ~spsolver ();
-  void calc (nr_double_t);
+  void calc (double);
   void init (void);
   void reduce (void);
   int  solve (void);
@@ -55,12 +55,12 @@ class spsolver : public analysis
   circuit * connectedJoin (node *, node *);
   void noiseConnect (circuit *, node *, node *);
   void noiseInterconnect (circuit *, node *, node *);
-  void saveResults (nr_double_t);
+  void saveResults (double);
   void saveNoiseResults (nr_complex_t[4], nr_complex_t[4],
-			 nr_double_t, vector *);
+			 double, vector *);
   char * createSP (int, int);
   const char * createCV (const std::string &c, const std::string &n);
-  void saveCharacteristics (nr_double_t);
+  void saveCharacteristics (double);
   void dropTee (circuit *);
   void dropCross (circuit *);
   void dropOpen (circuit *);

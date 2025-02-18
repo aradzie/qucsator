@@ -25,7 +25,7 @@
 #include <complex>
 #include "real.h"
 
-typedef std::complex<nr_double_t> nr_complex_t;
+typedef std::complex<double> nr_complex_t;
 
 // undefine this macro if it is defined already
 #ifdef log2
@@ -62,12 +62,12 @@ nr_complex_t   atanh (const nr_complex_t); //c++11
 nr_complex_t     exp (const nr_complex_t);
 nr_complex_t     log (const nr_complex_t);
 nr_complex_t   log10 (const nr_complex_t);
-nr_complex_t     pow (const nr_complex_t, const nr_double_t);
-nr_complex_t     pow (const nr_double_t, const nr_complex_t);
+nr_complex_t     pow (const nr_complex_t, const double);
+nr_complex_t     pow (const double, const nr_complex_t);
 nr_complex_t     pow (const nr_complex_t, const nr_complex_t);
 nr_complex_t    sqrt (const nr_complex_t);
 
-nr_double_t     norm (const nr_complex_t);
+double     norm (const nr_complex_t);
 
 
 //
@@ -90,22 +90,22 @@ nr_complex_t    log2 (const nr_complex_t);
 nr_complex_t  signum (const nr_complex_t);
 nr_complex_t    sign (const nr_complex_t);
 nr_complex_t    sinc (const nr_complex_t);
-nr_double_t   xhypot (const nr_complex_t, const nr_complex_t);
-nr_double_t   xhypot (const nr_double_t, const nr_complex_t);
-nr_double_t   xhypot (const nr_complex_t, const nr_double_t);
+double   xhypot (const nr_complex_t, const nr_complex_t);
+double   xhypot (const double, const nr_complex_t);
+double   xhypot (const nr_complex_t, const double);
 
 nr_complex_t round (const nr_complex_t);
 nr_complex_t trunc (const nr_complex_t);
 
 
-nr_double_t dB (const nr_complex_t);
+double dB (const nr_complex_t);
 
 nr_complex_t limexp (const nr_complex_t);
 
-nr_complex_t   polar (const nr_double_t mag, const nr_double_t theta = 0.0);
+nr_complex_t   polar (const double mag, const double theta = 0.0);
 /// \bug are these needed/used?
-//nr_complex_t   polar (const nr_double_t a, const nr_complex_t p);
-//nr_complex_t   polar (const nr_complex_t a, const nr_double_t p = 0.0);
+//nr_complex_t   polar (const double a, const nr_complex_t p);
+//nr_complex_t   polar (const nr_complex_t a, const double p = 0.0);
 nr_complex_t   polar (const nr_complex_t a, const nr_complex_t p = 0.0);
 
 
@@ -139,13 +139,13 @@ nr_complex_t  erfinv (const nr_complex_t); //see fspecial
 nr_complex_t erfcinv (const nr_complex_t); //see fspecial
 
 
-nr_double_t rad2deg (const nr_complex_t );
-nr_double_t deg2rad (const nr_complex_t );
+double rad2deg (const nr_complex_t );
+double deg2rad (const nr_complex_t );
 
 // modulo operators
 nr_complex_t operator % (const nr_complex_t, const nr_complex_t);
-nr_complex_t operator % (const nr_complex_t, const nr_double_t);
-nr_complex_t operator % (const nr_double_t, const nr_complex_t);
+nr_complex_t operator % (const nr_complex_t, const double);
+nr_complex_t operator % (const double, const nr_complex_t);
 
 // comparisons
 bool operator == (const nr_complex_t, const nr_complex_t);

@@ -20,7 +20,6 @@
  *
  *
  */
-#include "config.h"
 
 #include "component.h"
 #include "circline.h"
@@ -41,7 +40,7 @@ circline::circline () : circuit (2) {
   type = CIR_CIRCULAR;
 }
 
-void circline::calcResistivity (const char * const Mat, nr_double_t T) {
+void circline::calcResistivity (const char * const Mat, double T) {
   if (!strcmp (Mat, "Copper")) {
     if (T < 7) {
       rho = 2e-11;
@@ -128,17 +127,17 @@ void circline::calcResistivity (const char * const Mat, nr_double_t T) {
     where Z_0 = \sqrt{\frac{\mu_0 \mu_r}{\epsilon_0 \epsilon_r}}
     \f]
 */
-void circline::calcPropagation (nr_double_t frequency) {
-  nr_double_t er   = getPropertyDouble ("er");//Dielectric permittivity
-  nr_double_t mur  = getPropertyDouble ("mur");//Dielectric permeability
-  nr_double_t tand = getPropertyDouble ("tand");//Dielectric loss
-  nr_double_t a    = getPropertyDouble ("a");//Radius
+void circline::calcPropagation (double frequency) {
+  double er   = getPropertyDouble ("er");//Dielectric permittivity
+  double mur  = getPropertyDouble ("mur");//Dielectric permeability
+  double tand = getPropertyDouble ("tand");//Dielectric loss
+  double a    = getPropertyDouble ("a");//Radius
 
   /* wave number */
-  nr_double_t k0;
-  nr_double_t kc;
+  double k0;
+  double kc;
 
-  nr_double_t ad, ac, rs;
+  double ad, ac, rs;
 
   // check cutoff frequency
 
@@ -176,11 +175,11 @@ void circline::calcPropagation (nr_double_t frequency) {
 }
 
 /*! Compute noise parameter */
-void circline::calcNoiseSP (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");//Length
+void circline::calcNoiseSP (double) {
+  double l = getPropertyDouble ("L");//Length
   if (l < 0) return;
   // calculate noise using Bosma's theore
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
@@ -190,9 +189,9 @@ void circline::calcNoiseSP (nr_double_t) {
     \note do not check validity of epsr or mur because some research stuff could use epsr < 1 (plasma)
 */
 void circline::initCheck (void) {
-  nr_double_t a = getPropertyDouble ("a");//Radius
-  nr_double_t epsr = getPropertyDouble ("er");//Relative permittivity
-  nr_double_t mur = getPropertyDouble ("mur");//Relative permeability
+  double a = getPropertyDouble ("a");//Radius
+  double epsr = getPropertyDouble ("er");//Relative permittivity
+  double mur = getPropertyDouble ("mur");//Relative permeability
 
   if (a < 0) logprint (LOG_ERROR, "ERROR: The radius, 'a', must be positive!.\n");// checking if the radius is > 0
   fc_low =  (pe11*C0)/(2*pi*a*std::sqrt(mur*epsr));// Below this frequency, the modes do not propagate (evanescent modes)
@@ -200,7 +199,7 @@ void circline::initCheck (void) {
                                                    //So, it is of interest to determine the range in which only TE11 is propagating.
                                                    //When using circular waveguides, the upper cutoff frequency is given by the TM01 mode
   rho  = getPropertyDouble ("rho");//Resitivity
-  nr_double_t T = getPropertyDouble ("Temp");//Temperature
+  double T = getPropertyDouble ("Temp");//Temperature
   calcResistivity (getPropertyString ("Material"), celsius2kelvin (T));//Temperature calculation
 }
 
@@ -216,8 +215,8 @@ void circline::initSP (void) {
 }
 
 /*! Compute S parameter use generic transmission line formulae */
-void circline::calcSP (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
+void circline::calcSP (double frequency) {
+  double l = getPropertyDouble ("L");
 
   // calculate propagation constants
   calcPropagation (frequency);
@@ -251,8 +250,8 @@ void circline::initAC (void) {
 }
 
 /*! calc propagation using classical transmission line formulae */
-void circline::calcAC (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
+void circline::calcAC (double frequency) {
+  double l = getPropertyDouble ("L");
 
   // calculate propagation constants
   calcPropagation (frequency);
@@ -266,11 +265,11 @@ void circline::calcAC (nr_double_t frequency) {
 }
 
 /*! Compute noise */
-void circline::calcNoiseAC (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void circline::calcNoiseAC (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4.0 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 

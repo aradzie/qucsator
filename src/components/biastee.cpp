@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "biastee.h"
 
@@ -72,11 +70,11 @@ void biastee::initTR (void) {
   setISource (true);
 }
 
-void biastee::calcTR (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
-  nr_double_t c = getPropertyDouble ("C");
-  nr_double_t g, r, v;
-  nr_double_t i = real (getJ (VSRC_1));
+void biastee::calcTR (double) {
+  double l = getPropertyDouble ("L");
+  double c = getPropertyDouble ("C");
+  double g, r, v;
+  double i = real (getJ (VSRC_1));
 
   setState (fState, i * l);
   integrate (fState, l, r, v);

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "tline4p.h"
 
@@ -30,16 +28,16 @@ tline4p::tline4p () : circuit (4) {
   type = CIR_TLINE4P;
 }
 
-void tline4p::calcSP (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
-  nr_double_t z = getPropertyDouble ("Z");
-  nr_double_t a = getPropertyDouble ("Alpha");
-  nr_double_t b = 2 * pi * frequency / C0;
+void tline4p::calcSP (double frequency) {
+  double l = getPropertyDouble ("L");
+  double z = getPropertyDouble ("Z");
+  double a = getPropertyDouble ("Alpha");
+  double b = 2 * pi * frequency / C0;
   a = std::log (a) / 2;
 
   nr_complex_t g = nr_complex_t (a, b);
-  nr_double_t p = 2 * z0 + z;
-  nr_double_t n = 2 * z0 - z;
+  double p = 2 * z0 + z;
+  double n = 2 * z0 - z;
   nr_complex_t e = std::exp (2.0 * g * l);
   nr_complex_t d = p * p * e - n * n;
 
@@ -57,21 +55,21 @@ void tline4p::calcSP (nr_double_t frequency) {
   setS (NODE_2, NODE_4, -s12); setS (NODE_4, NODE_2, -s12);
 }
 
-void tline4p::calcNoiseSP (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void tline4p::calcNoiseSP (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   matrix s = getMatrixS ();
   matrix e = eye (getSize ());
   setMatrixN (celsius2kelvin (T) / T0 * (e - s * transpose (conj (s))));
 }
 
-void tline4p::calcNoiseAC (nr_double_t) {
-  nr_double_t l = getPropertyDouble ("L");
+void tline4p::calcNoiseAC (double) {
+  double l = getPropertyDouble ("L");
   if (l < 0) return;
   // calculate noise using Bosma's theorem
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
   setMatrixN (4 * celsius2kelvin (T) / T0 * real (getMatrixY ()));
 }
 
@@ -83,7 +81,7 @@ void tline4p::initDC (void) {
 }
 
 void tline4p::initAC (void) {
-  nr_double_t l = getPropertyDouble ("L");
+  double l = getPropertyDouble ("L");
   if (l != 0.0) {
     setVoltageSources (0);
     allocMatrixMNA ();
@@ -95,11 +93,11 @@ void tline4p::initAC (void) {
   }
 }
 
-void tline4p::calcAC (nr_double_t frequency) {
-  nr_double_t l = getPropertyDouble ("L");
-  nr_double_t z = getPropertyDouble ("Z");
-  nr_double_t a = getPropertyDouble ("Alpha");
-  nr_double_t b = 2 * pi * frequency / C0;
+void tline4p::calcAC (double frequency) {
+  double l = getPropertyDouble ("L");
+  double z = getPropertyDouble ("Z");
+  double a = getPropertyDouble ("Alpha");
+  double b = 2 * pi * frequency / C0;
   a = std::log (a) / 2;
   if (l != 0.0) {
     nr_complex_t g = nr_complex_t (a, b);
@@ -117,8 +115,8 @@ void tline4p::calcAC (nr_double_t frequency) {
 }
 
 void tline4p::initTR (void) {
-  nr_double_t l = getPropertyDouble ("L");
-  nr_double_t z = getPropertyDouble ("Z");
+  double l = getPropertyDouble ("L");
+  double z = getPropertyDouble ("Z");
   deleteHistory ();
   if (l > 0.0) {
     setVoltageSources (2);
@@ -138,11 +136,11 @@ void tline4p::initTR (void) {
   }
 }
 
-void tline4p::calcTR (nr_double_t t) {
-  nr_double_t l = getPropertyDouble ("L");
-  nr_double_t a = getPropertyDouble ("Alpha");
-  nr_double_t z = getPropertyDouble ("Z");
-  nr_double_t T = l / C0;
+void tline4p::calcTR (double t) {
+  double l = getPropertyDouble ("L");
+  double a = getPropertyDouble ("Alpha");
+  double z = getPropertyDouble ("Z");
+  double T = l / C0;
   a = std::log (a) / 2;
   if (T > 0.0) {
     T = t - T;

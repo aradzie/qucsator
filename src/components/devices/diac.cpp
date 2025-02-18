@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "device.h"
 #include "devstates.h"
@@ -55,12 +53,12 @@ void diac::calcDC (void) {
 
 void diac::calcTheModel (bool last) {
   // get device properties
-  nr_double_t Ubo = getPropertyDouble ("Vbo");
-  nr_double_t Ibo = getPropertyDouble ("Ibo");
-  nr_double_t Is  = getPropertyDouble ("Is");
-  nr_double_t N   = getPropertyDouble ("N");
-  nr_double_t gi  = 1.0 / getPropertyDouble ("Ri");
-  nr_double_t T   = getPropertyDouble ("Temp");
+  double Ubo = getPropertyDouble ("Vbo");
+  double Ibo = getPropertyDouble ("Ibo");
+  double Is  = getPropertyDouble ("Is");
+  double N   = getPropertyDouble ("N");
+  double gi  = 1.0 / getPropertyDouble ("Ri");
+  double T   = getPropertyDouble ("Temp");
 
   bool isOn;
   if (last)
@@ -69,7 +67,7 @@ void diac::calcTheModel (bool last) {
     Ud = fabs (real (getV (NODE_A1) - getV (NODE_IN)));
   isOn = Ud > (Ibo / gi);
 
-  nr_double_t Ut, Ieq, Vd;
+  double Ut, Ieq, Vd;
 
   if (isOn)
     Ut = N * celsius2kelvin (T) * kBoverQ;
@@ -104,8 +102,8 @@ void diac::calcTheModel (bool last) {
 
 // Saves operating points (voltages).
 void diac::saveOperatingPoints (void) {
-  nr_double_t Vd = real (getV (NODE_IN) - getV (NODE_A2));
-  nr_double_t Vi = real (getV (NODE_A1) - getV (NODE_IN));
+  double Vd = real (getV (NODE_IN) - getV (NODE_A2));
+  double Vi = real (getV (NODE_A1) - getV (NODE_IN));
   setOperatingPoint ("Vd", Vd);
   setOperatingPoint ("Vi", Vi);
 }
@@ -118,9 +116,9 @@ void diac::loadOperatingPoints (void) {
 
 // Calculates and saves operating points.
 void diac::calcOperatingPoints (void) {
-  nr_double_t Cj0 = getPropertyDouble ("Cj0");
+  double Cj0 = getPropertyDouble ("Cj0");
   // calculate capacitances and charges
-  nr_double_t Ci;
+  double Ci;
   Ci = Cj0;
   Qi = Cj0 * Ud;
   // save operating points
@@ -136,10 +134,10 @@ void diac::initAC (void) {
 }
 
 // Build admittance matrix for AC and SP analysis.
-matrix diac::calcMatrixY (nr_double_t frequency) {
-  nr_double_t gd = getOperatingPoint ("gd");
-  nr_double_t gi = getOperatingPoint ("gi");
-  nr_double_t Ci = getOperatingPoint ("Ci");
+matrix diac::calcMatrixY (double frequency) {
+  double gd = getOperatingPoint ("gd");
+  double gi = getOperatingPoint ("gi");
+  double Ci = getOperatingPoint ("Ci");
   nr_complex_t yd = nr_complex_t (gd, Ci * 2.0 * pi * frequency);
   matrix y (3);
   y.set (NODE_A2, NODE_A2, +yd);
@@ -153,12 +151,12 @@ matrix diac::calcMatrixY (nr_double_t frequency) {
 }
 
 // Callback for the AC analysis.
-void diac::calcAC (nr_double_t frequency) {
+void diac::calcAC (double frequency) {
   setMatrixY (calcMatrixY (frequency));
 }
 
 // Callback for S-parameter analysis.
-void diac::calcSP (nr_double_t frequency) {
+void diac::calcSP (double frequency) {
   setMatrixS (ytos (calcMatrixY (frequency)));
 }
 
@@ -173,7 +171,7 @@ void diac::initTR (void) {
 }
 
 // Callback for the TR analysis.
-void diac::calcTR (nr_double_t time) {
+void diac::calcTR (double time) {
   if (time_prev < time) {
     time_prev = time;
     Ud_last = real (getV (NODE_A1) - getV (NODE_IN));
@@ -184,7 +182,7 @@ void diac::calcTR (nr_double_t time) {
   loadOperatingPoints ();
   calcOperatingPoints ();
 
-  nr_double_t Ci = getOperatingPoint ("Ci");
+  double Ci = getOperatingPoint ("Ci");
   transientCapacitance (qState, NODE_IN, NODE_A2, Ci, Ud, Qi);
 }
 

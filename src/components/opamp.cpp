@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "opamp.h"
 
@@ -57,10 +55,10 @@ void opamp::initDC (void) {
 }
 
 void opamp::calcDC (void) {
-  nr_double_t g    = getPropertyDouble ("G");
-  nr_double_t uMax = getPropertyDouble ("Umax");
-  nr_double_t Uin  = real (getV (NODE_INP) - getV (NODE_INM));
-  nr_double_t Uout = uMax * two_over_pi * qucs::atan (Uin * g * pi_over_2 / uMax);
+  double g    = getPropertyDouble ("G");
+  double uMax = getPropertyDouble ("Umax");
+  double Uin  = real (getV (NODE_INP) - getV (NODE_INM));
+  double Uout = uMax * two_over_pi * qucs::atan (Uin * g * pi_over_2 / uMax);
   gv = g / (1 + sqr (pi_over_2 / uMax * g * Uin)) + GMin;
   setC (VSRC_1, NODE_INP, +gv);
   setC (VSRC_1, NODE_INM, -gv);
@@ -81,7 +79,7 @@ void opamp::initTR (void) {
   initDC ();
 }
 
-void opamp::calcTR (nr_double_t) {
+void opamp::calcTR (double) {
   calcDC ();
 }
 

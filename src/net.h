@@ -83,8 +83,8 @@ class net : public object
   void addNodeset (nodeset *);
   void delNodeset (void);
   nodeset * getNodeset (void) { return nset; }
-  void setSrcFactor (nr_double_t f) { srcFactor = f; }
-  nr_double_t getSrcFactor (void) { return srcFactor; }
+  void setSrcFactor (double f) { srcFactor = f; }
+  double getSrcFactor (void) { return srcFactor; }
   void setActionNetAll(net *);
 
  private:
@@ -100,7 +100,7 @@ class net : public object
   int reduced;
   int inserted;
   int insertedNodes;
-  nr_double_t srcFactor;
+  double srcFactor;
 };
 
 } // namespace qucs

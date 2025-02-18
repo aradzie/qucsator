@@ -27,22 +27,22 @@ namespace qucs {
 class poly
 {
  public:
-  poly (nr_double_t _x, nr_double_t _y)
+  poly (double _x, double _y)
     : x(_x), f0(_y) { f1 = f2 = 0; }
-  poly (nr_double_t _x, nr_double_t _f0, nr_double_t _f1)
+  poly (double _x, double _f0, double _f1)
     : x(_x), f0(_f0), f1(_f1) { f2 = 0; }
-  poly (nr_double_t _x, nr_double_t _f0, nr_double_t _f1, nr_double_t _f2)
+  poly (double _x, double _f0, double _f1, double _f2)
     : x(_x), f0(_f0), f1(_f1), f2(_f2) { }
   ~poly ()
     { }
-  nr_double_t eval (nr_double_t _x) {
-    nr_double_t dx = _x - x; return f0 + dx * (f1 + dx * f2);
+  double eval (double _x) {
+    double dx = _x - x; return f0 + dx * (f1 + dx * f2);
   }
 
-  nr_double_t x;  // x     - argument
-  nr_double_t f0; // f(x)  - value
-  nr_double_t f1; // f'(x) - 1st derivative
-  nr_double_t f2; // f"(x) - 2nd derivative
+  double x;  // x     - argument
+  double f0; // f(x)  - value
+  double f1; // f'(x) - 1st derivative
+  double f2; // f"(x) - 2nd derivative
 };
 
 } // namespace qucs

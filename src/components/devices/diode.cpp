@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "device.h"
 #include "devstates.h"
@@ -47,9 +45,9 @@ diode::diode () : circuit (2) {
 }
 
 // Callback for S-parameter analysis.
-void diode::calcSP (nr_double_t frequency) {
-  nr_double_t gd = getOperatingPoint ("gd");
-  nr_double_t Cd = getOperatingPoint ("Cd");
+void diode::calcSP (double frequency) {
+  double gd = getOperatingPoint ("gd");
+  double Cd = getOperatingPoint ("Cd");
   nr_complex_t y = 2 * z0 * nr_complex_t (gd, Cd * 2.0 * pi * frequency);
   setS (NODE_C, NODE_C, 1.0 / (1.0 + y));
   setS (NODE_A, NODE_A, 1.0 / (1.0 + y));
@@ -58,16 +56,16 @@ void diode::calcSP (nr_double_t frequency) {
 }
 
 // Callback for S-parameter noise analysis.
-void diode::calcNoiseSP (nr_double_t frequency) {
+void diode::calcNoiseSP (double frequency) {
 #if MICHAEL /* shot noise only */
-  nr_double_t Id = getOperatingPoint ("Id");
-  nr_double_t Is = getPropertyDouble ("Is") + getPropertyDouble ("Isr");
+  double Id = getOperatingPoint ("Id");
+  double Is = getPropertyDouble ("Is") + getPropertyDouble ("Isr");
 
   // adjust shot noise current if necessary
   if (Id < -Is) Id = -Is;
 
-  nr_double_t gd = getOperatingPoint ("gd");
-  nr_double_t Cd = getOperatingPoint ("Cd");
+  double gd = getOperatingPoint ("gd");
+  double Cd = getOperatingPoint ("Cd");
 
   nr_complex_t y = rect (gd, Cd * 2.0 * pi * frequency);
   nr_complex_t f = 2 * z0 * (Id + 2 * Is) / norm (2 * z0 * y + 1) * QoverkB / T0;
@@ -79,21 +77,21 @@ void diode::calcNoiseSP (nr_double_t frequency) {
 }
 
 // Computes noise correlation matrix Cy.
-matrix diode::calcMatrixCy (nr_double_t frequency) {
+matrix diode::calcMatrixCy (double frequency) {
   // fetch computed operating points
-  nr_double_t Id = getOperatingPoint ("Id");
-  nr_double_t Is = getPropertyDouble ("Is") + getPropertyDouble ("Isr");
+  double Id = getOperatingPoint ("Id");
+  double Is = getPropertyDouble ("Is") + getPropertyDouble ("Isr");
 
   // adjust shot noise current if necessary
   if (Id < -Is) Id = -Is;
 
-  nr_double_t Kf  = getPropertyDouble ("Kf");
-  nr_double_t Af  = getPropertyDouble ("Af");
-  nr_double_t Ffe = getPropertyDouble ("Ffe");
+  double Kf  = getPropertyDouble ("Kf");
+  double Af  = getPropertyDouble ("Af");
+  double Ffe = getPropertyDouble ("Ffe");
 
   // build noise current correlation matrix
   matrix cy (2);
-  nr_double_t i = 2 * (Id + 2 * Is) * QoverkB / T0 +    // shot noise
+  double i = 2 * (Id + 2 * Is) * QoverkB / T0 +    // shot noise
     Kf * qucs::pow (fabs (Id), Af) / qucs::pow (frequency, Ffe) / kB / T0; // flicker noise
   cy.set (NODE_C, NODE_C, +i); cy.set (NODE_A, NODE_A, +i);
   cy.set (NODE_A, NODE_C, -i); cy.set (NODE_C, NODE_A, -i);
@@ -103,24 +101,24 @@ matrix diode::calcMatrixCy (nr_double_t frequency) {
 // Initializes the diode model including temperature and area effects.
 void diode::initModel (void) {
   // fetch necessary device properties
-  nr_double_t T  = getPropertyDouble ("Temp");
-  nr_double_t Tn = getPropertyDouble ("Tnom");
-  nr_double_t A  = getPropertyDouble ("Area");
+  double T  = getPropertyDouble ("Temp");
+  double Tn = getPropertyDouble ("Tnom");
+  double A  = getPropertyDouble ("Area");
 
   // compute Is temperature and area dependency
-  nr_double_t Is  = getPropertyDouble ("Is");
-  nr_double_t N   = getPropertyDouble ("N");
-  nr_double_t Xti = getPropertyDouble ("Xti");
-  nr_double_t Eg  = getPropertyDouble ("Eg");
-  nr_double_t T1, T2;
+  double Is  = getPropertyDouble ("Is");
+  double N   = getPropertyDouble ("N");
+  double Xti = getPropertyDouble ("Xti");
+  double Eg  = getPropertyDouble ("Eg");
+  double T1, T2;
   T2 = celsius2kelvin (T);
   T1 = celsius2kelvin (Tn);
   Is = pnCurrent_T (T1, T2, Is, Eg, N, Xti);
   setScaledProperty ("Is", Is * A);
 
   // compute Isr temperature and area dependency
-  nr_double_t Isr = getPropertyDouble ("Isr");
-  nr_double_t Nr  = getPropertyDouble ("Nr");
+  double Isr = getPropertyDouble ("Isr");
+  double Nr  = getPropertyDouble ("Nr");
   Isr = pnCurrent_T (T1, T2, Isr, Eg, Nr, Xti);
   setScaledProperty ("Isr", Isr * A);
 
@@ -135,14 +133,14 @@ void diode::initModel (void) {
   }
 
   // compute Vj temperature dependency
-  nr_double_t Vj = getPropertyDouble ("Vj");
-  nr_double_t VjT;
+  double Vj = getPropertyDouble ("Vj");
+  double VjT;
   VjT = pnPotential_T (T1,T2, Vj);
   setScaledProperty ("Vj", VjT);
 
   // compute Cj0 temperature and area dependency
-  nr_double_t Cj0 = getPropertyDouble ("Cj0");
-  nr_double_t M   = getPropertyDouble ("M");
+  double Cj0 = getPropertyDouble ("Cj0");
+  double M   = getPropertyDouble ("M");
   Cj0 = pnCapacitance_T (T1, T2, M, VjT / Vj, Cj0);
   setScaledProperty ("Cj0", Cj0 * A);
 
@@ -153,28 +151,28 @@ void diode::initModel (void) {
   }
 
   // compute Bv temperature dependency
-  nr_double_t Bv  = getPropertyDouble ("Bv");
-  nr_double_t Tbv = getPropertyDouble ("Tbv");
-  nr_double_t DT  = T2 - T1;
+  double Bv  = getPropertyDouble ("Bv");
+  double Tbv = getPropertyDouble ("Tbv");
+  double DT  = T2 - T1;
   Bv = Bv - Tbv * DT;
   setScaledProperty ("Bv", Bv);
 
   // compute Tt temperature dependency
-  nr_double_t Tt   = getPropertyDouble ("Tt");
-  nr_double_t Ttt1 = getPropertyDouble ("Ttt1");
-  nr_double_t Ttt2 = getPropertyDouble ("Ttt2");
+  double Tt   = getPropertyDouble ("Tt");
+  double Ttt1 = getPropertyDouble ("Ttt1");
+  double Ttt2 = getPropertyDouble ("Ttt2");
   Tt = Tt * (1 + Ttt1 * DT + Ttt2 * DT * DT);
   setScaledProperty ("Tt", Tt);
 
   // compute M temperature dependency
-  nr_double_t Tm1 = getPropertyDouble ("Tm1");
-  nr_double_t Tm2 = getPropertyDouble ("Tm2");
+  double Tm1 = getPropertyDouble ("Tm1");
+  double Tm2 = getPropertyDouble ("Tm2");
   M = M * (1 + Tm1 * DT + Tm2 * DT * DT);
   setScaledProperty ("M", M);
 
   // compute Rs temperature and area dependency
-  nr_double_t Rs  = getPropertyDouble ("Rs");
-  nr_double_t Trs = getPropertyDouble ("Trs");
+  double Rs  = getPropertyDouble ("Rs");
+  double Trs = getPropertyDouble ("Trs");
   Rs = Rs * (1 + Trs * DT);
   setScaledProperty ("Rs", Rs / A);
 }
@@ -195,10 +193,10 @@ void diode::prepareDC (void) {
   }
 
   // get device temperature
-  nr_double_t T = getPropertyDouble ("Temp");
+  double T = getPropertyDouble ("Temp");
 
   // possibly insert series resistance
-  nr_double_t Rs = getScaledProperty ("Rs");
+  double Rs = getScaledProperty ("Rs");
   if (Rs != 0.0) {
     // create additional circuit if necessary and reassign nodes
     rs = splitResistor (this, rs, "Rs", "anode", NODE_A);
@@ -215,7 +213,7 @@ void diode::prepareDC (void) {
   // calculate actual breakdown voltage
   Bv = getScaledProperty ("Bv");
   if (Bv != 0) {
-    nr_double_t Ibv, Is, tol, Ut, Xbv, Xibv;
+    double Ibv, Is, tol, Ut, Xbv, Xibv;
     Ibv = getPropertyDouble ("Ibv");
     Is = getScaledProperty ("Is");
     Ut = celsius2kelvin (T) * kBoverQ;
@@ -264,14 +262,14 @@ void diode::restartDC (void) {
 // Callback for DC analysis.
 void diode::calcDC (void) {
   // get device properties
-  nr_double_t Is  = getScaledProperty ("Is");
-  nr_double_t N   = getPropertyDouble ("N");
-  nr_double_t Isr = getScaledProperty ("Isr");
-  nr_double_t Nr  = getPropertyDouble ("Nr");
-  nr_double_t Ikf = getPropertyDouble ("Ikf");
-  nr_double_t T   = getPropertyDouble ("Temp");
+  double Is  = getScaledProperty ("Is");
+  double N   = getPropertyDouble ("N");
+  double Isr = getScaledProperty ("Isr");
+  double Nr  = getPropertyDouble ("Nr");
+  double Ikf = getPropertyDouble ("Ikf");
+  double T   = getPropertyDouble ("Temp");
 
-  nr_double_t Ut, Ieq, Ucrit, gtiny;
+  double Ut, Ieq, Ucrit, gtiny;
 
   T = celsius2kelvin (T);
   Ut = T * kBoverQ;
@@ -280,7 +278,7 @@ void diode::calcDC (void) {
   // critical voltage necessary for bad start values
   Ucrit = pnCriticalVoltage (Is, N * Ut);
   if (Bv != 0 && Ud < std::min (0.0, -Bv + 10 * N * Ut)) {
-    nr_double_t V = -(Ud + Bv);
+    double V = -(Ud + Bv);
     V = pnVoltage (V, -(UdPrev + Bv), Ut * N, Ucrit);
     Ud = -(V + Bv);
   }
@@ -297,20 +295,20 @@ void diode::calcDC (void) {
     Id = pnCurrent (Ud, Is, Ut * N) + pnCurrent (Ud, Isr, Ut * Nr);
   }
   else if (Bv == 0 || Ud >= -Bv) { // reverse region
-    nr_double_t a = 3 * N * Ut / (Ud * euler);
+    double a = 3 * N * Ut / (Ud * euler);
     a = cubic (a);
     Id = -Is * (1 + a);
     gd = +Is * 3 * a / Ud;
   }
   else { // middle region
-    nr_double_t a = qucs::exp (-(Bv + Ud) / N / Ut);
+    double a = qucs::exp (-(Bv + Ud) / N / Ut);
     Id = -Is * a;
     gd = +Is * a / Ut / N;
   }
 
   // knee current calculations
   if (Ikf != 0.0) {
-    nr_double_t a = Ikf / (Ikf + Id);
+    double a = Ikf / (Ikf + Id);
     gd *= 0.5 * (2 - Id * a / Ikf) * qucs::sqrt (a);
     Id *= qucs::sqrt (a);
   }
@@ -340,7 +338,7 @@ void diode::calcDC (void) {
 
 // Saves operating points (voltages).
 void diode::saveOperatingPoints (void) {
-  nr_double_t Vd = real (getV (NODE_A) - getV (NODE_C));
+  double Vd = real (getV (NODE_A) - getV (NODE_C));
   setOperatingPoint ("Vd", Vd);
 }
 
@@ -356,15 +354,15 @@ void diode::calcOperatingPoints (void) {
   loadOperatingPoints ();
 
   // get necessary properties
-  nr_double_t M   = getScaledProperty ("M");
-  nr_double_t Cj0 = getScaledProperty ("Cj0");
-  nr_double_t Vj  = getScaledProperty ("Vj");
-  nr_double_t Fc  = getPropertyDouble ("Fc");
-  nr_double_t Cp  = getPropertyDouble ("Cp");
-  nr_double_t Tt  = getScaledProperty ("Tt");
+  double M   = getScaledProperty ("M");
+  double Cj0 = getScaledProperty ("Cj0");
+  double Vj  = getScaledProperty ("Vj");
+  double Fc  = getPropertyDouble ("Fc");
+  double Cp  = getPropertyDouble ("Cp");
+  double Tt  = getScaledProperty ("Tt");
 
   // calculate capacitances and charges
-  nr_double_t Cd;
+  double Cd;
   Cd = pnCapacitance (Ud, Cj0, Vj, M, Fc) + Tt * gd + Cp;
   Qd = pnCharge (Ud, Cj0, Vj, M, Fc) + Tt * Id + Cp * Ud;
 
@@ -380,16 +378,16 @@ void diode::initAC (void) {
 }
 
 // Callback for the AC analysis.
-void diode::calcAC (nr_double_t frequency) {
-  nr_double_t gd = getOperatingPoint ("gd");
-  nr_double_t Cd = getOperatingPoint ("Cd");
+void diode::calcAC (double frequency) {
+  double gd = getOperatingPoint ("gd");
+  double Cd = getOperatingPoint ("Cd");
   nr_complex_t y = nr_complex_t (gd, Cd * 2.0 * pi * frequency);
   setY (NODE_C, NODE_C, +y); setY (NODE_A, NODE_A, +y);
   setY (NODE_C, NODE_A, -y); setY (NODE_A, NODE_C, -y);
 }
 
 // Callback for the AC noise analysis.
-void diode::calcNoiseAC (nr_double_t frequency) {
+void diode::calcNoiseAC (double frequency) {
   setMatrixN (calcMatrixCy (frequency));
 }
 
@@ -403,12 +401,12 @@ void diode::initTR (void) {
 }
 
 // Callback for the TR analysis.
-void diode::calcTR (nr_double_t) {
+void diode::calcTR (double) {
   calcDC ();
   saveOperatingPoints ();
   calcOperatingPoints ();
 
-  nr_double_t Cd = getOperatingPoint ("Cd");
+  double Cd = getOperatingPoint ("Cd");
 
   transientCapacitance (qState, NODE_A, NODE_C, Cd, Ud, Qd);
 }
@@ -433,7 +431,7 @@ void diode::calcHB (int frequency) {
   saveOperatingPoints ();
   calcOperatingPoints ();
 
-  nr_double_t Cd = getOperatingPoint ("Cd");
+  double Cd = getOperatingPoint ("Cd");
 
   // fill in Q's in Q-Vector
   setQ (NODE_C, +Qd);

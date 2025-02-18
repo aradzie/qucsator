@@ -38,16 +38,16 @@ namespace fourier {
   qucs::vector fftshift (qucs::vector);
 
   // internal functions
-  void  _fft_1d (nr_double_t *, int, int isign = 1);
-  void _ifft_1d (nr_double_t *, int);
-  void  _dft_1d (nr_double_t *, int, int isign = 1);
-  void _idft_1d (nr_double_t *, int);
+  void  _fft_1d (double *, int, int isign = 1);
+  void _ifft_1d (double *, int);
+  void  _dft_1d (double *, int, int isign = 1);
+  void _idft_1d (double *, int);
 
-  void  _fft_1d_2r (nr_double_t *, nr_double_t *, int);
-  void _ifft_1d_2r (nr_double_t *, nr_double_t *, int);
+  void  _fft_1d_2r (double *, double *, int);
+  void _ifft_1d_2r (double *, double *, int);
 
-  void  _fft_nd (nr_double_t *, int[], int, int isign = 1);
-  void _ifft_nd (nr_double_t *, int[], int);
+  void  _fft_nd (double *, int[], int, int isign = 1);
+  void _ifft_nd (double *, int[], int);
 
 } // namespace
 

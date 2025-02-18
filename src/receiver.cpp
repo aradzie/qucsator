@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,9 +49,9 @@ int32_t emi::nearestbin32 (int x) {
 
 /* Ideal filter construction for given center frequency, bandwidth and
    the frequency for which the filter is evaluated. */
-nr_double_t emi::f_ideal (nr_double_t fc, nr_double_t bw, nr_double_t f) {
-  nr_double_t lo = fc - bw / 2;
-  nr_double_t hi = fc + bw / 2;
+double emi::f_ideal (double fc, double bw, double f) {
+  double lo = fc - bw / 2;
+  double hi = fc + bw / 2;
   if (f >= lo && f < hi)
     return 1.0;
   return 0.0;
@@ -62,8 +60,8 @@ nr_double_t emi::f_ideal (nr_double_t fc, nr_double_t bw, nr_double_t f) {
 /* Construction of a bandpass filter of 2nd order for given center
    frequency, bandwidth and the frequency for which the filter is
    evaluated. */
-nr_double_t emi::f_2ndorder (nr_double_t fc, nr_double_t bw, nr_double_t f) {
-  nr_double_t q = fc / bw;
+double emi::f_2ndorder (double fc, double bw, double f) {
+  double q = fc / bw;
   nr_complex_t p = nr_complex_t (0, f / fc);
   nr_complex_t w = p / q / (1.0 + p / q + p * p);
   return norm (w);
@@ -71,9 +69,9 @@ nr_double_t emi::f_2ndorder (nr_double_t fc, nr_double_t bw, nr_double_t f) {
 
 /* Construction of a gaussian filter for given center frequency,
    bandwidth and the frequency for which the filter is evaluated. */
-nr_double_t emi::f_gauss (nr_double_t fc, nr_double_t bw, nr_double_t f) {
-  nr_double_t a = log (0.5) / bw / bw;
-  nr_double_t s = f - fc;
+double emi::f_gauss (double fc, double bw, double f) {
+  double a = log (0.5) / bw / bw;
+  double s = f - fc;
   return exp (a * s * s);
 }
 
@@ -81,10 +79,10 @@ nr_double_t emi::f_gauss (nr_double_t fc, nr_double_t bw, nr_double_t f) {
    waveform in the time domain.  The number of points in the waveform
    is required to be a power of two.  Also the samples are supposed
    to be equidistant. */
-vector * emi::receiver (nr_double_t * ida, nr_double_t duration, int ilength) {
+vector * emi::receiver (double * ida, double duration, int ilength) {
 
   int i, n, points;
-  nr_double_t fres;
+  double fres;
   vector * ed = new vector ();
 
   points = ilength;
@@ -102,7 +100,7 @@ vector * emi::receiver (nr_double_t * ida, nr_double_t duration, int ilength) {
   fres = 1.0 / duration;
 
   /* generate data vector; inplace calculation of magnitudes */
-  nr_double_t * d = ida;
+  double * d = ida;
   for (n = 0, i = 0; i < points / 2; i++, n += 2){
     /* abs value of complex number */
     d[i] = xhypot (ida[n], ida[n + 1]);
@@ -120,26 +118,26 @@ vector * emi::receiver (nr_double_t * ida, nr_double_t duration, int ilength) {
   };
 
   /* define EMI noise floor */
-  nr_double_t noise = std::pow (10.0, (-100.0 / 40.0)) * 1e-6;
+  double noise = std::pow (10.0, (-100.0 / 40.0)) * 1e-6;
 
   /* generate resulting data & frequency vector */
-  nr_double_t fcur, dcur;
+  double fcur, dcur;
   int ei = 0;
 
   /* go through each EMI setting */
   for (i = 0; settings[i].bandwidth != 0; i++ ) {
 
-    nr_double_t bw = settings[i].bandwidth;
-    nr_double_t fstart = settings[i].start;
-    nr_double_t fstop = settings[i].stop;
-    nr_double_t fstep = settings[i].stepsize;
+    double bw = settings[i].bandwidth;
+    double fstart = settings[i].start;
+    double fstop = settings[i].stop;
+    double fstep = settings[i].stepsize;
 
     /* go through frequencies */
     for (fcur = fstart; fcur <= fstop; fcur += fstep) {
 
       /* calculate upper and lower frequency bounds */
-      nr_double_t lo = fcur - bw / 2;
-      nr_double_t hi = fcur + bw / 2;
+      double lo = fcur - bw / 2;
+      double hi = fcur + bw / 2;
       if (hi < fres) continue;
 
       /* calculate indices covering current bandwidth */
@@ -156,7 +154,7 @@ vector * emi::receiver (nr_double_t * ida, nr_double_t duration, int ilength) {
 	/* sum-up the values within the bandwidth */
 	dcur = 0;
 	for (int j = 0; j < ir - il; j++){
-	  nr_double_t f = fres * (il + j);
+	  double f = fres * (il + j);
 	  dcur += f_2ndorder (fcur, bw, f) * d[il + j];
 	}
 
@@ -187,9 +185,9 @@ vector * emi::receiver (vector * da, vector * dt, int len) {
   // find a power-of-two length
   nlen = emi::nearestbin32 (len);
 
-  nr_double_t tstart = real (dt->get (0));
-  nr_double_t tstop = real (dt->get (olen - 1));
-  nr_double_t duration = tstop - tstart;
+  double tstart = real (dt->get (0));
+  double tstop = real (dt->get (olen - 1));
+  double duration = tstop - tstart;
 
   /* please note: interpolation is always performed in order to ensure
      equidistant samples */
@@ -200,10 +198,10 @@ vector * emi::receiver (vector * da, vector * dt, int len) {
   inter->prepare (INTERPOL_CUBIC, REPEAT_NO, DATA_RECTANGULAR);
 
   // adjust the time domain vector using interpolation
-  nr_double_t * ida = new nr_double_t[2 * nlen];
-  nr_double_t tstep = duration / (nlen - 1);
+  double * ida = new double[2 * nlen];
+  double tstep = duration / (nlen - 1);
   for (i = 0; i < nlen; i++) {
-    nr_double_t t = i * tstep + tstart;
+    double t = i * tstep + tstart;
     ida[2 * i + 0] = inter->rinterpolate (t);
     ida[2 * i + 1] = 0;
   }

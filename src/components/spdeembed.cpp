@@ -20,8 +20,6 @@
  *
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "matvec.h"
 #include "dataset.h"
@@ -90,7 +88,7 @@ void spdeembed::initSP (void) {
   }
 }
 
-void spdeembed::calcSP (nr_double_t frequency) {
+void spdeembed::calcSP (double frequency) {
 
   // nothing to do if the given file type had errors
   if (spara == NULL || sfreq == NULL) return;
@@ -200,7 +198,7 @@ void spdeembed::initAC (void) {
   initSP ();
 }
 
-void spdeembed::calcAC (nr_double_t frequency) {
+void spdeembed::calcAC (double frequency) {
   // nothing to do if the given file type had errors
   if (spara == NULL || sfreq == NULL) return;
   // calculate interpolated S-parameters

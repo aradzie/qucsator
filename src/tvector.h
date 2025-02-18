@@ -38,9 +38,9 @@ class tvector;
 template <class nr_type_t>
 nr_type_t   scalar (tvector<nr_type_t>, tvector<nr_type_t>);
 template <class nr_type_t>
-nr_double_t maxnorm (tvector<nr_type_t>);
+double maxnorm (tvector<nr_type_t>);
 template <class nr_type_t>
-nr_double_t norm (tvector<nr_type_t>);
+double norm (tvector<nr_type_t>);
 template <class nr_type_t>
 nr_type_t   sum (tvector<nr_type_t>);
 template <class nr_type_t>
@@ -54,9 +54,9 @@ tvector<nr_type_t> operator + (nr_type_t, tvector<nr_type_t>);
 template <class nr_type_t>
 tvector<nr_type_t> operator - (tvector<nr_type_t>, tvector<nr_type_t>);
 template <class nr_type_t>
-tvector<nr_type_t> operator * (tvector<nr_type_t>, nr_double_t);
+tvector<nr_type_t> operator * (tvector<nr_type_t>, double);
 template <class nr_type_t>
-tvector<nr_type_t> operator * (nr_double_t, tvector<nr_type_t>);
+tvector<nr_type_t> operator * (double, tvector<nr_type_t>);
 template <class nr_type_t>
 tvector<nr_type_t> operator * (tvector<nr_type_t>, tvector<nr_type_t>);
 template <class nr_type_t>
@@ -86,21 +86,21 @@ class tvector
   int  isFinite (void);
   void print (void);
   void reorder (int *);
-  int  contains (nr_type_t, nr_double_t eps = std::numeric_limits<nr_double_t>::epsilon());
+  int  contains (nr_type_t, double eps = std::numeric_limits<double>::epsilon());
 
   // some basic vector operations
   friend tvector operator +<> (tvector, tvector);
   friend tvector operator -<> (tvector, tvector);
-  friend tvector operator *<> (tvector, nr_double_t);
-  friend tvector operator *<> (nr_double_t, tvector);
+  friend tvector operator *<> (tvector, double);
+  friend tvector operator *<> (double, tvector);
   friend tvector operator *<> (tvector, tvector);
   friend tvector operator -<> (tvector);
   friend tvector operator +<> (tvector, nr_type_t);
   friend tvector operator +<> (nr_type_t, tvector);
 
   // other operations
-  friend nr_double_t norm<> (tvector);
-  friend nr_double_t maxnorm<> (tvector);
+  friend double norm<> (tvector);
+  friend double maxnorm<> (tvector);
   friend nr_type_t   sum<> (tvector);
   friend nr_type_t   scalar<> (tvector, tvector);
   friend tvector     conj<> (tvector);
@@ -112,8 +112,8 @@ class tvector
   // intrinsic operators
   tvector operator += (tvector);
   tvector operator -= (tvector);
-  tvector operator *= (nr_double_t);
-  tvector operator /= (nr_double_t);
+  tvector operator *= (double);
+  tvector operator /= (double);
 
   // assignment operators
   tvector operator = (const nr_type_t);

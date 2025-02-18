@@ -69,155 +69,155 @@ namespace device {
   // computes current and its derivative for a MOS pn-junction
   void
     pnJunctionMOS (
-      nr_double_t Upn, // pn-voltage
-      nr_double_t Iss, // saturation current
-      nr_double_t Ute, // temperature voltage
-      nr_double_t& I,  // result current
-      nr_double_t& g); // result derivative
+      double Upn, // pn-voltage
+      double Iss, // saturation current
+      double Ute, // temperature voltage
+      double& I,  // result current
+      double& g); // result derivative
 
   // computes current and its derivative for a bipolar pn-junction
   void
     pnJunctionBIP (
-      nr_double_t Upn, // pn-voltage
-      nr_double_t Iss, // saturation current
-      nr_double_t Ute, // temperature voltage
-      nr_double_t& I,  // result current
-      nr_double_t& g); // result derivative
+      double Upn, // pn-voltage
+      double Iss, // saturation current
+      double Ute, // temperature voltage
+      double& I,  // result current
+      double& g); // result derivative
 
   // limits the forward pn-voltage
-  nr_double_t
+  double
      pnVoltage (
-       nr_double_t Ud,     // current pn-voltage
-       nr_double_t Uold,   // previous pn-voltage
-       nr_double_t Ut,     // temperature voltage
-       nr_double_t Ucrit); // critical voltage
+       double Ud,     // current pn-voltage
+       double Uold,   // previous pn-voltage
+       double Ut,     // temperature voltage
+       double Ucrit); // critical voltage
 
   // computes the exponential pn-junction current
-  nr_double_t
+  double
     pnCurrent (
-      nr_double_t Upn,  // pn-voltage
-      nr_double_t Iss,  // saturation current
-      nr_double_t Ute); // temperature voltage
+      double Upn,  // pn-voltage
+      double Iss,  // saturation current
+      double Ute); // temperature voltage
 
   // computes the exponential pn-junction current's derivative
-  nr_double_t
+  double
     pnConductance (
-      nr_double_t Upn,  // pn-voltage
-      nr_double_t Iss,  // saturation current
-      nr_double_t Ute); // temperature voltage
+      double Upn,  // pn-voltage
+      double Iss,  // saturation current
+      double Ute); // temperature voltage
 
   // computes pn-junction depletion capacitance
-  nr_double_t
+  double
     pnCapacitance (
-      nr_double_t Uj,  // pn-voltage
-      nr_double_t Cj,  // zero-bias capacitance
-      nr_double_t Vj,  // built-in potential
-      nr_double_t Mj,  // grading coefficient
-      nr_double_t Fc); // forward-bias coefficient
+      double Uj,  // pn-voltage
+      double Cj,  // zero-bias capacitance
+      double Vj,  // built-in potential
+      double Mj,  // grading coefficient
+      double Fc); // forward-bias coefficient
 
   // computes pn-junction depletion charge
-  nr_double_t
+  double
     pnCharge (
-      nr_double_t Uj,  // pn-voltage
-      nr_double_t Cj,  // zero-bias capacitance
-      nr_double_t Vj,  // built-in potential
-      nr_double_t Mj,  // grading coefficient
-      nr_double_t Fc); // forward-bias coefficient
+      double Uj,  // pn-voltage
+      double Cj,  // zero-bias capacitance
+      double Vj,  // built-in potential
+      double Mj,  // grading coefficient
+      double Fc); // forward-bias coefficient
 
   // computes pn-junction depletion capacitance
-  nr_double_t
+  double
     pnCapacitance (
-      nr_double_t Uj,  // pn-voltage
-      nr_double_t Cj,  // zero-bias capacitance
-      nr_double_t Vj,  // built-in potential
-      nr_double_t Mj); // grading coefficient
+      double Uj,  // pn-voltage
+      double Cj,  // zero-bias capacitance
+      double Vj,  // built-in potential
+      double Mj); // grading coefficient
 
   // computes pn-junction depletion charge
-  nr_double_t
+  double
     pnCharge (
-      nr_double_t Uj,  // pn-voltage
-      nr_double_t Cj,  // zero-bias capacitance
-      nr_double_t Vj,  // built-in potential
-      nr_double_t Mj); // grading coefficient
+      double Uj,  // pn-voltage
+      double Cj,  // zero-bias capacitance
+      double Vj,  // built-in potential
+      double Mj); // grading coefficient
 
   // compute critical voltage of pn-junction
-  nr_double_t
+  double
     pnCriticalVoltage (
-      nr_double_t Iss,  // saturation current
-      nr_double_t Ute); // temperature voltage
+      double Iss,  // saturation current
+      double Ute); // temperature voltage
 
   // limits the forward fet-voltage
-  nr_double_t
+  double
     fetVoltage (
-      nr_double_t Ufet, // current fet voltage
-      nr_double_t Uold, // previous fet voltage
-      nr_double_t Uth); // threshold voltage
+      double Ufet, // current fet voltage
+      double Uold, // previous fet voltage
+      double Uth); // threshold voltage
 
   // limits the drain-source voltage
-  nr_double_t
+  double
     fetVoltageDS (
-      nr_double_t Ufet,  // current fet voltage
-      nr_double_t Uold); // previous fet voltage
+      double Ufet,  // current fet voltage
+      double Uold); // previous fet voltage
 
   // calculates the overlap capacitance for mosfet (meyer model)
   void
     fetCapacitanceMeyer (
-      nr_double_t Ugs,   // gate-source voltage
-      nr_double_t Ugd,   // gate-drain voltage
-      nr_double_t Uth,   // threshold voltage
-      nr_double_t Udsat, // drain-source saturation voltage
-      nr_double_t Phi,   // built-in potential
-      nr_double_t Cox,   // oxide capacitance
-      nr_double_t& Cgs,  // resulting gate-source capacitance
-      nr_double_t& Cgd,  // resulting gate-drain capacitance
-      nr_double_t& Cgb); // resulting gate-bulk capacitance
+      double Ugs,   // gate-source voltage
+      double Ugd,   // gate-drain voltage
+      double Uth,   // threshold voltage
+      double Udsat, // drain-source saturation voltage
+      double Phi,   // built-in potential
+      double Cox,   // oxide capacitance
+      double& Cgs,  // resulting gate-source capacitance
+      double& Cgd,  // resulting gate-drain capacitance
+      double& Cgb); // resulting gate-bulk capacitance
 
   // computes temperature dependency of energy bandgap
-  nr_double_t
+  double
     Egap (
-      nr_double_t T,            // temperature
-      nr_double_t Eg0 = Eg0Si); // bandgap at 0K
+      double T,            // temperature
+      double Eg0 = Eg0Si); // bandgap at 0K
 
   // computes temperature dependency of intrinsic density
-  nr_double_t
+  double
     intrinsicDensity (
-      nr_double_t T,            // temperature
-      nr_double_t Eg0 = Eg0Si); // bandgap at 0K
+      double T,            // temperature
+      double Eg0 = Eg0Si); // bandgap at 0K
 
   // calculates temperature dependence for saturation current
-  nr_double_t
+  double
     pnCurrent_T (
-      nr_double_t T1,       // reference temperature
-      nr_double_t T2,       // temperature
-      nr_double_t Is,       // saturation current
-      nr_double_t Eg,       // bandgap at 300K
-      nr_double_t N = 1,    // emission coefficient
-      nr_double_t Xti = 0); // temperature coefficient
+      double T1,       // reference temperature
+      double T2,       // temperature
+      double Is,       // saturation current
+      double Eg,       // bandgap at 300K
+      double N = 1,    // emission coefficient
+      double Xti = 0); // temperature coefficient
 
   // calculates temperature dependence for junction potential
-  nr_double_t
+  double
     pnPotential_T (
-      nr_double_t T1,           // reference temperature
-      nr_double_t T2,           // temperature
-      nr_double_t Vj,           // built-in potential
-      nr_double_t Eg0 = Eg0Si); // bandgap at 0K
+      double T1,           // reference temperature
+      double T2,           // temperature
+      double Vj,           // built-in potential
+      double Eg0 = Eg0Si); // bandgap at 0K
 
   // calculates temperature dependence for junction capacitance
-  nr_double_t
+  double
     pnCapacitance_T (
-      nr_double_t T1,  // reference temperature
-      nr_double_t T2,  // temperature
-      nr_double_t M,   // grading coefficient
-      nr_double_t VR,  // built-in potential ratio
-      nr_double_t Cj); // zero-bias capacitance
+      double T1,  // reference temperature
+      double T2,  // temperature
+      double M,   // grading coefficient
+      double VR,  // built-in potential ratio
+      double Cj); // zero-bias capacitance
 
   // calculates temperature dependence for junction capacitance
-  nr_double_t
+  double
     pnCapacitance_F (
-      nr_double_t T1,  // reference temperature
-      nr_double_t T2,  // temperature
-      nr_double_t M,   // grading coefficient
-      nr_double_t VR); // built-in potential ratio: Vj(T2) / Vj(T1)
+      double T1,  // reference temperature
+      double T2,  // temperature
+      double M,   // grading coefficient
+      double VR); // built-in potential ratio: Vj(T2) / Vj(T1)
 
 } // namespace device
 

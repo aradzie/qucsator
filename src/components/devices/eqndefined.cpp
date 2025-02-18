@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "equation.h"
 #include "environment.h"
@@ -99,14 +97,14 @@ char * eqndefined::createVariable (const char * base, int r, int c, bool pfx) {
 }
 
 // Saves the given value into the equation result.
-void eqndefined::setResult (void * eqn, nr_double_t val) {
+void eqndefined::setResult (void * eqn, double val) {
   A(eqn)->evaluate ();
   constant * c = A(eqn)->getResult ();
   c->d = val;
 }
 
 // Returns the result of the equation.
-nr_double_t eqndefined::getResult (void * eqn) {
+double eqndefined::getResult (void * eqn) {
   A(eqn)->evaluate ();
   return A(eqn)->getResultDouble ();
 }
@@ -125,9 +123,9 @@ void eqndefined::initModel (void) {
   ceqn = (void **) malloc (sizeof (assignment *) * branches * branches);
 
   // allocate space for Jacobians and charges
-  _jstat = (nr_double_t *) malloc (sizeof (nr_double_t) * branches * branches);
-  _jdyna = (nr_double_t *) malloc (sizeof (nr_double_t) * branches * branches);
-  _charges = (nr_double_t *) malloc (sizeof (nr_double_t) * branches);
+  _jstat = (double *) malloc (sizeof (double) * branches * branches);
+  _jdyna = (double *) malloc (sizeof (double) * branches * branches);
+  _charges = (double *) malloc (sizeof (double) * branches);
 
   // first create voltage variables
   for (i = 0; i < branches; i++) {
@@ -282,17 +280,17 @@ void eqndefined::calcDC (void) {
 
   // calculate currents and put into right-hand side
   for (i = 0; i < branches; i++) {
-    nr_double_t c = getResult (ieqn[i]);
+    double c = getResult (ieqn[i]);
     setI (i * 2 + 0, -c);
     setI (i * 2 + 1, +c);
   }
 
   // calculate derivatives and put into Jacobian and right-hand side
   for (k = 0, i = 0; i < branches; i++) {
-    nr_double_t gv = 0;
+    double gv = 0;
     // usual G (dI/dV) entries
     for (j = 0; j < branches; j++, k++) {
-      nr_double_t g = getResult (geqn[k]);
+      double g = getResult (geqn[k]);
       setY (i * 2 + 0, j * 2 + 0, +g);
       setY (i * 2 + 1, j * 2 + 1, +g);
       setY (i * 2 + 0, j * 2 + 1, -g);
@@ -318,12 +316,12 @@ void eqndefined::evalOperatingPoints (void) {
 
   // save values for charges, conductances and capacitances
   for (k = 0, i = 0; i < branches; i++) {
-    nr_double_t q = getResult (qeqn[i]);
+    double q = getResult (qeqn[i]);
     _charges[i] = q;
     for (j = 0; j < branches; j++, k++) {
-      nr_double_t g = getResult (geqn[k]);
+      double g = getResult (geqn[k]);
       _jstat[k] = g;
-      nr_double_t c = getResult (ceqn[k]);
+      double c = getResult (ceqn[k]);
       _jdyna[k] = c;
     }
   }
@@ -346,15 +344,15 @@ void eqndefined::initAC (void) {
 }
 
 // Callback for AC analysis.
-void eqndefined::calcAC (nr_double_t frequency) {
+void eqndefined::calcAC (double frequency) {
   setMatrixY (calcMatrixY (frequency));
 }
 
 // Computes Y-matrix for AC analysis.
-matrix eqndefined::calcMatrixY (nr_double_t frequency) {
+matrix eqndefined::calcMatrixY (double frequency) {
   int i, j, k, branches = getSize () / 2;
   matrix y (2 * branches);
-  nr_double_t o = 2 * pi * frequency;
+  double o = 2 * pi * frequency;
 
   // merge conductances and capacitances
   for (k = 0, i = 0; i < branches; i++) {
@@ -380,7 +378,7 @@ void eqndefined::initTR (void) {
 }
 
 // Callback for the TR analysis.
-void eqndefined::calcTR (nr_double_t) {
+void eqndefined::calcTR (double) {
   int state, i, j, k, branches = getSize () / 2;
 
   // run usual DC iteration, then save operating points
@@ -401,7 +399,7 @@ void eqndefined::calcTR (nr_double_t) {
     for (j = 0; j < branches; j++, k++) {
       int r = i * 2;
       int c = j * 2;
-      nr_double_t v = BP (j);
+      double v = BP (j);
       transientCapacitanceC (r + 0, r + 1, c + 0, c + 1, _jdyna[k], v);
     }
   }
@@ -414,7 +412,7 @@ void eqndefined::initSP (void) {
 }
 
 // Callback for S-parameter analysis.
-void eqndefined::calcSP (nr_double_t frequency) {
+void eqndefined::calcSP (double frequency) {
   setMatrixS (ytos (calcMatrixY (frequency)));
 }
 
@@ -443,11 +441,11 @@ void eqndefined::calcHB (int) {
 
   // fill in C's (dQ/dV) in QV-Matrix and CV into right hand side
   for (k = 0, i = 0; i < branches; i++) {
-    nr_double_t cv = 0;
+    double cv = 0;
     for (j = 0; j < branches; j++, k++) {
       int r = i * 2;
       int c = j * 2;
-      nr_double_t val = _jdyna[k];
+      double val = _jdyna[k];
       setQV (r + 0, c + 0, +val);
       setQV (r + 1, c + 1, +val);
       setQV (r + 0, c + 1, -val);

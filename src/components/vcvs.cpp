@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vcvs.h"
 
@@ -31,10 +29,10 @@ vcvs::vcvs () : circuit (4) {
   setVoltageSources (1);
 }
 
-void vcvs::calcSP (nr_double_t frequency) {
+void vcvs::calcSP (double frequency) {
 
-  nr_double_t g = getPropertyDouble ("G");
-  nr_double_t T = getPropertyDouble ("T");
+  double g = getPropertyDouble ("G");
+  double T = getPropertyDouble ("T");
 
   nr_complex_t z1 = qucs::polar (g, pi - 2.0 * pi * frequency * T);
   nr_complex_t z2 = qucs::polar (g, - 2.0 * pi * frequency * T);
@@ -50,7 +48,7 @@ void vcvs::calcSP (nr_double_t frequency) {
 }
 
 void vcvs::initDC (void) {
-  nr_double_t g = getPropertyDouble ("G");
+  double g = getPropertyDouble ("G");
   allocMatrixMNA ();
   setC (VSRC_1, NODE_1, +g); setC (VSRC_1, NODE_2, -1.0);
   setC (VSRC_1, NODE_3, +1.0); setC (VSRC_1, NODE_4, -g);
@@ -64,15 +62,15 @@ void vcvs::initAC (void) {
   initDC ();
 }
 
-void vcvs::calcAC (nr_double_t frequency) {
-  nr_double_t T = getPropertyDouble ("T");
+void vcvs::calcAC (double frequency) {
+  double T = getPropertyDouble ("T");
   nr_complex_t g = qucs::polar (getPropertyDouble ("G"),
 			  - 2.0 * pi * frequency * T);
   setC (VSRC_1, NODE_1, +g); setC (VSRC_1, NODE_4, -g);
 }
 
 void vcvs::initTR (void) {
-  nr_double_t T = getPropertyDouble ("T");
+  double T = getPropertyDouble ("T");
   initDC ();
   deleteHistory ();
   if (T > 0.0) {
@@ -82,12 +80,12 @@ void vcvs::initTR (void) {
   }
 }
 
-void vcvs::calcTR (nr_double_t t) {
-  nr_double_t T = getPropertyDouble ("T");
+void vcvs::calcTR (double t) {
+  double T = getPropertyDouble ("T");
   if (T > 0.0) {
     T = t - T;
-    nr_double_t g = getPropertyDouble ("G");
-    nr_double_t v = getV (NODE_4, T) - getV (NODE_1, T);
+    double g = getPropertyDouble ("G");
+    double v = getV (NODE_4, T) - getV (NODE_1, T);
     setE (VSRC_1, g * v);
   }
 }

@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <limits>
 
 #include <stdio.h>
@@ -184,7 +182,7 @@ nr_complex_t vector::get (int i) {
   return data[i];
 }
 
-void vector::set (nr_double_t d, int i) {
+void vector::set (double d, int i) {
   data[i] = nr_complex_t (d);
 }
 
@@ -209,9 +207,9 @@ int vector::checkSizes (vector v1, vector v2) {
 // searches the maximum value of the vector elements.
 // complex numbers in the 1. and 4. quadrant are counted as "abs(c)".
 // complex numbers in the 2. and 3. quadrant are counted as "-abs(c)".
-nr_double_t vector::maximum (void) {
+double vector::maximum (void) {
   nr_complex_t c;
-  nr_double_t d, max_D = -std::numeric_limits<nr_double_t>::max();
+  double d, max_D = -std::numeric_limits<double>::max();
   for (int i = 0; i < getSize (); i++) {
     c = data[i];
     d = fabs (arg (c)) < pi_over_2 ? abs (c) : -abs (c);
@@ -223,9 +221,9 @@ nr_double_t vector::maximum (void) {
 // searches the minimum value of the vector elements.
 // complex numbers in the 1. and 4. quadrant are counted as "abs(c)".
 // complex numbers in the 2. and 3. quadrant are counted as "-abs(c)".
-nr_double_t vector::minimum (void) {
+double vector::minimum (void) {
   nr_complex_t c;
-  nr_double_t d, min_D = +std::numeric_limits<nr_double_t>::max();
+  double d, min_D = +std::numeric_limits<double>::max();
   for (int i = 0; i < getSize (); i++) {
     c = data[i];
     d = fabs (arg (c)) < pi_over_2 ? abs (c) : -abs (c);
@@ -236,12 +234,12 @@ nr_double_t vector::minimum (void) {
 
 /* Unwraps a phase vector in radians.  Adds +/- 2*Pi if consecutive
    values jump about |Pi|. */
-vector unwrap (vector v, nr_double_t tol, nr_double_t step) {
+vector unwrap (vector v, double tol, double step) {
   vector result (v.getSize ());
-  nr_double_t add = 0;
+  double add = 0;
   result (0) = v (0);
   for (int i = 1; i < v.getSize (); i++) {
-    nr_double_t diff = real (v (i) - v (i-1));
+    double diff = real (v (i) - v (i-1));
     if (diff > +tol) {
       add -= step;
     } else if (diff < -tol) {
@@ -267,7 +265,7 @@ nr_complex_t prod (vector v) {
 nr_complex_t avg (vector v) {
   nr_complex_t result (0.0);
   for (int i = 0; i < v.getSize (); i++) result += v.get (i);
-  return result / (nr_double_t) v.getSize ();
+  return result / (double) v.getSize ();
 }
 
 vector signum (vector v) {
@@ -288,7 +286,7 @@ vector xhypot (vector v, const nr_complex_t z) {
   return result;
 }
 
-vector xhypot (vector v, const nr_double_t d) {
+vector xhypot (vector v, const double d) {
   vector result (v);
   for (int i = 0; i < v.getSize (); i++) result.set (xhypot (v.get(i), d), i);
   return result;
@@ -300,7 +298,7 @@ vector xhypot (const nr_complex_t z, vector v) {
   return result;
 }
 
-vector xhypot (const nr_double_t d, vector v) {
+vector xhypot (const double d, vector v) {
   vector result (v);
   for (int i = 0; i < v.getSize (); i++) result.set (xhypot (d, v.get (i)), i);
   return result;
@@ -414,7 +412,7 @@ vector pow (vector v, const nr_complex_t z) {
   return result;
 }
 
-vector pow (vector v, const nr_double_t d) {
+vector pow (vector v, const double d) {
   vector result (v);
   for (int i = 0; i < v.getSize (); i++) result.set (pow (v.get(i), d), i);
   return result;
@@ -426,7 +424,7 @@ vector pow (const nr_complex_t z, vector v) {
   return result;
 }
 
-vector pow (const nr_double_t d, vector v) {
+vector pow (const double d, vector v) {
   vector result (v);
   for (int i = 0; i < v.getSize (); i++) result.set (pow (d, v.get (i)), i);
   return result;
@@ -635,7 +633,7 @@ vector vector::operator=(const nr_complex_t c) {
   return *this;
 }
 
-vector vector::operator=(const nr_double_t d) {
+vector vector::operator=(const double d) {
   for (int i = 0; i < size; i++) data[i] = d;
   return *this;
 }
@@ -652,7 +650,7 @@ vector vector::operator+=(const nr_complex_t c) {
   return *this;
 }
 
-vector vector::operator+=(const nr_double_t d) {
+vector vector::operator+=(const double d) {
   for (int i = 0; i < size; i++) data[i] += d;
   return *this;
 }
@@ -680,13 +678,13 @@ vector operator+(const nr_complex_t c, vector v) {
   return v + c;
 }
 
-vector operator+(vector v, const nr_double_t d) {
+vector operator+(vector v, const double d) {
   vector result (v);
   result += d;
   return result;
 }
 
-vector operator+(const nr_double_t d, vector v) {
+vector operator+(const double d, vector v) {
   return v + d;
 }
 
@@ -708,7 +706,7 @@ vector vector::operator-=(const nr_complex_t c) {
   return *this;
 }
 
-vector vector::operator-=(const nr_double_t d) {
+vector vector::operator-=(const double d) {
   for (int i = 0; i < size; i++) data[i] -= d;
   return *this;
 }
@@ -732,7 +730,7 @@ vector operator-(vector v, const nr_complex_t c) {
   return result;
 }
 
-vector operator-(vector v, const nr_double_t d) {
+vector operator-(vector v, const double d) {
   vector result (v);
   result -= d;
   return result;
@@ -744,7 +742,7 @@ vector operator-(const nr_complex_t c, vector v) {
   return result;
 }
 
-vector operator-(const nr_double_t d, vector v) {
+vector operator-(const double d, vector v) {
   vector result (-v);
   result += d;
   return result;
@@ -762,7 +760,7 @@ vector vector::operator*=(const nr_complex_t c) {
   return *this;
 }
 
-vector vector::operator*=(const nr_double_t d) {
+vector vector::operator*=(const double d) {
   for (int i = 0; i < size; i++) data[i] *= d;
   return *this;
 }
@@ -786,7 +784,7 @@ vector operator*(vector v, const nr_complex_t c) {
   return result;
 }
 
-vector operator*(vector v, const nr_double_t d) {
+vector operator*(vector v, const double d) {
   vector result (v);
   result *= d;
   return result;
@@ -796,7 +794,7 @@ vector operator*(const nr_complex_t c, vector v) {
   return v * c;
 }
 
-vector operator*(const nr_double_t d, vector v) {
+vector operator*(const double d, vector v) {
   return v * d;
 }
 
@@ -812,7 +810,7 @@ vector vector::operator/=(const nr_complex_t c) {
   return *this;
 }
 
-vector vector::operator/=(const nr_double_t d) {
+vector vector::operator/=(const double d) {
   for (int i = 0; i < size; i++) data[i] /= d;
   return *this;
 }
@@ -838,7 +836,7 @@ vector operator/(vector v, const nr_complex_t c) {
   return result;
 }
 
-vector operator/(vector v, const nr_double_t d) {
+vector operator/(vector v, const double d) {
   vector result (v);
   result /= d;
   return result;
@@ -851,7 +849,7 @@ vector operator/(const nr_complex_t c, vector v) {
   return result;
 }
 
-vector operator/(const nr_double_t d, vector v) {
+vector operator/(const double d, vector v) {
   vector result (v);
   result  = d;
   result /= v;
@@ -865,7 +863,7 @@ vector operator%(vector v, const nr_complex_t z) {
   return result;
 }
 
-vector operator%(vector v, const nr_double_t d) {
+vector operator%(vector v, const double d) {
   int len = v.getSize ();
   vector result (len);
   for (int i = 0; i < len; i++) result (i) = v (i) % d;
@@ -879,7 +877,7 @@ vector operator%(const nr_complex_t z, vector v) {
   return result;
 }
 
-vector operator%(const nr_double_t d, vector v) {
+vector operator%(const double d, vector v) {
   int len = v.getSize ();
   vector result (len);
   for (int i = 0; i < len; i++) result (i) = d % v (i);
@@ -926,7 +924,7 @@ char * vector::getOrigin (void) {
 
 /* The function returns the number of entries with the given value
    deviating no more than the given epsilon. */
-int vector::contains (nr_complex_t val, nr_double_t eps) {
+int vector::contains (nr_complex_t val, double eps) {
   int count = 0;
   for (int i = 0; i < size; i++) {
     if (abs (data[i] - val) <= eps) count++;
@@ -951,12 +949,12 @@ void vector::sort (bool ascending) {
 /* The function creates a linear stepped vector of values starting at
    the given start value, ending with the given stop value and
    containing points elements. */
-vector linspace (nr_double_t start, nr_double_t stop, int points) {
+vector linspace (double start, double stop, int points) {
   vector result (points);
-  nr_double_t val, step = (stop - start) / (points - 1);
+  double val, step = (stop - start) / (points - 1);
   for (int i = 0; i < points; i++) {
     val = start + (i * step);
-    if (i != 0 && fabs (val) < fabs (step) / 4 && fabs (val) < std::numeric_limits<nr_double_t>::epsilon())
+    if (i != 0 && fabs (val) < fabs (step) / 4 && fabs (val) < std::numeric_limits<double>::epsilon())
       val = 0.0;
     result.set (val, i);
   }
@@ -966,10 +964,10 @@ vector linspace (nr_double_t start, nr_double_t stop, int points) {
 /* The function creates a logarithmic stepped vector of values
    starting at the given start value, ending with the given stop value
    and containing points elements. */
-vector logspace (nr_double_t start, nr_double_t stop, int points) {
+vector logspace (double start, double stop, int points) {
   assert (start * stop > 0);
   vector result (points);
-  nr_double_t step, first, last, d;
+  double step, first, last, d;
 
   // ensure the last value being larger than the first
   if (fabs (start) > fabs (stop)) {
@@ -1007,7 +1005,7 @@ vector cumavg (vector v) {
   vector result (v);
   nr_complex_t val (0.0);
   for (int i = 0; i < v.getSize (); i++) {
-    val = (val * (nr_double_t) i + v.get (i)) / (i + 1.0);
+    val = (val * (double) i + v.get (i)) / (i + 1.0);
     result.set (val, i);
   }
   return result;
@@ -1059,21 +1057,21 @@ vector step (vector v) {
   return result;
 }
 
-static nr_double_t integrate_n (vector v) { /* using trapezoidal rule */
-  nr_double_t result = 0.0;
+static double integrate_n (vector v) { /* using trapezoidal rule */
+  double result = 0.0;
   for (int i = 1; i < v.getSize () - 1; i++) result += norm (v.get (i));
   result += 0.5 * norm (v.get (0));
   result += 0.5 * norm (v.get (v.getSize () - 1));
   return result;
 }
 
-nr_double_t vector::rms (void) {
-  nr_double_t result = std::sqrt (integrate_n (*this) / getSize ());
+double vector::rms (void) {
+  double result = std::sqrt (integrate_n (*this) / getSize ());
   return result;
 }
 
-nr_double_t vector::variance (void) {
-  nr_double_t result = 0.0;
+double vector::variance (void) {
+  double result = 0.0;
   nr_complex_t average = avg (*this);
   for (int i = 0; i < getSize (); i++) result += norm (get (i) - average);
   if (getSize () > 1)
@@ -1081,7 +1079,7 @@ nr_double_t vector::variance (void) {
   return 0.0;
 }
 
-nr_double_t vector::stddev (void) {
+double vector::stddev (void) {
   return std::sqrt (variance ());
 }
 
@@ -1168,14 +1166,14 @@ vector polar (vector a, vector p) {
   return res;
 }
 
-vector atan2 (const nr_double_t y, vector v) {
+vector atan2 (const double y, vector v) {
   vector result (v);
   for (int i = 0; i < v.getSize (); i++)
     result.set (atan2 (y, v.get (i)), i);
   return result;
 }
 
-vector atan2 (vector v, const nr_double_t x) {
+vector atan2 (vector v, const double x) {
   vector result (v);
   for (int i = 0; i < v.getSize (); i++)
     result.set (atan2 (v.get (i), x) , i);
@@ -1213,8 +1211,8 @@ vector dbm2w (vector v) {
   return result;
 }
 
-nr_double_t integrate (vector v, const nr_double_t h) {
-  nr_double_t s = real (v.get (0) ) / 2;
+double integrate (vector v, const double h) {
+  double s = real (v.get (0) ) / 2;
   for (int i = 1; i < v.getSize () - 1; i++)
     s += real (v.get (i));
   return (s + real (v.get (v.getSize () - 1) ) / 2) * h;
@@ -1246,10 +1244,10 @@ vector runavg (vector v, const int n) {
   int len = v.getSize () - n + 1, i;
   vector result (len);
   for (i = 0; i < n; i++) s += v.get (i);
-  y = s / (nr_double_t) n; // first running average value
+  y = s / (double) n; // first running average value
   result.set (y, 0);
   for (i = 0; i < len - 1; i++) {
-    y += (v.get (i + n) - v.get (i)) / (nr_double_t) n;
+    y += (v.get (i + n) - v.get (i)) / (double) n;
     result.set (y, i + 1);
   }
   return result;
@@ -1258,7 +1256,7 @@ vector runavg (vector v, const int n) {
 // smooth a vector over an aperture a
 // done extending the vector endpoints and using a two-sided moving average
 // moving average length is always odd
-vector smooth(vector v, nr_double_t a) {
+vector smooth(vector v, double a) {
   int len = v.getSize (), i;
   int t2 = floor(len/2 * a / 100); // moving average is over 2*t2+1 elements
   // auxiliary vector, extend original vector at beginning and end

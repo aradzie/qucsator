@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "dataset.h"
 #include "poly.h"
@@ -112,10 +110,10 @@ void ifile::initTR (void) {
   initDC ();
 }
 
-void ifile::calcTR (nr_double_t t) {
-  nr_double_t G = getPropertyDouble ("G");
-  nr_double_t T = getPropertyDouble ("T");
-  nr_double_t i = inter->rinterpolate (t - T);
+void ifile::calcTR (double t) {
+  double G = getPropertyDouble ("G");
+  double T = getPropertyDouble ("T");
+  double i = inter->rinterpolate (t - T);
   setI (NODE_1, +G * i); setI (NODE_2, -G * i);
 }
 

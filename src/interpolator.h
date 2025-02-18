@@ -45,21 +45,21 @@ class interpolator
   interpolator ();
   ~interpolator ();
 
-  void vectors (nr_double_t *, nr_double_t *, int);
-  void vectors (nr_complex_t *, nr_double_t *, int);
+  void vectors (double *, double *, int);
+  void vectors (nr_complex_t *, double *, int);
   void rvectors (qucs::vector *, qucs::vector *);
   void cvectors (qucs::vector *, qucs::vector *);
   void prepare (int, int, int domain = DATA_RECTANGULAR);
-  nr_double_t rinterpolate (nr_double_t);
-  nr_complex_t cinterpolate (nr_double_t);
+  double rinterpolate (double);
+  nr_complex_t cinterpolate (double);
 
 private:
-  int findIndex (nr_double_t);
-  int findIndex_old (nr_double_t);
-  nr_double_t linear (nr_double_t,
-		      nr_double_t, nr_double_t, nr_double_t, nr_double_t);
-  nr_double_t rlinear (nr_double_t, int);
-  nr_complex_t clinear (nr_double_t, int);
+  int findIndex (double);
+  int findIndex_old (double);
+  double linear (double,
+		      double, double, double, double);
+  double rlinear (double, int);
+  nr_complex_t clinear (double, int);
   void cleanup (void);
 
 private:
@@ -67,9 +67,9 @@ private:
   int interpolType;
   int repeat;
   int length;
-  nr_double_t * rx;
-  nr_double_t * ry;
-  nr_double_t duration;
+  double * rx;
+  double * ry;
+  double duration;
   spline * rsp, * isp;
   nr_complex_t * cy;
 };

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "vpm.h"
 
@@ -46,8 +44,8 @@ void vpm::initDC (void) {
 
 void vpm::initAC (void) {
   initDC ();
-  nr_double_t a = getPropertyDouble ("U");
-  nr_double_t p = getPropertyDouble ("Phase");
+  double a = getPropertyDouble ("U");
+  double p = getPropertyDouble ("Phase");
   setE (VSRC_1, qucs::polar (a, deg2rad (p)));
 }
 
@@ -55,15 +53,15 @@ void vpm::initTR (void) {
   initDC ();
 }
 
-void vpm::calcTR (nr_double_t t) {
-  nr_double_t f = getPropertyDouble ("f");
-  nr_double_t p = getPropertyDouble ("Phase");
-  nr_double_t d = getPropertyDouble ("M") * 2 * pi;
-  nr_double_t a = getPropertyDouble ("U");
-  nr_double_t v = real (getV  (NODE_3));
-  nr_double_t b = 2 * pi * f * t + deg2rad (p) + v * d;
-  nr_double_t u = a * std::sin (b);
-  nr_double_t g = a * std::cos (b) * d;
+void vpm::calcTR (double t) {
+  double f = getPropertyDouble ("f");
+  double p = getPropertyDouble ("Phase");
+  double d = getPropertyDouble ("M") * 2 * pi;
+  double a = getPropertyDouble ("U");
+  double v = real (getV  (NODE_3));
+  double b = 2 * pi * f * t + deg2rad (p) + v * d;
+  double u = a * std::sin (b);
+  double g = a * std::cos (b) * d;
   setE (VSRC_1, g * v - u);
   setC (VSRC_1, NODE_3, g);
 }

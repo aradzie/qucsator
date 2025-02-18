@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "component.h"
 #include "substrate.h"
 #include "msopen.h"
@@ -33,26 +31,26 @@ msgap::msgap () : circuit (2) {
   type = CIR_MSGAP;
 }
 
-void msgap::calcSP (nr_double_t frequency) {
+void msgap::calcSP (double frequency) {
   setMatrixS (ytos (calcMatrixY (frequency)));
 }
 
-matrix msgap::calcMatrixY (nr_double_t frequency) {
+matrix msgap::calcMatrixY (double frequency) {
 
   /* how to get properties of this component, e.g. W */
-  nr_double_t W1 = getPropertyDouble ("W1");
-  nr_double_t W2 = getPropertyDouble ("W2");
-  nr_double_t s  = getPropertyDouble ("S");
+  double W1 = getPropertyDouble ("W1");
+  double W2 = getPropertyDouble ("W2");
+  double s  = getPropertyDouble ("S");
   const char * SModel  = getPropertyString ("MSModel");
   const char * DModel  = getPropertyString ("MSDispModel");
 
   /* how to get properties of the substrate, e.g. Er, H */
   substrate * subst = getSubstrate ();
-  nr_double_t er    = subst->getPropertyDouble ("er");
-  nr_double_t h     = subst->getPropertyDouble ("h");
-  nr_double_t t     = subst->getPropertyDouble ("t");
+  double er    = subst->getPropertyDouble ("er");
+  double h     = subst->getPropertyDouble ("h");
+  double t     = subst->getPropertyDouble ("t");
 
-  nr_double_t Q1, Q2, Q3, Q4, Q5;
+  double Q1, Q2, Q3, Q4, Q5;
   bool flip = false;
   if (W2 < W1) {  // equations are valid for 1 <= W2/W1 <= 3
     Q1 = W1;
@@ -62,9 +60,9 @@ matrix msgap::calcMatrixY (nr_double_t frequency) {
   }
 
   // calculate parallel open end capacitances
-  nr_double_t C1 = msopen::calcCend (frequency, W1, h, t, er,
+  double C1 = msopen::calcCend (frequency, W1, h, t, er,
 				     SModel, DModel, "Kirschning");
-  nr_double_t C2 = msopen::calcCend (frequency, W2, h, t, er,
+  double C2 = msopen::calcCend (frequency, W2, h, t, er,
 				     SModel, DModel, "Kirschning");
 
   W2 /= W1;
@@ -79,7 +77,7 @@ matrix msgap::calcMatrixY (nr_double_t frequency) {
   Q3 = qucs::exp (-0.5978 * qucs::pow (W2, +1.35)) - 0.55;
   Q4 = qucs::exp (-0.5978 * qucs::pow (W2, -1.35)) - 0.55;
 
-  nr_double_t Cs = 5e-10 * h * qucs::exp (-1.86 * s) * Q1 *
+  double Cs = 5e-10 * h * qucs::exp (-1.86 * s) * Q1 *
     (1.0 + 4.19 * (1.0 - qucs::exp (-0.785 * qucs::sqrt (1.0 / W1) * W2)));
   C1 *= (Q2 + Q3) / (Q2 + 1.0);
   C2 *= (Q2 + Q4) / (Q2 + 1.0);
@@ -107,7 +105,7 @@ void msgap::initDC (void) {
   clearY ();
 }
 
-void msgap::calcAC (nr_double_t frequency) {
+void msgap::calcAC (double frequency) {
   setMatrixY (calcMatrixY (frequency));
 }
 
