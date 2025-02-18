@@ -1,5 +1,6 @@
 ---
 BasedOnStyle: LLVM
-SortIncludes: 'false'
+SortIncludes: 'true'
+ColumnLimit: 100
 
 ...
