@@ -1,6 +1,8 @@
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 
+add_compile_definitions(DEBUG)
+
 set(GENERATED_SOURCES)
 
 foreach(type csv citi dataset mdl netlist touchstone zvr)
