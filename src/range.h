@@ -24,26 +24,25 @@
 
 namespace qucs {
 
-class range
-{
- public:
-  range ();
-  range (double, double);
-  range (char, double, double, char);
-  range (const range &);
-  ~range ();
-  bool inside (double);
-  bool outside (double);
-  double lo (void) { return l; }
-  double hi (void) { return h; }
-  char * toString (void);
+class range {
+public:
+  range();
+  range(double, double);
+  range(char, double, double, char);
+  range(const range &);
+  ~range();
+  bool inside(double);
+  bool outside(double);
+  double lo(void) { return l; }
+  double hi(void) { return h; }
+  char *toString(void);
 
- private:
-  char il;        // interval boundary
-  double l;  // lower bound of the value
-  double h;  // upper bound of the value
-  char ih;        // interval boundary
-  char * txt;
+private:
+  char il;  // interval boundary
+  double l; // lower bound of the value
+  double h; // upper bound of the value
+  char ih;  // interval boundary
+  char *txt;
 };
 
 } // namespace qucs

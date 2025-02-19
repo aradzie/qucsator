@@ -28,53 +28,52 @@ namespace qucs {
 
 class vector;
 
-class dataset : public object
-{
- public:
-  dataset ();
-  dataset (char *);
-  dataset (const dataset &);
-  ~dataset ();
-  void addDependency (qucs::vector *);
-  void addDependencies (qucs::vector *);
-  void appendDependency (qucs::vector *);
-  void appendDependencies (qucs::vector *);
-  void addVariable (qucs::vector *);
-  void addVariables (qucs::vector *);
-  void appendVariable (qucs::vector *);
-  void appendVariables (qucs::vector *);
-  void applyDependencies (qucs::vector * v);
-  void delDependency (qucs::vector *);
-  void delVariable (qucs::vector *);
+class dataset : public object {
+public:
+  dataset();
+  dataset(char *);
+  dataset(const dataset &);
+  ~dataset();
+  void addDependency(qucs::vector *);
+  void addDependencies(qucs::vector *);
+  void appendDependency(qucs::vector *);
+  void appendDependencies(qucs::vector *);
+  void addVariable(qucs::vector *);
+  void addVariables(qucs::vector *);
+  void appendVariable(qucs::vector *);
+  void appendVariables(qucs::vector *);
+  void applyDependencies(qucs::vector *v);
+  void delDependency(qucs::vector *);
+  void delVariable(qucs::vector *);
 
-  void assignDependency (const char *const, const char * const);
-  char * getFile (void);
-  void setFile (const char *);
-  void print (void);
-  void printData (qucs::vector *, FILE *);
-  void printDependency (qucs::vector *, FILE *);
-  void printVariable (qucs::vector *, FILE *);
-  qucs::vector * findDependency (const char *);
-  qucs::vector * findVariable (const std::string &);
-  qucs::vector * getDependencies (void) { return dependencies; }
-  qucs::vector * getVariables (void) { return variables; }
-  int isDependency (qucs::vector *);
-  int isVariable (qucs::vector *);
-  qucs::vector * findOrigin (char *);
-  static dataset * load (const char *);
-  static dataset * load_touchstone (const char *);
-  static dataset * load_csv (const char *);
-  static dataset * load_citi (const char *);
-  static dataset * load_zvr (const char *);
-  static dataset * load_mdl (const char *);
+  void assignDependency(const char *const, const char *const);
+  char *getFile();
+  void setFile(const char *);
+  void print();
+  void printData(qucs::vector *, FILE *);
+  void printDependency(qucs::vector *, FILE *);
+  void printVariable(qucs::vector *, FILE *);
+  qucs::vector *findDependency(const char *);
+  qucs::vector *findVariable(const std::string &);
+  qucs::vector *getDependencies() { return dependencies; }
+  qucs::vector *getVariables() { return variables; }
+  int isDependency(qucs::vector *);
+  int isVariable(qucs::vector *);
+  qucs::vector *findOrigin(char *);
+  static dataset *load(const char *);
+  static dataset *load_touchstone(const char *);
+  static dataset *load_csv(const char *);
+  static dataset *load_citi(const char *);
+  static dataset *load_zvr(const char *);
+  static dataset *load_mdl(const char *);
 
-  int countDependencies (void);
-  int countVariables (void);
+  int countDependencies();
+  int countVariables();
 
- private:
-  char * file;
-  qucs::vector * dependencies;
-  qucs::vector * variables;
+private:
+  char *file;
+  qucs::vector *dependencies;
+  qucs::vector *variables;
 };
 
 } // namespace qucs

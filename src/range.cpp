@@ -27,15 +27,13 @@
 
 namespace qucs {
 
-// Constructor creates an instance of the range class.
-range::range () {
+range::range() {
   il = ih = '.';
   l = h = 0.0;
-  txt = NULL;
+  txt = nullptr;
 }
 
-// Constructor creates an fully qualified instance of the range class.
-range::range (char ilo, double lo, double hi, char ihi) {
+range::range(char ilo, double lo, double hi, char ihi) {
   il = ilo;
   ih = ihi;
   if (lo > hi) {
@@ -45,13 +43,11 @@ range::range (char ilo, double lo, double hi, char ihi) {
     l = lo;
     h = hi;
   }
-  txt = NULL;
+  txt = nullptr;
 }
 
-/* This copy constructor creates a instance of the range class based
-   on the given range. */
-range::range (const range & r) {
-  txt = r.txt ? strdup (r.txt) : NULL;
+range::range(const range &r) {
+  txt = r.txt ? strdup(r.txt) : nullptr;
   il = r.il;
   ih = r.ih;
   l = r.l;
@@ -59,35 +55,29 @@ range::range (const range & r) {
 }
 
 /* Checks whether the given value is outside the range. */
-bool range::outside (double value) {
-  return !inside (value);
-}
+bool range::outside(double value) { return !inside(value); }
 
 /* Checks whether the given value is inside the range. */
-bool range::inside (double value) {
+bool range::inside(double value) {
   int err = 0;
-  if (il == '[' &&  (value < l))
+  if (il == '[' && (value < l))
     err++;
   if (il == ']' && !(value > l))
     err++;
   if (ih == '[' && !(value < h))
     err++;
-  if (ih == ']' &&  (value > h))
+  if (ih == ']' && (value > h))
     err++;
   return err == 0;
 }
 
-// Destructor deletes an instance of the range class.
-range::~range () {
-  free (txt);
-}
+range::~range() { free(txt); }
 
-/* Returns a text representation of the range object. */
-char * range::toString (void) {
+char *range::toString() {
   char str[64];
-  sprintf (str, "%c%g,%g%c", il, l, h, ih);
-  free (txt);
-  txt = strdup (str);
+  sprintf(str, "%c%g,%g%c", il, l, h, ih);
+  free(txt);
+  txt = strdup(str);
   return txt;
 }
 

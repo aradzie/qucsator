@@ -26,41 +26,26 @@
 
 namespace qucs {
 
-class pair
-{
- public:
-  pair () :
-    p(std::string(),0.0)
-  {};
+class pair {
+public:
+  pair() : p(std::string(), 0.0) {};
 
-  pair (const char * const s) :
-  p(s != nullptr ? std::string(s) : std::string(),0.0)
-  {};
+  pair(const char *const s) : p(s != nullptr ? std::string(s) : std::string(), 0.0) {};
 
-  pair (const char * const s, double v) :
-    p(s != nullptr ? std::string(s) : std::string(),v)
-  {} ;
+  pair(const char *const s, double v) : p(s != nullptr ? std::string(s) : std::string(), v) {};
 
-  pair(const std::string s, double v) : p(s,v) {};
+  pair(const std::string s, double v) : p(s, v) {};
 
-  void setName (const char * const s) {
-    p.first = s != nullptr ? std::string(s) : std::string();
-  };
+  void setName(const char *const s) { p.first = s != nullptr ? std::string(s) : std::string(); };
 
-  const char * getName (void) const {
-    return p.first.c_str();
-  };
+  const char *getName() const { return p.first.c_str(); };
 
-  double getValue (void) const {
-    return p.second;
-  }
+  double getValue() const { return p.second; }
 
-  void setValue (const double val) {
-    p.second = val;
-  }
+  void setValue(const double val) { p.second = val; }
 
- private:
-  std::pair<std::string,double> p;
+private:
+  std::pair<std::string, double> p;
 };
 
 } // namespace qucs

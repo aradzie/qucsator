@@ -19,27 +19,22 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "property.h"
 #include "complex.h"
 #include "variable.h"
-#include "property.h"
 
 namespace qucs {
 
 using namespace eqn;
 
-// Constructor creates an unnamed instance of the property class.
-property::property () :
-  str()
-{
+property::property() : str() {
   type = PROPERTY_UNKNOWN;
   value = 0.0;
-  var = NULL;
+  var = nullptr;
   def = false;
 }
 
-
-// Destructor deletes the property object.
-property::~property () {
+property::~property() {
 #if 0 /* FIXME: do this at another code location */
   if (type == PROPERTY_VAR) {
     constant * c = var->getConstant ();
@@ -51,96 +46,90 @@ property::~property () {
 #endif
 }
 
-
 // Short macro in order to obtain the correct constant value.
-#define D(con) ((constant *) (con))->d
-#define S(con) ((constant *) (con))->s
-#define V(con) ((constant *) (con))->v
+#define D(con) ((constant *)(con))->d
+#define S(con) ((constant *)(con))->s
+#define V(con) ((constant *)(con))->v
 
-// Returns the property's value as vector.
-qucs::vector * property::getVector (void) const {
-  if (var != NULL) {
-    if (var->getType () == VAR_CONSTANT)
-      return V (var->getConstant ());
-    else if (var->getType () == VAR_REFERENCE)
-      return V (var->getReference()->getResult ());
+// Returns the property value as vector.
+qucs::vector *property::getVector() const {
+  if (var != nullptr) {
+    if (var->getType() == VAR_CONSTANT)
+      return V(var->getConstant());
+    if (var->getType() == VAR_REFERENCE)
+      return V(var->getReference()->getResult());
   }
-  return NULL;
+  return nullptr;
 }
 
-// Returns the property's value as string.
-const char * property::getString (void) const {
-  if (var != NULL)
-    return S (var->getConstant ());
+// Returns the property value as string.
+const char *property::getString() const {
+  if (var != nullptr)
+    return S(var->getConstant());
   return str.c_str();
 }
 
 // Returns the property's reference if it is a variable.
-const char * property::getReference (void) const {
-  if (var != NULL)
-    return var->getName ();
+const char *property::getReference() const {
+  if (var != nullptr)
+    return var->getName();
   return str.c_str();
 }
 
-// Returns the property's value as double.
-double property::getDouble (void) const {
-  if (var != NULL) {
-    if (var->getType () == VAR_CONSTANT)
-      return D (var->getConstant ());
-    else if (var->getType () == VAR_REFERENCE)
-      return D (var->getReference()->getResult ());
+// Returns the property value as double.
+double property::getDouble() const {
+  if (var != nullptr) {
+    if (var->getType() == VAR_CONSTANT)
+      return D(var->getConstant());
+    else if (var->getType() == VAR_REFERENCE)
+      return D(var->getReference()->getResult());
   }
   return value;
 }
 
-// Returns the property's value as integer.
-int property::getInteger (void) const {
-  if (var != NULL) return (int) std::floor (D (var->getConstant ()));
-  return (int) std::floor (value);
+// Returns the property value as integer.
+int property::getInteger() const {
+  if (var != nullptr)
+    return (int)std::floor(D(var->getConstant()));
+  return (int)std::floor(value);
 }
 
-// Sets the property's value being a double.
-void property::set (const double val) {
+// Sets the property value being a double.
+void property::set(const double val) {
   type = PROPERTY_DOUBLE;
   value = val;
 }
 
-// Sets the property's value being an integer.
-void property::set (const int val) {
+// Sets the property value being an integer.
+void property::set(const int val) {
   type = PROPERTY_INT;
   value = val;
 }
 
-// Sets the property's value being a variable.
-void property::set (variable * const val) {
+// Sets the property value being a variable.
+void property::set(variable *const val) {
   type = PROPERTY_VAR;
   var = val;
 }
 
-// Sets the property's value being a string.
-void property::set (const std::string &val) {
+// Sets the property value being a string.
+void property::set(const std::string &val) {
   type = PROPERTY_STR;
   this->str = val;
 }
 
-// This function returns a text representation of the property object.
-std::string property::toString (void) const {
+std::string property::toString() const {
   switch (type) {
   case PROPERTY_UNKNOWN:
     return "(no such type)";
-    break;
   case PROPERTY_INT:
     return std::to_string(std::floor(value));
-    break;
   case PROPERTY_STR:
     return std::string(this->str);
-    break;
   case PROPERTY_DOUBLE:
     return std::to_string(value);
-    break;
   case PROPERTY_VAR:
     return var->getName();
-    break;
   }
   return "";
 }

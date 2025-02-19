@@ -22,10 +22,8 @@
 #ifndef __NODELIST_H__
 #define __NODELIST_H__
 
-#include <vector>
 #include <list>
-#include <memory>
-#include <algorithm>
+#include <vector>
 
 namespace qucs {
 
@@ -33,13 +31,13 @@ class node;
 class net;
 
 namespace detail {
-  typedef std::vector<node *> nodevector;
+typedef std::vector<node *> nodevector;
 }
 
 struct nodelist_t {
 public:
-  nodelist_t(const std::string &n="", bool intern = false) :
-    n(0), name(n), internal(intern), nodes() {}
+  nodelist_t(const std::string &n = "", bool intern = false)
+      : n(0), name(n), internal(intern), nodes() {}
 
   nodelist_t(nodelist_t &c) = default;
 
@@ -61,79 +59,54 @@ public:
   std::string name;
   bool internal;
 
-  reference operator[] (size_type n) {
-    return (this->nodes[n]);
-  }
-  const_reference operator[] (size_type n) const {
-    return (this->nodes[n]);
-  }
+  reference operator[](size_type n) { return (this->nodes[n]); }
+  const_reference operator[](size_type n) const { return (this->nodes[n]); }
 
-  size_type size() const noexcept {
-    return nodes.size();
-  }
+  size_type size() const noexcept { return nodes.size(); }
 
-  void push_back(const value_type &val) {
-    this->nodes.push_back(val);
-  }
+  void push_back(const value_type &val) { this->nodes.push_back(val); }
 
-  iterator begin() noexcept {
-    return nodes.begin();
-  }
-  const_iterator begin() const noexcept {
-    return nodes.begin();
-  }
-  iterator end() noexcept {
-    return nodes.end();
-  }
-  const_iterator end() const noexcept {
-    return nodes.end();
-  }
-  iterator erase (erase_iterator position)
-  { return nodes.erase(position); };
-  iterator erase (erase_iterator first, erase_iterator last)
-  { return nodes.erase(first,last); };
+  iterator begin() noexcept { return nodes.begin(); }
+  const_iterator begin() const noexcept { return nodes.begin(); }
+  iterator end() noexcept { return nodes.end(); }
+  const_iterator end() const noexcept { return nodes.end(); }
+  iterator erase(erase_iterator position) { return nodes.erase(position); };
+  iterator erase(erase_iterator first, erase_iterator last) { return nodes.erase(first, last); };
 
-  bool empty() const noexcept {
-    return nodes.empty();
-  }
+  bool empty() const noexcept { return nodes.empty(); }
+
 private:
   std::vector<value_type> nodes;
 };
 
-class nodelist
-{
- public:
+class nodelist {
+public:
   // Constructor creates an instance of the nodelist class.
-  nodelist () :  narray(), sorting(0) {
-  }
-  nodelist (net *);
-  ~nodelist ();
-  int length (void) const ;
-  int getNodeNr (const std::string &) const ;
-  std::string get (int) const ;
-  bool isInternal (int) const ;
-  void assignNodes (void);
-  void print (void) const;
-  std::string getNodeString (int) const;
-  void sort (void);
-  void remove (circuit *);
-  void insert (circuit *);
-  void sortedNodes (node **, node **);
-  struct nodelist_t * getNode (const std::string &) const;
-  struct nodelist_t * getNode (int nr) const {
-    return narray[nr + 1];
-  }
-  nodelist_t &operator[](int nr) const {
-    return *narray[nr + 1];
-  }
+  nodelist() : narray(), sorting(0) {}
+  nodelist(net *);
+  ~nodelist();
+  int length() const;
+  int getNodeNr(const std::string &) const;
+  std::string get(int) const;
+  bool isInternal(int) const;
+  void assignNodes();
+  void print() const;
+  std::string getNodeString(int) const;
+  void sort();
+  void remove(circuit *);
+  void insert(circuit *);
+  void sortedNodes(node **, node **);
+  nodelist_t *getNode(const std::string &) const;
+  nodelist_t *getNode(int nr) const { return narray[nr + 1]; }
+  nodelist_t &operator[](int nr) const { return *narray[nr + 1]; }
 
- private:
+private:
   std::vector<nodelist_t *> narray;
   std::list<nodelist_t *> root;
   int sorting;
-  bool contains (const std::string &) const;
-  void insert (struct nodelist_t *);
-  void addCircuitNode (struct nodelist_t *, node *);
+  bool contains(const std::string &) const;
+  void insert(nodelist_t *);
+  void addCircuitNode(nodelist_t *, node *);
 };
 
 } // namespace qucs

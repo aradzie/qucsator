@@ -20,139 +20,119 @@
  * Boston, MA 02110-1301, USA.
  */
 
- /*! \file analysis.cpp
-  * \brief Implementation of the analysis class.
-  *
-  * Contains the implementation of the analysis class.
-  *
-  */
-
 #include <cstring>
 
-#include "object.h"
+#include "analysis.h"
 #include "complex.h"
+#include "dataset.h"
+#include "object.h"
+#include "ptrlist.h"
+#include "strlist.h"
 #include "sweep.h"
 #include "vector.h"
-#include "strlist.h"
-#include "dataset.h"
-#include "ptrlist.h"
-#include "analysis.h"
 
 namespace qucs {
 
-//Constructor. Creates an unnamed instance of the analysis class.
-analysis::analysis () : object () {
-  data = NULL;
-  subnet = NULL;
-  env = NULL;
-  actions = NULL;
+analysis::analysis() : object() {
+  data = nullptr;
+  subnet = nullptr;
+  env = nullptr;
+  actions = nullptr;
   type = ANALYSIS_UNKNOWN;
   runs = 0;
   progress = true;
 }
 
-// Constructor creates a named instance of the analysis class.
-analysis::analysis (const std::string &n) : object (n) {
-  data = NULL;
-  subnet = NULL;
-  env = NULL;
-  actions = NULL;
+analysis::analysis(const std::string &n) : object(n) {
+  data = nullptr;
+  subnet = nullptr;
+  env = nullptr;
+  actions = nullptr;
   type = ANALYSIS_UNKNOWN;
   runs = 0;
   progress = true;
 }
 
-// Destructor deletes the analysis class object.
-analysis::~analysis () {
-  delete actions;
-}
+analysis::~analysis() { delete actions; }
 
-/* The copy constructor creates a new instance of the analysis class
-   based on the given analysis object. */
-analysis::analysis (analysis & a) : object (a) {
+analysis::analysis(analysis &a) : object(a) {
   data = a.data;
   subnet = a.subnet;
   env = a.env;
-  actions = a.actions ? new ptrlist<analysis> (*a.actions) : NULL;
+  actions = a.actions ? new ptrlist<analysis>(*a.actions) : nullptr;
   type = a.type;
   runs = a.runs;
   progress = a.progress;
 }
 
-/* This function adds the given analysis to the actions being
-   associated with the current analysis object. */
-void analysis::addAnalysis (analysis * a) {
-  if (!actions) actions = new ptrlist<analysis> ();
-  actions->push_front (a);
+void analysis::addAnalysis(analysis *a) {
+  if (!actions) {
+    actions = new ptrlist<analysis>();
+  }
+  actions->push_front(a);
 }
 
-/* This function deletes the given analysis from the actions being
-   associated with the current analysis object. */
-void analysis::delAnalysis (analysis * a) {
+void analysis::delAnalysis(analysis *a) {
   if (actions != nullptr) {
-    actions->remove (a);
+    actions->remove(a);
   }
 }
 
-/* The following function creates a sweep object depending on the
-   analysis's properties.  Supported sweep types are: linear,
-   logarithmic, lists and constants. */
-sweep * analysis::createSweep (const std::string& n) {
-  sweep * swp = NULL;
+/* Creates a sweep object depending on the analysis's properties. */
+sweep *analysis::createSweep(const std::string &n) {
+  sweep *swp = nullptr;
   // get type of sweep
-  const char * const type = getPropertyString ("Type");
+  const char *const type = getPropertyString("Type");
 
   // linearly or logarithmically stepped sweeps
-  if (!strcmp (type, "lin") || !strcmp (type, "log")) {
-    double start = getPropertyDouble ("Start");
-    double stop = getPropertyDouble ("Stop");
-    int points = getPropertyInteger ("Points");
-    if (!strcmp (type, "lin")) {
-      swp = new linsweep (n);
-      ((linsweep *) swp)->create (start, stop, points);
-    }
-    else if (!strcmp (type, "log")) {
-      swp = new logsweep (n);
-      ((logsweep *) swp)->create (start, stop, points);
+  if (!strcmp(type, "lin") || !strcmp(type, "log")) {
+    double start = getPropertyDouble("Start");
+    double stop = getPropertyDouble("Stop");
+    int points = getPropertyInteger("Points");
+    if (!strcmp(type, "lin")) {
+      swp = new linsweep(n);
+      ((linsweep *)swp)->create(start, stop, points);
+    } else if (!strcmp(type, "log")) {
+      swp = new logsweep(n);
+      ((logsweep *)swp)->create(start, stop, points);
     }
   }
 
   // lists of values
-  else if (!strcmp (type, "list")) {
-    vector * values = getPropertyVector ("Values");
-    int points = values->getSize ();
-    swp = new lstsweep (n);
-    ((lstsweep *) swp)->create (points);
-    for (int i = 0; i < values->getSize (); i++)
-      swp->set (i, real (values->get (i)));
+  else if (!strcmp(type, "list")) {
+    vector *values = getPropertyVector("Values");
+    int points = values->getSize();
+    swp = new lstsweep(n);
+    ((lstsweep *)swp)->create(points);
+    for (int i = 0; i < values->getSize(); i++)
+      swp->set(i, real(values->get(i)));
   }
 
   // constant value
-  else if (!strcmp (type, "const")) {
-    double val = getPropertyDouble ("Values");
-    swp = new consweep (n);
-    ((consweep *) swp)->create (1);
-    swp->set (0, val);
+  else if (!strcmp(type, "const")) {
+    double val = getPropertyDouble("Values");
+    swp = new consweep(n);
+    ((consweep *)swp)->create(1);
+    swp->set(0, val);
   }
 
-  swp->setParent (this);
+  swp->setParent(this);
   return swp;
 }
 
-/* Saves the given variable into the dataset.  Creates the dataset
-   vector if necessary. */
-  void analysis::saveVariable (const std::string &n, nr_complex_t z, vector * f) {
-  vector * d;
-  if ((d = data->findVariable (n)) == NULL) {
-    d = new vector (n);
-    if (f != NULL) {
-      d->setDependencies (new strlist ());
-      d->getDependencies()->add (f->getName ());
+/* Saves the given variable into the dataset.  Creates the dataset vector if necessary. */
+void analysis::saveVariable(const std::string &n, nr_complex_t z, vector *f) {
+  vector *d;
+  if ((d = data->findVariable(n)) == nullptr) {
+    d = new vector(n);
+    if (f != nullptr) {
+      d->setDependencies(new strlist());
+      d->getDependencies()->add(f->getName());
     }
-    d->setOrigin (getName ());
-    data->addVariable (d);
+    d->setOrigin(getName());
+    data->addVariable(d);
   }
-  d->add (z);
+  d->add(z);
 }
 
 } // namespace qucs

@@ -23,6 +23,7 @@
 #define __NET_H__
 
 #include <string>
+
 #include "ptrlist.h"
 
 namespace qucs {
@@ -35,65 +36,63 @@ class analysis;
 class dataset;
 class environment;
 
-
-class net : public object
-{
- public:
-  net ();
-  net (const std::string &);
-  net (net &);
-  ~net ();
-  circuit * getRoot (void) { return root; }
-  void setRoot (circuit * c) { root = c; }
-  void insertCircuit (circuit *);
-  void removeCircuit (circuit *, int dropping = 1);
-  int  containsCircuit (circuit *);
-  int  checkCircuitChain (void);
-  void list (void);
-  void reducedCircuit (circuit *);
-  node * findConnectedNode (node *);
-  node * findConnectedCircuitNode (node *);
-  void insertedCircuit (circuit *);
-  void insertedNode (node *);
-  void insertAnalysis (analysis *);
-  void removeAnalysis (analysis *);
-  dataset * runAnalysis (int &);
-  void getDroppedCircuits (nodelist * nodes = NULL);
-  void deleteUnusedCircuits (nodelist * nodes = NULL);
-  int  getPorts (void) { return nPorts; }
-  int  getReduced (void) { return reduced; }
-  void setReduced (int r) { reduced = r; }
-  int  getVoltageSources (void) { return nSources; }
-  void setVoltageSources (int n) { nSources = n; }
-  analysis * findAnalysis (const std::string &) const;
-  analysis * findAnalysis (int);
-  analysis * findSecondOrder (void);
-  analysis * getChildAnalysis (analysis *);
-  const char * getChild (analysis *) const;
-  void orderAnalysis (void);
-  analysis * findLastOrder (analysis *);
-  ptrlist<analysis> * findLastOrderChildren (analysis *);
-  void sortChildAnalyses (analysis *);
-  int  containsAnalysis (analysis *, int);
-  environment * getEnv (void) { return env; }
-  void setEnv (environment * e) { env = e; }
-  int  countPorts (void);
-  int  countNodes (void);
-  int  isNonLinear (void);
-  void addNodeset (nodeset *);
-  void delNodeset (void);
-  nodeset * getNodeset (void) { return nset; }
-  void setSrcFactor (double f) { srcFactor = f; }
-  double getSrcFactor (void) { return srcFactor; }
+class net : public object {
+public:
+  net();
+  net(const std::string &);
+  net(net &);
+  ~net();
+  circuit *getRoot() { return root; }
+  void setRoot(circuit *c) { root = c; }
+  void insertCircuit(circuit *);
+  void removeCircuit(circuit *, int dropping = 1);
+  int containsCircuit(circuit *);
+  int checkCircuitChain();
+  void list();
+  void reducedCircuit(circuit *);
+  node *findConnectedNode(node *);
+  node *findConnectedCircuitNode(node *);
+  void insertedCircuit(circuit *);
+  void insertedNode(node *);
+  void insertAnalysis(analysis *);
+  void removeAnalysis(analysis *);
+  dataset *runAnalysis(int &);
+  void getDroppedCircuits(nodelist *nodes = nullptr);
+  void deleteUnusedCircuits(nodelist *nodes = nullptr);
+  int getPorts() { return nPorts; }
+  int getReduced() { return reduced; }
+  void setReduced(int r) { reduced = r; }
+  int getVoltageSources() { return nSources; }
+  void setVoltageSources(int n) { nSources = n; }
+  analysis *findAnalysis(const std::string &) const;
+  analysis *findAnalysis(int);
+  analysis *findSecondOrder();
+  analysis *getChildAnalysis(analysis *);
+  const char *getChild(analysis *) const;
+  void orderAnalysis();
+  analysis *findLastOrder(analysis *);
+  ptrlist<analysis> *findLastOrderChildren(analysis *);
+  void sortChildAnalyses(analysis *);
+  int containsAnalysis(analysis *, int);
+  environment *getEnv() { return env; }
+  void setEnv(environment *e) { env = e; }
+  int countPorts();
+  int countNodes();
+  int isNonLinear();
+  void addNodeset(nodeset *);
+  void delNodeset();
+  nodeset *getNodeset() { return nset; }
+  void setSrcFactor(double f) { srcFactor = f; }
+  double getSrcFactor() { return srcFactor; }
   void setActionNetAll(net *);
 
- private:
-  nodeset * nset;
-  circuit * drop;
-  circuit * root;
-  ptrlist<analysis> * actions;
-  ptrlist<analysis> * orgacts;
-  environment * env;
+private:
+  nodeset *nset;
+  circuit *drop;
+  circuit *root;
+  ptrlist<analysis> *actions;
+  ptrlist<analysis> *orgacts;
+  environment *env;
   int nPorts;
   int nSources;
   int nCircuits;

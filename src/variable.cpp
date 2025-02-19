@@ -19,31 +19,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "equation.h"
-#include "components/microstrip/substrate.h"
-#include "analysis.h"
 #include "variable.h"
+#include "analysis.h"
+#include "components/microstrip/substrate.h"
+#include "equation.h"
 
 namespace qucs {
 
-// Constructor creates an unnamed instance of the variable class.
-variable::variable () : name() {
-  next = NULL;
+variable::variable() : name() {
+  next = nullptr;
   type = VAR_UNKNOWN;
   pass = true;
 }
 
-// This constructor creates a named instance of the variable class.
-variable::variable (const char * const n) {
+variable::variable(const char *const n) {
   name = n ? std::string(n) : std::string();
-  next = NULL;
+  next = nullptr;
   type = VAR_UNKNOWN;
   pass = true;
 }
 
-/* This copy constructor creates a instance of the variable class based
-   on the given variable. */
-variable::variable (const variable & o) {
+variable::variable(const variable &o) {
   this->name = o.name;
   type = o.type;
   next = o.next;
@@ -51,36 +47,34 @@ variable::variable (const variable & o) {
   value = o.value;
 }
 
-
-// Creates textual representation of a variable.
-const char * variable::toString (void) {
+const char *variable::toString() {
   std::string text;
-  const char * str = NULL;
-  char * val = NULL;
+  const char *str = nullptr;
+  char *val = nullptr;
   switch (type) {
   case VAR_UNKNOWN:
     text = "variable";
     break;
   case VAR_CONSTANT:
-    str = value.c->toString ();
-    text = "constant: "+std::string(str);
+    str = value.c->toString();
+    text = "constant: " + std::string(str);
     break;
   case VAR_VALUE:
-    str = value.v->toString ();
-    text = "value: "+std::string(str);
+    str = value.v->toString();
+    text = "value: " + std::string(str);
     break;
   case VAR_REFERENCE:
-    str = value.r->toString ();
-    val = value.r->getResult()->toString ();
-    text = "reference: "+std::string(str)+" = "+std::string(val);
+    str = value.r->toString();
+    val = value.r->getResult()->toString();
+    text = "reference: " + std::string(str) + " = " + std::string(val);
     break;
   case VAR_SUBSTRATE:
-    str = value.s->getName ();
-    text = "substrate: "+std::string(str);
+    str = value.s->getName();
+    text = "substrate: " + std::string(str);
     break;
   case VAR_ANALYSIS:
-    str = value.a->getName ();
-    text = "analysis: "+std::string(str);
+    str = value.a->getName();
+    text = "analysis: " + std::string(str);
     break;
   default:
     text = "?variable?";

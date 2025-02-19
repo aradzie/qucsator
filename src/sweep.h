@@ -22,83 +22,80 @@
 #ifndef __SWEEP_H__
 #define __SWEEP_H__
 
+#include <string>
+
 namespace qucs {
 
 enum sweep_type {
-  SWEEP_UNKNOWN = -1, // not yet defined
-  SWEEP_CONSTANT,     // constant value
-  SWEEP_LINEAR,       // linear
-  SWEEP_LOGARITHMIC,  // logarithmic
-  SWEEP_LIST          // list of values
+  SWEEP_UNKNOWN = -1,
+  SWEEP_CONSTANT,
+  SWEEP_LINEAR,
+  SWEEP_LOGARITHMIC,
+  SWEEP_LIST
 };
 
 class object;
 
-class sweep : public object
-{
- public:
-  sweep ();
-  sweep (const std::string&);
-  sweep (sweep &);
-  ~sweep ();
-  int getSize (void) { return size; }
-  int getType (void) { return type; }
-  double get (int);
-  double next (void);
-  double prev (void);
-  void set (int, double);
-  void setSize (int);
-  char * toString (void);
-  void reverse (void);
-  void reset (void) { counter = 0; };
-  object * getParent (void) { return parent; }
-  void setParent (object * p) { parent = p; }
+class sweep : public object {
+public:
+  sweep();
+  sweep(const std::string &);
+  sweep(sweep &);
+  ~sweep();
+  int getSize() { return size; }
+  int getType() { return type; }
+  double get(int);
+  double next();
+  double prev();
+  void set(int, double);
+  void setSize(int);
+  char *toString();
+  void reverse();
+  void reset() { counter = 0; };
+  object *getParent() { return parent; }
+  void setParent(object *p) { parent = p; }
 
- protected:
+protected:
   int type;
 
- private:
-  double * data;
+private:
+  double *data;
   int size;
-  char * txt;
+  char *txt;
   int counter;
-  object * parent;
+  object *parent;
 };
 
-class linsweep : public sweep
-{
- public:
-  linsweep ();
-  linsweep (const std::string &);
-  ~linsweep ();
-  void create (double, double, int);
+class linsweep : public sweep {
+public:
+  linsweep();
+  linsweep(const std::string &);
+  ~linsweep();
+  void create(double, double, int);
 };
 
-class logsweep : public sweep
-{
- public:
-  logsweep ();
-  logsweep (const std::string &);
-  ~logsweep ();
-  void create (double, double, int);
+class logsweep : public sweep {
+public:
+  logsweep();
+  logsweep(const std::string &);
+  ~logsweep();
+  void create(double, double, int);
 };
 
-class consweep : public sweep
-{
- public:
-  consweep ();
-  consweep (const std::string &);
-  ~consweep ();
-  void create (double);
+class consweep : public sweep {
+public:
+  consweep();
+  consweep(const std::string &);
+  ~consweep();
+  void create(double);
 };
 
-class lstsweep : public sweep
-{
- public:
-  lstsweep ();
-  lstsweep (const std::string &);
-  ~lstsweep ();
-  void create (int);
+class lstsweep : public sweep {
+public:
+  lstsweep();
+  lstsweep(const std::string &);
+  ~lstsweep();
+  void create(int);
 };
 
 } // namespace qucs

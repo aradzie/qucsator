@@ -22,12 +22,11 @@
 #ifndef __VALUELIST_H__
 #define __VALUELIST_H__
 
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 namespace qucs {
-  template <typename T>
-    using  valuelist= std::unordered_map<std::string,T>;
+template <typename T> using valuelist = std::unordered_map<std::string, T>;
 }
 
 #endif /* __VALUELIST_H__ */

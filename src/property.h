@@ -38,31 +38,30 @@ enum property_type {
   PROPERTY_VAR
 };
 
-class property
-{
- public:
-  property ();
-  virtual ~property ();
+class property {
+public:
+  property();
+  virtual ~property();
 
-  qucs::vector * getVector (void) const;
-  double getDouble (void) const;
-  int getInteger (void) const;
-  const char * getString (void) const;
-  const char * getReference (void) const;
-  void set (const double);
-  void set (int);
-  void set (const std::string &);
-  void set (variable *);
-  std::string toString (void) const;
-  bool isDefault (void) const { return def; }
-  void setDefault (bool d) { def = d; }
+  qucs::vector *getVector() const;
+  double getDouble() const;
+  int getInteger() const;
+  const char *getString() const;
+  const char *getReference() const;
+  void set(double);
+  void set(int);
+  void set(const std::string &);
+  void set(variable *);
+  std::string toString() const;
+  bool isDefault() const { return def; }
+  void setDefault(bool d) { def = d; }
 
- private:
+private:
   bool def;
   int type;
   std::string str;
   double value;
-  variable * var;
+  variable *var;
 };
 
 typedef std::unordered_map<std::string, property> properties;
