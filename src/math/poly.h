@@ -24,19 +24,15 @@
 
 namespace qucs {
 
-class poly
-{
- public:
-  poly (double _x, double _y)
-    : x(_x), f0(_y) { f1 = f2 = 0; }
-  poly (double _x, double _f0, double _f1)
-    : x(_x), f0(_f0), f1(_f1) { f2 = 0; }
-  poly (double _x, double _f0, double _f1, double _f2)
-    : x(_x), f0(_f0), f1(_f1), f2(_f2) { }
-  ~poly ()
-    { }
-  double eval (double _x) {
-    double dx = _x - x; return f0 + dx * (f1 + dx * f2);
+class poly {
+public:
+  poly(double _x, double _y) : x(_x), f0(_y) { f1 = f2 = 0; }
+  poly(double _x, double _f0, double _f1) : x(_x), f0(_f0), f1(_f1) { f2 = 0; }
+  poly(double _x, double _f0, double _f1, double _f2) : x(_x), f0(_f0), f1(_f1), f2(_f2) {}
+  ~poly() {}
+  double eval(double _x) {
+    double dx = _x - x;
+    return f0 + dx * (f1 + dx * f2);
   }
 
   double x;  // x     - argument

@@ -7,6 +7,7 @@ set(
   SOURCES
   complex.cpp
   fspecial.cpp
+  interpolator.cpp
   matrix.cpp
   real.cpp
   spline.cpp

@@ -23,7 +23,6 @@ set(
   history.cpp
   input.cpp
   integrator.cpp
-  interpolator.cpp
   logging.c
   matvec.cpp
   module.cpp
