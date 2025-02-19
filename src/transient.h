@@ -25,12 +25,12 @@
 namespace qucs {
 
 enum integrator_type {
-  INTEGRATOR_UNKNOWN       = -1,
-  INTEGRATOR_EULER         =  0,
-  INTEGRATOR_TRAPEZOIDAL   =  1,
-  INTEGRATOR_GEAR          =  2,
-  INTEGRATOR_ADAMSMOULTON  =  3,
-  INTEGRATOR_ADAMSBASHFORD =  4
+  INTEGRATOR_UNKNOWN = -1,
+  INTEGRATOR_EULER = 0,
+  INTEGRATOR_TRAPEZOIDAL = 1,
+  INTEGRATOR_GEAR = 2,
+  INTEGRATOR_ADAMSMOULTON = 3,
+  INTEGRATOR_ADAMSBASHFORD = 4
 };
 
 class circuit;
@@ -38,23 +38,19 @@ class integrator;
 
 namespace transient {
 
-  void calcCorrectorCoeff (int, int, double *, double *);
-  void calcPredictorCoeff (int, int, double *, double *);
-  void getConductance (integrator *, double, double&);
-  void integrateEuler (integrator *, int, double, double&,
-		       double&);
-  void integrateBilinear (integrator *, int, double, double&,
-			  double&);
-  void integrateGear (integrator *, int, double, double&,
-		      double&);
-  void integrateMoulton (integrator *, int, double, double&,
-			 double&);
-  void setIntegrationMethod (circuit *, int);
-  int  correctorType (const char * const, int&);
-  int  correctorType (int, int);
-  int  predictorType (int, int, int&);
-  double getCorrectorError (int, int);
-  double getPredictorError (int, int);
+void calcCorrectorCoeff(int, int, double *, double *);
+void calcPredictorCoeff(int, int, double *, double *);
+void getConductance(integrator *, double, double &);
+void integrateEuler(integrator *, int, double, double &, double &);
+void integrateBilinear(integrator *, int, double, double &, double &);
+void integrateGear(integrator *, int, double, double &, double &);
+void integrateMoulton(integrator *, int, double, double &, double &);
+void setIntegrationMethod(circuit *, int);
+int correctorType(const char *const, int &);
+int correctorType(int, int);
+int predictorType(int, int, int &);
+double getCorrectorError(int, int);
+double getPredictorError(int, int);
 
 } // namespace transient
 

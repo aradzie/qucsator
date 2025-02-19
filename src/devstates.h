@@ -24,30 +24,27 @@
 
 namespace qucs {
 
-class devstates
-{
- public:
-  // constructor and destructor set
-  devstates ();
-  devstates (int, int);
-  ~devstates ();
+class devstates {
+public:
+  devstates();
+  devstates(int, int);
+  ~devstates();
 
-  // public functions operating on states and variables
-  int  deviceState (void);
-  void deviceState (int);
-  int  deviceStates (void);
-  void deviceStates (int, int);
-  double  operator () (int) const;
-  double& operator () (int);
-  double  deviceVar (int) const;
-  double& deviceVar (int);
+  int deviceState();
+  void deviceState(int);
+  int deviceStates();
+  void deviceStates(int, int);
+  double operator()(int) const;
+  double &operator()(int);
+  double deviceVar(int) const;
+  double &deviceVar(int);
 
- private:
+private:
   int nstates;
   int nvars;
   int nstate;
-  double * states;
-  double * pstate;
+  double *states;
+  double *pstate;
 };
 
 } // namespace qucs

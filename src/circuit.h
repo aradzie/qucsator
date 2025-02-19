@@ -29,6 +29,8 @@
 #define __CIRCUIT_H__
 
 #include "characteristic.h"
+#include "complex.h"
+#include "object.h"
 #include "operatingpoint.h"
 
 #define NODE_1 0

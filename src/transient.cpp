@@ -19,14 +19,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "object.h"
-#include "complex.h"
-#include "circuit.h"
-#include "net.h"
-#include "tvector.h"
-#include "tmatrix.h"
-#include "eqnsys.h"
 #include "transient.h"
+#include "circuit.h"
+#include "eqnsys.h"
+#include "tmatrix.h"
+#include "tvector.h"
 
 #define COEFFDEBUG 0
 #define FIXEDCOEFF 0
@@ -38,193 +35,191 @@ namespace qucs {
 
 using namespace transient;
 
-/* The function calculates the integration coefficient for numerical
+/* Calculates the integration coefficient for numerical
    integration methods.  Supported methods are: Gear (order 1-6),
    Trapezoidal, backward Euler and Adams-Moulton (order 1-6). */
-void transient::calcCorrectorCoeff (int Method, int order,
-				    double * coefficients,
-				    double * delta) {
-
-  tmatrix<double> A (order + 1);
-  tvector<double> x (order + 1);
-  tvector<double> b (order + 1);
+void transient::calcCorrectorCoeff(int Method, int order, double *coefficients, double *delta) {
+  tmatrix<double> A(order + 1);
+  tvector<double> x(order + 1);
+  tvector<double> b(order + 1);
   eqnsys<double> e;
-  e.setAlgo (ALGO_LU_DECOMPOSITION);
+  e.setAlgo(ALGO_LU_DECOMPOSITION);
 
   switch (Method) {
   case INTEGRATOR_GEAR: // GEAR order 1 to 6
-    {
+  {
 #if FIXEDCOEFF
-      int i, r, c;
-      // right hand side vector
-      for (i = 0; i < order + 1; i++) b.set (i, 1);
-      for (i = 1; i < order + 1; i++) {
-	A.set (i, 0, i); // first column
-	A.set (0, i, 1); // first row
-      }
-      for (c = 1; c <= order - 1; c++) {
-	double entry = -c;
-	for (r = 1; r <= order; r++) {
-	  A.set (r, c + 1, entry);
-	  entry *= -c;
-	}
-      }
-      e.passEquationSys (&A, &x, &b);
-      e.solve ();
-
-      // vector x consists of b_{-1}, a_{0}, a_{1} ... a_{k-1} right here
-#if COEFFDEBUG
-      logprint (LOG_STATUS, "DEBUG: Gear order %d:", order);
-      for (i = 0; i < x.getRows (); i++) {
-	logprint (LOG_STATUS, " %g", x.get (i));
-      }
-      logprint (LOG_STATUS, "\n");
-#endif
-      double k = x.get (0);
-      coefficients[COEFF_G] = 1 / delta[0] / k;
-      for (i = 1; i <= order; i++) {
-	coefficients[i] = - 1 / delta[0] / k * x.get (i);
-      }
-#else /* !FIXEDCOEFF */
-      int c, r;
-      // right hand side vector
-      b.set (1, -1 / delta[0]);
-      // first row
-      for (c = 0; c < order + 1; c++) A.set (0, c, 1);
-      double f, a;
-      for (f = 0, c = 0; c < order; c++) {
-	f += delta[c];
-	for (a = 1, r = 0; r < order; r++) {
-	  a *= f / delta[0];
-	  A.set (r + 1, c + 1, a);
-	}
-      }
-      e.passEquationSys (&A, &x, &b);
-      e.solve ();
-      for (r = 0; r <= order; r++) coefficients[r] = x.get (r);
-#endif /* !FIXEDCOEFF */
+    int i, r, c;
+    // right hand side vector
+    for (i = 0; i < order + 1; i++)
+      b.set(i, 1);
+    for (i = 1; i < order + 1; i++) {
+      A.set(i, 0, i); // first column
+      A.set(0, i, 1); // first row
     }
-    break;
+    for (c = 1; c <= order - 1; c++) {
+      double entry = -c;
+      for (r = 1; r <= order; r++) {
+        A.set(r, c + 1, entry);
+        entry *= -c;
+      }
+    }
+    e.passEquationSys(&A, &x, &b);
+    e.solve();
+
+    // vector x consists of b_{-1}, a_{0}, a_{1} ... a_{k-1} right here
+#if COEFFDEBUG
+    logprint(LOG_STATUS, "DEBUG: Gear order %d:", order);
+    for (i = 0; i < x.getRows(); i++) {
+      logprint(LOG_STATUS, " %g", x.get(i));
+    }
+    logprint(LOG_STATUS, "\n");
+#endif
+    double k = x.get(0);
+    coefficients[COEFF_G] = 1 / delta[0] / k;
+    for (i = 1; i <= order; i++) {
+      coefficients[i] = -1 / delta[0] / k * x.get(i);
+    }
+#else  /* !FIXEDCOEFF */
+    int c, r;
+    // right hand side vector
+    b.set(1, -1 / delta[0]);
+    // first row
+    for (c = 0; c < order + 1; c++)
+      A.set(0, c, 1);
+    double f, a;
+    for (f = 0, c = 0; c < order; c++) {
+      f += delta[c];
+      for (a = 1, r = 0; r < order; r++) {
+        a *= f / delta[0];
+        A.set(r + 1, c + 1, a);
+      }
+    }
+    e.passEquationSys(&A, &x, &b);
+    e.solve();
+    for (r = 0; r <= order; r++)
+      coefficients[r] = x.get(r);
+#endif /* !FIXEDCOEFF */
+  } break;
   case INTEGRATOR_EULER: // BACKWARD EULER
     coefficients[COEFF_G] = 1 / delta[0];
-    coefficients[1] = - 1 / delta[0];
+    coefficients[1] = -1 / delta[0];
     break;
   case INTEGRATOR_TRAPEZOIDAL: // TRAPEZOIDAL (bilinear)
     coefficients[COEFF_G] = 2 / delta[0];
-    coefficients[1] = - 2 / delta[0];
+    coefficients[1] = -2 / delta[0];
     break;
   case INTEGRATOR_ADAMSMOULTON: // ADAMS-MOULTON order 1 to 6
-    {
-      int i, r, c;
-      // right hand side vector
-      for (i = 0; i < order + 1; i++) b.set (i, 1);
-      for (i = 1; i < order + 1; i++) {
-	A.set (i, 1, i); // second column
-	A.set (1, i, 1); // second row
-      }
-      A.set (0, 0, 1);
-      for (c = 1; c <= order - 2; c++) {
-	double entry = -c;
-	for (r = 2; r <= order; r++) {
-	  A.set (r, c + 2, r * entry);
-	  entry *= -c;
-	}
-      }
-      e.passEquationSys (&A, &x, &b);
-      e.solve ();
-
-      // vector x consists of a_{0}, b_{-1}, b_{0} ... b_{k-2} right here
-#if COEFFDEBUG
-      logprint (LOG_STATUS, "DEBUG: Moulton order %d:", order);
-      for (i = 0; i < x.getRows (); i++) {
-	logprint (LOG_STATUS, " %g", x.get (i));
-      }
-      logprint (LOG_STATUS, "\n");
-#endif
-      double k = x.get (1);
-      coefficients[COEFF_G] = 1 / delta[0] / k;
-      coefficients[1] = -x.get (0) / delta[0] / k;
-      for (i = 2; i <= order; i++) {
-	coefficients[i] = -x.get (i) / k;
+  {
+    int i, r, c;
+    // right hand side vector
+    for (i = 0; i < order + 1; i++)
+      b.set(i, 1);
+    for (i = 1; i < order + 1; i++) {
+      A.set(i, 1, i); // second column
+      A.set(1, i, 1); // second row
+    }
+    A.set(0, 0, 1);
+    for (c = 1; c <= order - 2; c++) {
+      double entry = -c;
+      for (r = 2; r <= order; r++) {
+        A.set(r, c + 2, r * entry);
+        entry *= -c;
       }
     }
-    break;
+    e.passEquationSys(&A, &x, &b);
+    e.solve();
+
+    // vector x consists of a_{0}, b_{-1}, b_{0} ... b_{k-2} right here
+#if COEFFDEBUG
+    logprint(LOG_STATUS, "DEBUG: Moulton order %d:", order);
+    for (i = 0; i < x.getRows(); i++) {
+      logprint(LOG_STATUS, " %g", x.get(i));
+    }
+    logprint(LOG_STATUS, "\n");
+#endif
+    double k = x.get(1);
+    coefficients[COEFF_G] = 1 / delta[0] / k;
+    coefficients[1] = -x.get(0) / delta[0] / k;
+    for (i = 2; i <= order; i++) {
+      coefficients[i] = -x.get(i) / k;
+    }
+  } break;
   }
 }
 
-/* The function calculates the integration coefficient for numerical
+/* Calculates the integration coefficient for numerical
    integration methods.  Supported methods are: Adams-Bashford (order
    1-6), forward Euler and explicit Gear (order 1-6). */
-void transient::calcPredictorCoeff (int Method, int order,
-				    double * coefficients,
-				    double * delta) {
-
-  tmatrix<double> A (order + 1);
-  tvector<double> x (order + 1);
-  tvector<double> b (order + 1);
+void transient::calcPredictorCoeff(int Method, int order, double *coefficients, double *delta) {
+  tmatrix<double> A(order + 1);
+  tvector<double> x(order + 1);
+  tvector<double> b(order + 1);
   eqnsys<double> e;
-  e.setAlgo (ALGO_LU_DECOMPOSITION);
+  e.setAlgo(ALGO_LU_DECOMPOSITION);
 
   switch (Method) {
   case INTEGRATOR_GEAR: // explicit GEAR order 1 to 6
-    {
-      int c, r;
-      // right hand side vector
-      b.set (0, 1);
-      // first row
-      for (c = 0; c < order + 1; c++) A.set (0, c, 1);
-      double f, a;
-      for (f = 0, c = 0; c < order + 1; c++) {
-	f += delta[c];
-	for (a = 1, r = 0; r < order; r++) {
-	  a *= f / delta[0];
-	  A.set (r + 1, c, a);
-	}
+  {
+    int c, r;
+    // right hand side vector
+    b.set(0, 1);
+    // first row
+    for (c = 0; c < order + 1; c++)
+      A.set(0, c, 1);
+    double f, a;
+    for (f = 0, c = 0; c < order + 1; c++) {
+      f += delta[c];
+      for (a = 1, r = 0; r < order; r++) {
+        a *= f / delta[0];
+        A.set(r + 1, c, a);
       }
-      e.passEquationSys (&A, &x, &b);
-      e.solve ();
-      for (r = 0; r <= order; r++) coefficients[r] = x.get (r);
     }
-    break;
+    e.passEquationSys(&A, &x, &b);
+    e.solve();
+    for (r = 0; r <= order; r++)
+      coefficients[r] = x.get(r);
+  } break;
   case INTEGRATOR_ADAMSBASHFORD: // ADAMS-BASHFORD order 1 to 6
-    {
-      int i, r, c;
-      // right hand side vector
-      for (i = 0; i < order + 1; i++) b.set (i, 1);
-      for (i = 1; i < order + 1; i++) A.set (1, i, 1); // second row
-      A.set (0, 0, 1);
-      for (c = 1; c <= order - 1; c++) {
-	double entry = -c;
-	for (r = 2; r <= order; r++) {
-	  A.set (r, c + 1, r * entry);
-	  entry *= -c;
-	}
+  {
+    int i, r, c;
+    // right hand side vector
+    for (i = 0; i < order + 1; i++)
+      b.set(i, 1);
+    for (i = 1; i < order + 1; i++)
+      A.set(1, i, 1); // second row
+    A.set(0, 0, 1);
+    for (c = 1; c <= order - 1; c++) {
+      double entry = -c;
+      for (r = 2; r <= order; r++) {
+        A.set(r, c + 1, r * entry);
+        entry *= -c;
       }
-      e.passEquationSys (&A, &x, &b);
-      e.solve ();
-
-      // vector x consists of a_{0}, b_{0}, b_{1} ... b_{k-1} right here
-#if COEFFDEBUG
-      logprint (LOG_STATUS, "DEBUG: Bashford order %d:", order);
-      for (i = 0; i < x.getRows (); i++) {
-	logprint (LOG_STATUS, " %g", x.get (i));
-      }
-      logprint (LOG_STATUS, "\n");
-#endif
-      coefficients[COEFF_G] = x.get (0);
-      for (i = 1; i <= order; i++) {
-	coefficients[i] = x.get (i) * delta[0];
-      }
-#if !FIXEDCOEFF
-      if (order == 2) {
-	double f = - delta[0] / (2 * delta[1]);
-	coefficients[0] = 1;
-	coefficients[1] = (1 - f) * delta[0];
-	coefficients[2] = f * delta[0];
-      }
-#endif
     }
-    break;
+    e.passEquationSys(&A, &x, &b);
+    e.solve();
+
+    // vector x consists of a_{0}, b_{0}, b_{1} ... b_{k-1} right here
+#if COEFFDEBUG
+    logprint(LOG_STATUS, "DEBUG: Bashford order %d:", order);
+    for (i = 0; i < x.getRows(); i++) {
+      logprint(LOG_STATUS, " %g", x.get(i));
+    }
+    logprint(LOG_STATUS, "\n");
+#endif
+    coefficients[COEFF_G] = x.get(0);
+    for (i = 1; i <= order; i++) {
+      coefficients[i] = x.get(i) * delta[0];
+    }
+#if !FIXEDCOEFF
+    if (order == 2) {
+      double f = -delta[0] / (2 * delta[1]);
+      coefficients[0] = 1;
+      coefficients[1] = (1 - f) * delta[0];
+      coefficients[2] = f * delta[0];
+    }
+#endif
+  } break;
   case INTEGRATOR_EULER: // FORWARD EULER
     coefficients[COEFF_G] = 1;
     coefficients[1] = delta[0];
@@ -233,121 +228,122 @@ void transient::calcPredictorCoeff (int Method, int order,
 }
 
 // Loads the equivalent conductance.
-void transient::getConductance (integrator * c, double cap,
-				double& geq) {
-  double * coeff = c->getCoefficients ();
+void transient::getConductance(integrator *c, double cap, double &geq) {
+  double *coeff = c->getCoefficients();
   geq = cap * coeff[COEFF_G];
 }
 
 // This is the implicit Euler integrator.
-void transient::integrateEuler (integrator * c, int qstate, double cap,
-				double& geq, double& ceq) {
-  double * coeff = c->getCoefficients ();
+void transient::integrateEuler(integrator *c, int qstate, double cap, double &geq, double &ceq) {
+  double *coeff = c->getCoefficients();
   int cstate = qstate + 1;
   double cur;
   geq = cap * coeff[COEFF_G];
-  ceq = c->getState (qstate, 1) * coeff[1];
-  cur = c->getState (qstate) * coeff[COEFF_G] + ceq;
-  c->setState (cstate, cur);
+  ceq = c->getState(qstate, 1) * coeff[1];
+  cur = c->getState(qstate) * coeff[COEFF_G] + ceq;
+  c->setState(cstate, cur);
 }
 
 // Trapezoidal integrator.
-void transient::integrateBilinear (integrator * c, int qstate, double cap,
-				   double& geq, double& ceq) {
-  double * coeff = c->getCoefficients ();
+void transient::integrateBilinear(integrator *c, int qstate, double cap, double &geq, double &ceq) {
+  double *coeff = c->getCoefficients();
   int cstate = qstate + 1;
   double cur;
   geq = cap * coeff[COEFF_G];
-  ceq = c->getState (qstate, 1) * coeff[1] - c->getState (cstate, 1);
-  cur = c->getState (qstate) * coeff[COEFF_G] + ceq;
-  c->setState (cstate, cur);
+  ceq = c->getState(qstate, 1) * coeff[1] - c->getState(cstate, 1);
+  cur = c->getState(qstate) * coeff[COEFF_G] + ceq;
+  c->setState(cstate, cur);
 }
 
 // Integrator using the Gear coefficients.
-void transient::integrateGear (integrator * c, int qstate, double cap,
-			       double& geq, double& ceq) {
-  double * coeff = c->getCoefficients ();
+void transient::integrateGear(integrator *c, int qstate, double cap, double &geq, double &ceq) {
+  double *coeff = c->getCoefficients();
   int i, cstate = qstate + 1;
   double cur;
   geq = cap * coeff[COEFF_G];
-  for (ceq = 0, i = 1; i <= c->getOrder (); i++) {
-    ceq += c->getState (qstate, i) * coeff[i];
+  for (ceq = 0, i = 1; i <= c->getOrder(); i++) {
+    ceq += c->getState(qstate, i) * coeff[i];
   }
-  cur = c->getState (qstate) * coeff[COEFF_G] + ceq;
-  c->setState (cstate, cur);
+  cur = c->getState(qstate) * coeff[COEFF_G] + ceq;
+  c->setState(cstate, cur);
 }
 
 // Integrator using the Adams-Moulton coefficients.
-void transient::integrateMoulton (integrator * c, int qstate, double cap,
-				  double& geq, double& ceq) {
-  double * coeff = c->getCoefficients ();
+void transient::integrateMoulton(integrator *c, int qstate, double cap, double &geq, double &ceq) {
+  double *coeff = c->getCoefficients();
   int i, cstate = qstate + 1;
   double cur;
   geq = cap * coeff[COEFF_G];
-  ceq = c->getState (qstate, 1) * coeff[1];
-  for (i = 2; i <= c->getOrder (); i++) {
-    ceq += c->getState (cstate, i - 1) * coeff[i];
+  ceq = c->getState(qstate, 1) * coeff[1];
+  for (i = 2; i <= c->getOrder(); i++) {
+    ceq += c->getState(cstate, i - 1) * coeff[i];
   }
-  cur = c->getState (qstate) * coeff[COEFF_G] + ceq;
-  c->setState (cstate, cur);
+  cur = c->getState(qstate) * coeff[COEFF_G] + ceq;
+  c->setState(cstate, cur);
 }
 
 /* The function applies the appropriate integration function to the
    given circuit object. */
-void transient::setIntegrationMethod (circuit * c, int Method) {
+void transient::setIntegrationMethod(circuit *c, int Method) {
   switch (Method) {
   case INTEGRATOR_GEAR:
-    c->setIntegration (integrateGear);
+    c->setIntegration(integrateGear);
     break;
   case INTEGRATOR_TRAPEZOIDAL:
-    c->setIntegration (integrateBilinear);
+    c->setIntegration(integrateBilinear);
     break;
   case INTEGRATOR_EULER:
-    c->setIntegration (integrateEuler);
+    c->setIntegration(integrateEuler);
     break;
   case INTEGRATOR_ADAMSMOULTON:
-    c->setIntegration (integrateMoulton);
+    c->setIntegration(integrateMoulton);
     break;
   default:
-    c->setIntegration (NULL);
+    c->setIntegration(nullptr);
     break;
   }
-  c->setConductance (getConductance);
+  c->setConductance(getConductance);
 }
 
 /* Returns an appropriate integrator type identifier and the maximum
    order depending on the given string argument. */
-int transient::correctorType (const char * const Method, int& MaxOrder) {
-  if (!strcmp (Method, "Gear")) {
-    if (MaxOrder > 6) MaxOrder = 6;
-    if (MaxOrder < 1) MaxOrder = 1;
+int transient::correctorType(const char *const Method, int &MaxOrder) {
+  if (!strcmp(Method, "Gear")) {
+    if (MaxOrder > 6)
+      MaxOrder = 6;
+    if (MaxOrder < 1)
+      MaxOrder = 1;
     return INTEGRATOR_GEAR;
   }
-  else if (!strcmp (Method, "Trapezoidal")) {
+  if (!strcmp(Method, "Trapezoidal")) {
     MaxOrder = 2;
     return INTEGRATOR_TRAPEZOIDAL;
   }
-  else if (!strcmp (Method, "Euler")) {
+  if (!strcmp(Method, "Euler")) {
     MaxOrder = 1;
     return INTEGRATOR_EULER;
   }
-  else if (!strcmp (Method, "AdamsMoulton")) {
-    if (MaxOrder > 6) MaxOrder = 6;
-    if (MaxOrder < 1) MaxOrder = 1;
+  if (!strcmp(Method, "AdamsMoulton")) {
+    if (MaxOrder > 6)
+      MaxOrder = 6;
+    if (MaxOrder < 1)
+      MaxOrder = 1;
     return INTEGRATOR_ADAMSMOULTON;
   }
-  else if (!strcmp (Method, "AdamsBashford")) {
-    if (MaxOrder > 6) MaxOrder = 6;
-    if (MaxOrder < 1) MaxOrder = 1;
+  if (!strcmp(Method, "AdamsBashford")) {
+    if (MaxOrder > 6)
+      MaxOrder = 6;
+    if (MaxOrder < 1)
+      MaxOrder = 1;
     return INTEGRATOR_ADAMSBASHFORD;
   }
   return INTEGRATOR_UNKNOWN;
 }
 
-/* The function returns the appropriate predictor integration method
+/* Returns the appropriate predictor integration method
    for the given corrector method and adjusts the order of the
    predictor as well based on the given corrector method. */
-int transient::predictorType (int corrMethod, int corrOrder, int& predOrder) {
+int transient::predictorType(int corrMethod, int corrOrder, int &predOrder) {
   int predMethod = INTEGRATOR_UNKNOWN;
   switch (corrMethod) {
   case INTEGRATOR_GEAR:
@@ -375,53 +371,131 @@ struct integration_types_t {
   double predErrorConstant[6];
 };
 
-static struct integration_types_t integration_types[] = {
-  { INTEGRATOR_EULER,
-    { INTEGRATOR_EULER },
-    { -1.0/2 },
-    { +1.0/2 }
-  },
-  { INTEGRATOR_TRAPEZOIDAL,
-    { INTEGRATOR_EULER, INTEGRATOR_TRAPEZOIDAL },
-    { -1.0/2, -1.0/12 },
-    { +1.0/2, +5.0/12 }
-  },
-  { INTEGRATOR_GEAR,
-    { INTEGRATOR_GEAR, INTEGRATOR_GEAR, INTEGRATOR_GEAR,
-      INTEGRATOR_GEAR, INTEGRATOR_GEAR, INTEGRATOR_GEAR },
-    { -1.0/2, -2.0/9, -3.0/22, -12.0/125, -10.0/137, -20.0/343 },
-    { +1.0, +1.0, +1.0, +1.0, +1.0, +1.0 }
-  },
-  { INTEGRATOR_ADAMSMOULTON,
-    { INTEGRATOR_ADAMSMOULTON, INTEGRATOR_ADAMSMOULTON,
-      INTEGRATOR_ADAMSMOULTON, INTEGRATOR_ADAMSMOULTON,
-      INTEGRATOR_ADAMSMOULTON, INTEGRATOR_ADAMSMOULTON },
-    { -1.0/2, -1.0/12, -1.0/24, -19.0/720, -3.0/160, -863.0/60480 },
-    { +1.0/2, +1.0/12, +1.0/24, +19.0/720, +3.0/160, +863.0/60480 }
-  },
-  { INTEGRATOR_ADAMSBASHFORD,
-    { INTEGRATOR_ADAMSBASHFORD, INTEGRATOR_ADAMSBASHFORD,
-      INTEGRATOR_ADAMSBASHFORD, INTEGRATOR_ADAMSBASHFORD,
-      INTEGRATOR_ADAMSBASHFORD, INTEGRATOR_ADAMSBASHFORD },
-    { -1.0/2, -5.0/12, -3.0/8, -251.0/720, -95.0/288, -19087.0/60480 },
-    { +1.0/2, +5.0/12, +3.0/8, +251.0/720, +95.0/288, +19087.0/60480 }
-  }
+static integration_types_t integration_types[] = {
+    {
+        INTEGRATOR_EULER,
+        {
+            INTEGRATOR_EULER,
+        },
+        {
+            -1.0 / 2,
+        },
+        {
+            +1.0 / 2,
+        },
+    },
+    {
+        INTEGRATOR_TRAPEZOIDAL,
+        {
+            INTEGRATOR_EULER,
+            INTEGRATOR_TRAPEZOIDAL,
+        },
+        {
+            -1.0 / 2,
+            -1.0 / 12,
+        },
+        {
+            +1.0 / 2,
+            +5.0 / 12,
+        },
+    },
+    {
+        INTEGRATOR_GEAR,
+        {
+            INTEGRATOR_GEAR,
+            INTEGRATOR_GEAR,
+            INTEGRATOR_GEAR,
+            INTEGRATOR_GEAR,
+            INTEGRATOR_GEAR,
+            INTEGRATOR_GEAR,
+        },
+        {
+            -1.0 / 2,
+            -2.0 / 9,
+            -3.0 / 22,
+            -12.0 / 125,
+            -10.0 / 137,
+            -20.0 / 343,
+        },
+        {
+            +1.0,
+            +1.0,
+            +1.0,
+            +1.0,
+            +1.0,
+            +1.0,
+        },
+    },
+    {
+        INTEGRATOR_ADAMSMOULTON,
+        {
+            INTEGRATOR_ADAMSMOULTON,
+            INTEGRATOR_ADAMSMOULTON,
+            INTEGRATOR_ADAMSMOULTON,
+            INTEGRATOR_ADAMSMOULTON,
+            INTEGRATOR_ADAMSMOULTON,
+            INTEGRATOR_ADAMSMOULTON,
+        },
+        {
+            -1.0 / 2,
+            -1.0 / 12,
+            -1.0 / 24,
+            -19.0 / 720,
+            -3.0 / 160,
+            -863.0 / 60480,
+        },
+        {
+            +1.0 / 2,
+            +1.0 / 12,
+            +1.0 / 24,
+            +19.0 / 720,
+            +3.0 / 160,
+            +863.0 / 60480,
+        },
+    },
+    {
+        INTEGRATOR_ADAMSBASHFORD,
+        {
+            INTEGRATOR_ADAMSBASHFORD,
+            INTEGRATOR_ADAMSBASHFORD,
+            INTEGRATOR_ADAMSBASHFORD,
+            INTEGRATOR_ADAMSBASHFORD,
+            INTEGRATOR_ADAMSBASHFORD,
+            INTEGRATOR_ADAMSBASHFORD,
+        },
+        {
+            -1.0 / 2,
+            -5.0 / 12,
+            -3.0 / 8,
+            -251.0 / 720,
+            -95.0 / 288,
+            -19087.0 / 60480,
+        },
+        {
+            +1.0 / 2,
+            +5.0 / 12,
+            +3.0 / 8,
+            +251.0 / 720,
+            +95.0 / 288,
+            +19087.0 / 60480,
+        },
+    },
 };
 
 /* The function returns the appropriate integration type for the given
    corrector integration type and order. */
-int transient::correctorType (int Method, int order) {
+int transient::correctorType(int Method, int order) {
   return integration_types[Method].integratorType[order - 1];
 }
 
 // Returns the error constant for the given corrector.
-double transient::getCorrectorError (int Method, int order) {
+double transient::getCorrectorError(int Method, int order) {
   return integration_types[Method].corrErrorConstant[order - 1];
 }
 
 // Returns the error constant for the given predictor.
-double transient::getPredictorError (int Method, int order) {
+double transient::getPredictorError(int Method, int order) {
   return integration_types[Method].predErrorConstant[order - 1];
 }
 
-}
+} // namespace qucs

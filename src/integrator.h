@@ -29,34 +29,29 @@
 
 namespace qucs {
 
-class integrator : public states<double>
-{
- public:
-  // constructor and destructor set
-  integrator ();
-  integrator (const integrator &);
-  ~integrator ();
+class integrator : public states<double> {
+public:
+  integrator();
+  integrator(const integrator &);
+  ~integrator();
 
-  // integration specific
-  typedef void (* integrate_func_t)
-    (integrator *, int, double, double&, double&);
-  void setIntegration (integrate_func_t f) { integrate_func = f; }
-  typedef void (* conductor_func_t)
-    (integrator *, double, double&);
-  void setConductance (conductor_func_t f) { conductor_func = f; }
-  void integrate (int, double, double&, double&);
-  void conductor (double, double&);
-  void setOrder (int o) { order = o; }
-  int  getOrder (void) { return order; }
-  void setMode (int s) { state = s; }
-  int  getMode (void) { return state; }
-  void setCoefficients (double * c) { coefficients = c; }
-  double * getCoefficients (void) { return coefficients; }
+  typedef void (*integrate_func_t)(integrator *, int, double, double &, double &);
+  void setIntegration(integrate_func_t f) { integrate_func = f; }
+  typedef void (*conductor_func_t)(integrator *, double, double &);
+  void setConductance(conductor_func_t f) { conductor_func = f; }
+  void integrate(int, double, double &, double &);
+  void conductor(double, double &);
+  void setOrder(int o) { order = o; }
+  int getOrder() { return order; }
+  void setMode(int s) { state = s; }
+  int getMode() { return state; }
+  void setCoefficients(double *c) { coefficients = c; }
+  double *getCoefficients() { return coefficients; }
 
- private:
+private:
   int order;
   int state;
-  double * coefficients;
+  double *coefficients;
   integrate_func_t integrate_func;
   conductor_func_t conductor_func;
 };

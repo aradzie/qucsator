@@ -22,6 +22,8 @@
 #ifndef __PAIR_H__
 #define __PAIR_H__
 
+#include <string>
+
 namespace qucs {
 
 class pair

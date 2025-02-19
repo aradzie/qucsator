@@ -25,23 +25,20 @@
 
 // Some definitions for the save-state variables.
 #define STATE_SHIFT 3
-#define STATE_NUM   8
-#define STATE_MASK  7
+#define STATE_NUM 8
+#define STATE_MASK 7
 
 namespace qucs {
 
-// Constructor creates an unnamed instance of the integrator class.
-integrator::integrator () : states<double> () {
-  coefficients = NULL;
+integrator::integrator() : states() {
+  coefficients = nullptr;
   order = 0;
   state = 0;
-  integrate_func = NULL;
-  conductor_func = NULL;
+  integrate_func = nullptr;
+  conductor_func = nullptr;
 }
 
-/* The copy constructor creates a new instance based on the given
-   integrator object. */
-integrator::integrator (const integrator & c) : states<double> (c) {
+integrator::integrator(const integrator &c) : states(c) {
   coefficients = c.coefficients;
   order = c.order;
   state = c.state;
@@ -49,23 +46,22 @@ integrator::integrator (const integrator & c) : states<double> (c) {
   conductor_func = c.conductor_func;
 }
 
-// Destructor deletes a integrator object.
-integrator::~integrator () {
-}
+integrator::~integrator() {}
 
-/* The function evaluates the state of the integration-using component
-   and runs the appropriate integrator function. */
-void integrator::integrate (int qstate, double cap, double& geq,
-			    double& ceq) {
+/* Evaluates the state of the integration-using component
+ * and runs the appropriate integrator function. */
+void integrator::integrate(int qstate, double cap, double &geq, double &ceq) {
   int cstate = qstate + 1;
-  if (state & MODE_INIT) fillState (qstate, getState (qstate));
-  (*integrate_func) (this, qstate, cap, geq, ceq);
-  if (state & MODE_INIT) fillState (cstate, getState (cstate));
+  if (state & MODE_INIT) {
+    fillState(qstate, getState(qstate));
+  }
+  (*integrate_func)(this, qstate, cap, geq, ceq);
+  if (state & MODE_INIT) {
+    fillState(cstate, getState(cstate));
+  }
 }
 
-/* This function runs the appropriate conductor function. */
-void integrator::conductor (double cap, double& geq) {
-  (*conductor_func) (this, cap, geq);
-}
+/* Runs the appropriate conductor function. */
+void integrator::conductor(double cap, double &geq) { (*conductor_func)(this, cap, geq); }
 
 } // namespace qucs

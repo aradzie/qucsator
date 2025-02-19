@@ -25,70 +25,51 @@
 
 namespace qucs {
 
-// Default constructor for device state class instance.
-devstates::devstates () {
+devstates::devstates() {
   nstates = 0;
   nvars = 0;
-  states = NULL;
+  states = nullptr;
   nstate = 0;
-  pstate = NULL;
+  pstate = nullptr;
 }
 
-// Constructor for device state class instance.
-devstates::devstates (int vars, int states) {
-  deviceStates (vars, states);
-}
+devstates::devstates(int vars, int states) { deviceStates(vars, states); }
 
-// Destructor for device state class instance.
-devstates::~devstates () {
-  free (states);
-}
+devstates::~devstates() { free(states); }
 
 /* Initializes the device state class instance containing the
    specified number of variables and states. */
-void devstates::deviceStates (int vars, int stats) {
+void devstates::deviceStates(int vars, int stats) {
   nvars = vars;
   nstates = stats;
-  free (states);
-  states = (double *) malloc (sizeof (double) * nvars * nstates);
+  free(states);
+  states = (double *)malloc(sizeof(double) * nvars * nstates);
   nstate = 0;
   pstate = states;
 }
 
 // Returns the number of states.
-int devstates::deviceStates (void) {
-  return nstates;
-}
+int devstates::deviceStates() { return nstates; }
 
 // Sets the current state.
-void devstates::deviceState (int state) {
+void devstates::deviceState(int state) {
   nstate = state;
   pstate = &states[nvars * nstate];
 }
 
 // Returns the current state.
-int devstates::deviceState (void) {
-  return nstate;
-}
+int devstates::deviceState() { return nstate; }
 
 // Access operator for the given variable in the current state.
-double devstates::operator () (int var) const {
-  return pstate[var];
-}
+double devstates::operator()(int var) const { return pstate[var]; }
 
 // Reference access operator for the given variable in the current state.
-double& devstates::operator () (int var) {
-  return pstate[var];
-}
+double &devstates::operator()(int var) { return pstate[var]; }
 
 // Returns the given variable in the current state.
-double devstates::deviceVar (int var) const {
-  return pstate[var];
-}
+double devstates::deviceVar(int var) const { return pstate[var]; }
 
 // Returns a reference to the given variable in the current state.
-double& devstates::deviceVar (int var) {
-  return pstate[var];
-}
+double &devstates::deviceVar(int var) { return pstate[var]; }
 
 } // namespace qucs

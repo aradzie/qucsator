@@ -29,8 +29,8 @@
 #include "exception.h"
 #include "exceptionstack.h"
 
-//! Little helper macro.
-#define Swap(type,a,b) { type t; t = a; a = b; b = t; }
+#define SWAP(type,a,b) { type t; t = a; a = b; b = t; }
+#define MAX(x,y) (((x) > (y)) ? (x) : (y))
 
 namespace qucs {
 
@@ -356,8 +356,8 @@ void eqnsys<nr_type_t>::factorize_lu_crout (void) {
     // exchange table
     if (c != pivot) {
       A->exchangeRows (c, pivot);
-      Swap (int, rMap[c], rMap[pivot]);
-      Swap (double, nPvt[c], nPvt[pivot]);
+      SWAP (int, rMap[c], rMap[pivot]);
+      SWAP (double, nPvt[c], nPvt[pivot]);
     }
   }
 #if LU_FAILURE
@@ -422,8 +422,8 @@ void eqnsys<nr_type_t>::factorize_lu_doolittle (void) {
     // exchange table
     if (c != pivot) {
       A->exchangeRows (c, pivot);
-      Swap (int, rMap[c], rMap[pivot]);
-      Swap (double, nPvt[c], nPvt[pivot]);
+      SWAP (int, rMap[c], rMap[pivot]);
+      SWAP (double, nPvt[c], nPvt[pivot]);
     }
 
     // finally divide by the pivot element
@@ -894,8 +894,8 @@ void eqnsys<nr_type_t>::factorize_qrh (void) {
     }
     if (pivot != c) {
       A->exchangeCols (pivot, c);
-      Swap (int, cMap[pivot], cMap[c]);
-      Swap (double, nPvt[pivot], nPvt[c]);
+      SWAP (int, cMap[pivot], cMap[c]);
+      SWAP (double, nPvt[pivot], nPvt[c]);
     }
 
     // compute householder vector
@@ -957,8 +957,8 @@ void eqnsys<nr_type_t>::factorize_qr_householder (void) {
       }
     if (pivot != c) {
       A->exchangeCols (pivot, c);
-      Swap (int, cMap[pivot], cMap[c]);
-      Swap (double, nPvt[pivot], nPvt[c]);
+      SWAP (int, cMap[pivot], cMap[c]);
+      SWAP (double, nPvt[pivot], nPvt[c]);
     }
 
     // compute and apply householder vector
