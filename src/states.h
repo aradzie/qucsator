@@ -24,41 +24,35 @@
 
 namespace qucs {
 
-/*! \class states
- * \brief template class for storing state variables.
- *
+/*
  * This class is used for storing sets of states for use
  * by the transient integrators.
- *
  */
-template <class state_type_t>
-class states
-{
- public:
-  // constructor and destructor set
-  states ();
-  states (const states &);
-  ~states ();
+template <class state_type_t> class states {
+public:
+  states();
+  states(const states &);
+  ~states();
 
-  // save-state variables for transient analysis
-  state_type_t getState (int, int n = 0);
-  void setState (int, state_type_t, int n = 0);
-  void initStates (void);
-  void clearStates (void);
-  int  getStates (void) { return nstates; }
-  void setStates (int n) { nstates = n; }
-  void nextState (void);
-  void prevState (void);
-  void fillState (int, state_type_t);
-  void saveState (int, state_type_t *);
-  void inputState (int, state_type_t *);
+  state_type_t getState(int, int n = 0);
+  void setState(int, state_type_t, int n = 0);
+  void initStates();
+  void clearStates();
+  int getStates() { return nstates; }
+  void setStates(int n) { nstates = n; }
+  void nextState();
+  void prevState();
+  void fillState(int, state_type_t);
+  void saveState(int, state_type_t *);
+  void inputState(int, state_type_t *);
 
- private:
-  // stateval: array for holding all the sets of states. Multiple sets of
-  // states are stored in one large array which is indexed appropriately
-  // to get the right state set and value
-  state_type_t * stateval;
-  int nstates; // the number of sets of states stored
+private:
+  // Array for holding all the sets of states.
+  // Multiple sets of states are stored in one large array which is indexed appropriately
+  // to get the right state set and value.
+  state_type_t *stateval;
+  // The number of sets of states stored.
+  int nstates;
   int currentstate;
 };
 
