@@ -4,10 +4,6 @@ set(
   hash.h
   ptrlist.h
   states.h
-  tmatrix.h
-  tridiag.h
-  tvector.h
-  tvector.h
   valuelist.h
 )
 
@@ -39,7 +35,6 @@ set(
   property.cpp
   range.cpp
   receiver.cpp
-  spline.cpp
   strlist.cpp
   sweep.cpp
   transient.cpp

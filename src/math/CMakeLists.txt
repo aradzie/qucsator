@@ -9,6 +9,10 @@ set(
   fspecial.cpp
   matrix.cpp
   real.cpp
+  spline.cpp
+  tmatrix.h
+  tridiag.h
+  tvector.h
 )
 
 add_library(coreMath OBJECT ${SOURCES})
