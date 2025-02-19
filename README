@@ -29,51 +29,5 @@ in a certain format as input and outputs a Qucs dataset.  It has been
 programmed for usage in the Qucs project but can also be used by other
 applications.
 
-Requirements
-============
-
-Adms is required to translate some component parts. Tested with 2.3.6.
-
-Installation
-============
-
-Unpack the distribution tarball:
-
-    $ tar xvzf qucsator-<version>.tar.gz               (using GNU tar)
-    $ gzip -cd qucsator-<version>.tar.gz | tar xvf -   (using another tar)
-
-Change into the source directory:
-
-    $ cd qucsator-<version>
-
-Configure the source package for your system:
-
-    $ ./configure
-
-Now compile the package. Note that parallel build is broken at the moment.
-
-    $ make
-
-Install Qucsator. This is optional.
-
-    $ make install
-
-You must have root privileges if you want to install the package in the
-standard location (/usr/local) or in any location that is only writable
-by root.
-
-For further information on installing the package, please consult the
-file INSTALL included in this distribution.
-
-Please note:  Users of the FreeBSD OS may use a GNU make (probably gmake)
-to compile and install the package.
-
-Getting the latest development version
-======================================
-
-You can always get the current Qucsator version from our repository.
-
-    $ git clone https://github.com/Qucs/qucsator
-    $ cd qucsator
-
-Run `sh bootstrap' before `configure' with the appropriate options.
+This is my own fork of the project. I intend to use it for learning and experimentation.
+I will be modifying it in different ways and do not plan to keep it backward compatible.
