@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <cmath>
 #include <algorithm>
 
@@ -31,7 +29,6 @@
 #include "net.h"
 #include "constants.h"
 #include "device.h"
-#include "netdefs.h"
 #include "resistor.h"
 #include "capacitor.h"
 

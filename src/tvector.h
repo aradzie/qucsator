@@ -23,11 +23,7 @@
 #define __TVECTOR_H__
 
 #include <vector>
-#include <assert.h>
-
 #include <limits>
-
-#include "precision.h"
 
 namespace qucs {
 

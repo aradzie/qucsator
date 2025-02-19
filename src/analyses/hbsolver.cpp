@@ -20,8 +20,6 @@
  */
 
 #include <algorithm>
-
-#include <stdio.h>
 #include <cstring>
 
 #include "object.h"

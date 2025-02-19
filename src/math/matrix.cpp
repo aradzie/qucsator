@@ -78,11 +78,9 @@
       http://authors.library.caltech.edu/6226/01/WEDieeetmtt92.pdf
 
 */
-#include <assert.h>
-#include <stdio.h>
-#include <cstdlib>
-#include <string.h>
-#include <cmath>
+
+#include <cassert>
+#include <cstring>
 
 #include "object.h"
 #include "complex.h"

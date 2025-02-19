@@ -21,7 +21,6 @@
 
 #include "component.h"
 #include "dataset.h"
-#include "poly.h"
 #include "spline.h"
 #include "interpolator.h"
 #include "ifile.h"

@@ -19,19 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <cmath>
+#include <cstring>
 
 #include "consts.h"
-#include "object.h"
 #include "complex.h"
 #include "vector.h"
 #include "fourier.h"
 
-// Helper macro.
-#define Swap(a,b) { double t; t = a; a = b; b = t; }
+#define SWAP(a,b) { double t; t = a; a = b; b = t; }
 
 namespace qucs {
 
@@ -48,8 +44,8 @@ void fourier::_fft_1d (double * data, int len, int isign) {
   j = 0;
   for (i = 0; i < n; i += 2) {
     if (j > i) {                   // was index already swapped ?
-      Swap (data[j], data[i]);     // swap real part
-      Swap (data[j+1], data[i+1]); // swap imaginary part
+      SWAP (data[j], data[i]);     // swap real part
+      SWAP (data[j+1], data[i+1]); // swap imaginary part
     }
     m = len;
     while (m >= 2 && j >= m) {     // calculate next swap index
@@ -256,8 +252,8 @@ void fourier::_fft_nd (double * data, int len[], int nd, int isign) {
        for (i1 = i2; i1 <= i2 + ip1 - 2; i1 += 2) {
 	 for (i3 = i1; i3 <= ip3; i3 += ip2) {
 	   i3rev = i2rev + i3 - i2;
-	   Swap (data[i3-1], data[i3rev-1]);
-	   Swap (data[i3], data[i3rev]);
+	   SWAP (data[i3-1], data[i3rev-1]);
+	   SWAP (data[i3], data[i3rev]);
 	 }
        }
      }

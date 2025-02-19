@@ -19,11 +19,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cassert>
 #include <cmath>
-#include <assert.h>
+#include <cstring>
 
 #include "object.h"
 #include "complex.h"

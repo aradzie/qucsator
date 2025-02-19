@@ -23,10 +23,6 @@
 #ifndef __REAL_H__
 #define __REAL_H__
 
-#include <cmath>
-
-#include <constants.h>
-
 /**It is preferred to add all used functions into the qucs namespace.
  * Doing so one is forced do think about compatibility instead of using std directly.
  * Inline is optional at this moment
@@ -109,12 +105,6 @@ double deg2rad (const double x );
 
 /*!\brief Compute the third power of input */
 static inline double cubic (const double x)  { return (x * x * x); }
-
-/*!\brief Convert Celsius to Kelvin */
-static inline double celsius2kelvin (const double x)  { return (x - K); }
-
-/*!\brief Convert Kelvin to Celsius */
-static inline double kelvin2celsius (const double x)  { return (x + K); }
 
 
 //

@@ -19,9 +19,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
 #include <cstring>
 
+#include "constants.h"
 #include "object.h"
 #include "complex.h"
 #include "circuit.h"

@@ -20,13 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <cmath>
-
-#include "logging.h"
 #include "complex.h"
 #include "object.h"
 #include "vector.h"

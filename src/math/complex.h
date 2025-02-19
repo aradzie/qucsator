@@ -27,11 +27,6 @@
 
 typedef std::complex<double> nr_complex_t;
 
-// undefine this macro if it is defined already
-#ifdef log2
-#undef log2
-#endif
-
 namespace qucs {
 
 // see http://www.cplusplus.com/reference/complex/

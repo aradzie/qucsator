@@ -26,12 +26,8 @@
 #include <limits>
 
 #include "consts.h"
-#include "precision.h"
 #include "complex.h"
-
-#ifdef log2
-#undef log2
-#endif
+#include "object.h"
 
 namespace qucs {
 

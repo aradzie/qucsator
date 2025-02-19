@@ -86,6 +86,12 @@ static const double Eg0Si = 1.16;
 */
 static const double GMin = NR_TINY;
 
+/*!\brief Convert Celsius to Kelvin */
+static inline double celsius2kelvin (const double x)  { return (x - K); }
+
+/*!\brief Convert Kelvin to Celsius */
+static inline double kelvin2celsius (const double x)  { return (x + K); }
+
 } // namespace qucs
 
 #endif /* __CONSTANTS_H__ */

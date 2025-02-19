@@ -19,20 +19,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <cmath>
+#include <cassert>
 #include <vector>
 
 #include "complex.h"
 #include "tvector.h"
-#include "precision.h"
 
 namespace qucs {
-
-
 
 // Returns the tvector element at the given position.
 template <class nr_type_t>

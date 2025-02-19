@@ -19,13 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <cmath>
-#include <float.h>
-#include <assert.h>
-#include <limits>
+#include <cstring>
 
 #include "logging.h"
 #include "complex.h"
@@ -33,21 +27,17 @@
 #include "node.h"
 #include "circuit.h"
 #include "vector.h"
-#include "dataset.h"
 #include "net.h"
 #include "analysis.h"
 #include "nodelist.h"
 #include "nodeset.h"
-#include "strlist.h"
 #include "tvector.h"
 #include "tmatrix.h"
 #include "eqnsys.h"
-#include "precision.h"
 #include "operatingpoint.h"
 #include "exception.h"
 #include "exceptionstack.h"
 #include "nasolver.h"
-#include "constants.h"
 
 namespace qucs {
 

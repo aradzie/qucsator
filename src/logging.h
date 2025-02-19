@@ -25,6 +25,14 @@
 #define LOG_ERROR 0
 #define LOG_STATUS 1
 
+#ifdef   __cplusplus
+# define __BEGIN_DECLS  extern "C" {
+# define __END_DECLS }
+#else
+# define __BEGIN_DECLS
+# define __END_DECLS
+#endif
+
 __BEGIN_DECLS
 
 void logprint(int, const char *, ...);

@@ -27,7 +27,7 @@
   *
   */
 
-#include <string.h>
+#include <cstring>
 
 #include "object.h"
 #include "complex.h"

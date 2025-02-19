@@ -24,13 +24,10 @@
  * \brief Vector of matrices class implementation
  */
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cassert>
 #include <cmath>
+#include <cstring>
 
-#include "logging.h"
 #include "object.h"
 #include "complex.h"
 #include "vector.h"

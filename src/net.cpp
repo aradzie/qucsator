@@ -19,28 +19,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+#include <cassert>
 
 #include "logging.h"
 #include "complex.h"
 #include "object.h"
 #include "node.h"
 #include "circuit.h"
-#include "strlist.h"
-#include "vector.h"
 #include "dataset.h"
 #include "net.h"
-#include "tee.h"
-#include "open.h"
-#include "itrafo.h"
 #include "ptrlist.h"
 #include "analysis.h"
 #include "nodelist.h"
 #include "nodeset.h"
-#include "equation.h"
 #include "environment.h"
 #include "component_id.h"
 

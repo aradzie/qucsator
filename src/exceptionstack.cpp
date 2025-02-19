@@ -19,10 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "logging.h"
 #include "exception.h"
 #include "exceptionstack.h"
@@ -34,16 +30,16 @@ exceptionstack qucs::estack;
 
 // Constructor creates an instance of the exception stack class.
 exceptionstack::exceptionstack () {
-  root = NULL;
+  root = nullptr;
 }
 
 /* This copy constructor creates a instance of the exception stack
    class based on the given exception stack. */
 exceptionstack::exceptionstack (const exceptionstack & e) {
-  exception * last, * prev = NULL;
-  for (exception * next = e.root; next != NULL; next = next->getNext ()) {
+  exception * last, * prev = nullptr;
+  for (exception * next = e.root; next != nullptr; next = next->getNext ()) {
     last = new exception (*next);
-    if (prev != NULL)
+    if (prev != nullptr)
       prev->setNext (last);
     else
       root = last;
@@ -70,7 +66,7 @@ void exceptionstack::push (exception * e) {
 /* This function removes the top exception from the exception stack
    and returns the new top exception. */
 exception * exceptionstack::pop (void) {
-  if (root != NULL) {
+  if (root != nullptr) {
     exception * next = root->getNext ();
     delete root;
     root = next;
@@ -90,7 +86,7 @@ void exceptionstack::print (const char * prefix) {
   if (root)
     logprint (LOG_ERROR, "%s%sexception stack\n",
 	      prefix ? prefix : "", prefix ? " " : "");
-  while ((next = top ()) != NULL) {
+  while ((next = top ()) != nullptr) {
     logprint (LOG_ERROR, "  %03d: %s\n", next->getCode (), next->getText ());
     pop ();
   }

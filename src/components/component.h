@@ -22,12 +22,8 @@
 #ifndef __COMPONENT_H__
 #define __COMPONENT_H__
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#include <cmath>
-#include <float.h>
+#include <cassert>
+#include <cstring>
 
 #include "logging.h"
 #include "complex.h"

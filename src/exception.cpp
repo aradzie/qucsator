@@ -19,10 +19,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cstdarg>
 
 #include "exception.h"
 

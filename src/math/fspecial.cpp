@@ -19,15 +19,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <cmath>
-#include <algorithm>
 
 #include "constants.h"
 #include "fspecial.h"
-
-#include <limits>
 
 using qucs::pi_over_2;
 using qucs::sqrt_pi;

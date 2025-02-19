@@ -19,16 +19,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstring>
 
+#include "precision.h"
 #include "logging.h"
 #include "complex.h"
 #include "object.h"
 #include "node.h"
 #include "circuit.h"
-#include "strlist.h"
 #include "vector.h"
 #include "matvec.h"
 #include "dataset.h"
@@ -39,7 +37,6 @@
 #include "netdefs.h"
 #include "characteristic.h"
 #include "spsolver.h"
-#include "constants.h"
 #include "components/component_id.h"
 #include "components/tee.h"
 #include "components/open.h"

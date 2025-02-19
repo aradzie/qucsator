@@ -19,10 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstring>
 
 #include "hash.h"
 

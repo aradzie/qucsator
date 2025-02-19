@@ -19,12 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <cmath>
-
-#include "precision.h"
 #include "tvector.h"
 #include "poly.h"
 #include "spline.h"

@@ -17,11 +17,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <assert.h>
-#include <time.h>
+#include <cassert>
 #include <cmath>
-#include <float.h>
-
 #include <limits>
 
 #include "logging.h"

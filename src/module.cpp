@@ -20,23 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <cstdio>
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <map>
 #include <list>
+#include <map>
 
 #include "netdefs.h"
 #include "components.h"
 #include "analyses.h"
-#include "netdefs.h"
 #include "module.h"
 #include "logging.h"
 #include "nodeset.h"
 
 #include <dlfcn.h>
-
-#include <cstdlib> //for exit
 
 namespace qucs {
 

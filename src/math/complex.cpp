@@ -24,15 +24,9 @@
    Implements complex number class and functions
 */
 
-#include <cmath>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "constants.h"
-#include "precision.h"
 #include "complex.h"
 #include "consts.h"
+#include "constants.h"
 #include "fspecial.h"
 
 
