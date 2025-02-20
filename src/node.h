@@ -33,16 +33,16 @@ public:
   // Sets the unique number of this node
   void setNode(const int n) { this->nNode = n; };
   // Returns the unique number of this node.
-  int getNode(void) const { return this->nNode; };
+  int getNode() const { return this->nNode; };
   // Sets the port number of this node.
   void setPort(const int p) { this->port = p; };
   // Returns the port number of this node.
-  int getPort(void) const { return this->port; };
+  int getPort() const { return this->port; };
   // Sets this node's circuit.
   void setCircuit(circuit *const c) { this->_circuit = c; };
-  circuit *getCircuit(void) const { return this->_circuit; };
+  circuit *getCircuit() const { return this->_circuit; };
   void setInternal(int i) { internal = i; }
-  int getInternal(void) { return internal; }
+  int getInternal() { return internal; }
 
 private:
   int nNode;

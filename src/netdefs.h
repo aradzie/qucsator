@@ -28,42 +28,42 @@ class environment;
 
 /* Representation of a node list. */
 struct node_t {
-  char * node;
-  char * xlate;
+  char *node;
+  char *xlate;
   int xlatenr;
-  struct node_t * next;
+  struct node_t *next;
 };
 
 /* Representation of a value. */
 struct value_t {
-  char * ident;
-  char * unit;
-  char * scale;
+  char *ident;
+  char *unit;
+  char *scale;
   double value;
   int var;
   int subst;
   int hint;
   int range;
-  struct value_t * next;
+  struct value_t *next;
 };
 
 /* Representation of a key / value pair. */
 struct pair_t {
-  char * key;
-  struct value_t * value;
-  struct pair_t * next;
+  char *key;
+  struct value_t *value;
+  struct pair_t *next;
 };
 
 /* Representation of a definition line in the netlist. */
 struct definition_t {
-  char * type;
-  char * instance;
-  struct node_t * nodes;
-  struct pair_t * pairs;
-  struct definition_t * next;
-  struct definition_t * sub;
-  qucs::environment * env;
-  void * eqns;
+  char *type;
+  char *instance;
+  struct node_t *nodes;
+  struct pair_t *pairs;
+  struct definition_t *next;
+  struct definition_t *sub;
+  qucs::environment *env;
+  void *eqns;
   int duplicate;
   int action;
   int substrate;
@@ -72,38 +72,38 @@ struct definition_t {
   int line;
   int copy;
   int ncount;
-  char * text;
-  char * subcircuit;
-  struct value_t * values;
-  struct define_t * define;
+  char *text;
+  char *subcircuit;
+  struct value_t *values;
+  struct define_t *define;
 };
 
 // Structure defining a key value pair.
 struct property_t {
-  const char * key; // key name
-  int type;         // type of property
+  const char *key; // key name
+  int type;        // type of property
   struct {
-    double d;  // default value
-    const char * s; // default string
+    double d;      // default value
+    const char *s; // default string
   } defaultval;
   struct {
-    char il;        // interval boundary
-    double l;  // lower bound of the value
-    double h;  // upper bound of the value
-    char ih;        // interval boundary
-    const char * str[8]; // possible string list
+    char il;            // interval boundary
+    double l;           // lower bound of the value
+    double h;           // upper bound of the value
+    char ih;            // interval boundary
+    const char *str[8]; // possible string list
   } range;
 };
 
 // Structure defining an available component type.
 struct define_t {
-  const char * type;            // component name
-  int nodes;                    // number of nodes
-  int action;                   // is that an action?
-  int substrate;                // is that a substrate?
-  int nonlinear;                // is the component linear?
-  struct property_t * required; // required properties
-  struct property_t * optional; // optional proberties
+  const char *type;            // component name
+  int nodes;                   // number of nodes
+  int action;                  // is that an action?
+  int substrate;               // is that a substrate?
+  int nonlinear;               // is the component linear?
+  struct property_t *required; // required properties
+  struct property_t *optional; // optional proberties
 };
 
 // Maximum number of S-parameter ports.

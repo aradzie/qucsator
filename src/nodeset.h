@@ -22,28 +22,29 @@
 #ifndef __NODESET_H__
 #define __NODESET_H__
 
+#include "object.h"
+
 namespace qucs {
 
-class nodeset
-{
- public:
-  MCREATOR (nodeset);
-  nodeset (char *);
-  nodeset (char *, double);
-  nodeset (const nodeset &);
-  virtual ~nodeset ();
-  nodeset * getNext (void) { return next; }
-  void setNext (nodeset * p) { next = p; }
-  void setName (char *);
-  char * getName (void);
-  double getValue (void) { return value; }
-  void setValue (double val) { value = val; }
-  nodeset * findNodeset (char *);
+class nodeset {
+public:
+  MCREATOR(nodeset);
+  nodeset(char *);
+  nodeset(char *, double);
+  nodeset(const nodeset &);
+  virtual ~nodeset();
+  nodeset *getNext() { return next; }
+  void setNext(nodeset *p) { next = p; }
+  void setName(char *);
+  char *getName();
+  double getValue() { return value; }
+  void setValue(double val) { value = val; }
+  nodeset *findNodeset(char *);
 
- private:
-  char * name;
+private:
+  char *name;
   double value;
-  nodeset * next;
+  nodeset *next;
 };
 
 } // namespace qucs

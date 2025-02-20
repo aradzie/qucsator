@@ -22,6 +22,10 @@
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
+#include <cstdio>
+
+#include "object.h"
+
 namespace qucs {
 
 class net;
@@ -29,33 +33,31 @@ class circuit;
 class analysis;
 class environment;
 
-class input : public object
-{
- public:
-  input ();
-  input (char *);
-  ~input ();
-  int netlist (net *);
-  FILE * getFile (void) { return fd; }
-  void setFile (FILE * f) { fd = f; }
-  void factory (void);
-  circuit * createCircuit (char *);
-  analysis * createAnalysis (char *);
-  substrate * createSubstrate (char *);
-  environment * getEnv (void) { return env; }
-  void setEnv (environment * e) { env = e; }
-  static void assignDefaultProperties (object *, struct define_t *);
-  static qucs::vector * createVector (struct value_t *);
+class input {
+public:
+  input();
+  input(const char *);
+  ~input();
+  int netlist(net *);
+  FILE *getFile() { return fd; }
+  void setFile(FILE *f) { fd = f; }
+  void factory();
+  circuit *createCircuit(char *);
+  analysis *createAnalysis(char *);
+  substrate *createSubstrate(char *);
+  environment *getEnv() { return env; }
+  void setEnv(environment *e) { env = e; }
+  static void assignDefaultProperties(object *, struct define_t *);
+  static qucs::vector *createVector(struct value_t *);
 
- private:
-  FILE * fd;
-  net * subnet;
-  environment * env;
+private:
+  FILE *fd;
+  net *subnet;
+  environment *env;
 };
 
-// externalize global variable
 extern int netlist_check;
 
-}
+} // namespace qucs
 
 #endif /* __INPUT_H__ */

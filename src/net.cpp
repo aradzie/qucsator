@@ -59,7 +59,6 @@ net::net(const std::string &n) : object(n) {
   srcFactor = 1;
 }
 
-// Destructor deletes the net class object.
 net::~net() {
   circuit *n;
   // delete each and every circuit
@@ -79,8 +78,6 @@ net::~net() {
   delete actions;
 }
 
-/* The copy constructor creates a new instance of the net class based
-   on the given net object. */
 net::net(net &n) : object(n) {
   root = drop = nullptr;
   nPorts = nCircuits = nSources = 0;
@@ -92,12 +89,9 @@ net::net(net &n) : object(n) {
   srcFactor = 1;
 }
 
-/* This function prepends the given circuit to the list of registered
-   circuits. */
+/* Prepends the given circuit to the list of registered circuits. */
 void net::insertCircuit(circuit *c) {
-#if 0
-  assert (!containsCircuit (c));
-#endif
+  assert(!containsCircuit(c));
 
   // chain circuit appropriately
   if (root)
@@ -126,9 +120,7 @@ void net::insertCircuit(circuit *c) {
 
 /* Removes the given circuit from the list of registered circuits. */
 void net::removeCircuit(circuit *c, int dropping) {
-#if 0
-  assert (containsCircuit (c));
-#endif
+  assert(containsCircuit(c));
 
   // adjust the circuit chain appropriately
   if (c == root) {

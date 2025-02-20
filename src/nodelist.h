@@ -47,11 +47,7 @@ public:
   typedef detail::nodevector::size_type size_type;
   typedef detail::nodevector::reference reference;
   typedef detail::nodevector::const_reference const_reference;
-#ifdef HAVE_ERASE_CONSTANT_ITERATOR
   typedef detail::nodevector::const_iterator erase_iterator;
-#else
-  typedef detail::nodevector::iterator erase_iterator;
-#endif
 
   /*! alias node number */
   std::size_t n;
@@ -81,7 +77,6 @@ private:
 
 class nodelist {
 public:
-  // Constructor creates an instance of the nodelist class.
   nodelist() : narray(), sorting(0) {}
   nodelist(net *);
   ~nodelist();

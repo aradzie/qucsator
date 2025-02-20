@@ -23,19 +23,13 @@ int main(int argc, char **argv) {
   // create static modules
   module::registerModules();
 
-  // create root environment
-  environment *root = new environment(std::string("root"));
+  auto env = new environment(std::string("root"));
+  auto root = new net("subnet");
+  root->setEnv(env);
 
-  // create netlist object and input
-  net *subnet = new net("subnet");
-  input *in = new input("input.txt");
-
-  // pass root environment to netlist object and input
-  subnet->setEnv(root);
-  in->setEnv(root);
-
-  // get input netlist
-  if (in->netlist(subnet) != 0) {
+  const auto in = new input("input.txt");
+  in->setEnv(env);
+  if (in->netlist(root) != 0) {
     if (netlist_check) {
       logprint(LOG_STATUS, "checker notice, netlist check FAILED\n");
     }
@@ -46,28 +40,27 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  // attach a ground to the netlist
-  circuit *gnd = new ground();
+  auto *gnd = new ground();
   gnd->setNode(0, "gnd");
   gnd->setName("GND");
-  subnet->insertCircuit(gnd);
+  root->insertCircuit(gnd);
 
   // analyse the netlist
   int err = 0;
-  dataset *out = subnet->runAnalysis(err);
+  dataset *out = root->runAnalysis(err);
   ret |= err;
 
   // evaluate output dataset
-  ret |= root->equationSolver(out);
+  ret |= env->equationSolver(out);
   out->setFile("output.txt");
   out->print();
 
   estack.print("uncaught");
 
-  delete subnet;
   delete in;
   delete out;
   delete root;
+  delete env;
 
   // delete static modules and dynamic modules
   module::unregisterModules();

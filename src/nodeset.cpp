@@ -23,75 +23,67 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "object.h"
 #include "netdefs.h"
 #include "nodeset.h"
+#include "object.h"
 
 namespace qucs {
 
-// Constructor creates an unnamed instance of the node set class.
-nodeset::nodeset () {
-  name = NULL;
+nodeset::nodeset() {
+  name = nullptr;
   value = 0.0;
-  next = NULL;
+  next = nullptr;
 }
 
-// Constructor creates a named instance of the node set class.
-nodeset::nodeset (char * n) {
-  name = n ? strdup (n) : NULL;
+nodeset::nodeset(char *n) {
+  name = n ? strdup(n) : nullptr;
   value = 0.0;
-  next = NULL;
+  next = nullptr;
 }
 
-/* This full qualified constructor creates an instance of the node set
-   class containing both the key and the value of the node set. */
-nodeset::nodeset (char * n, double val) {
-  name = n ? strdup (n) : NULL;
+nodeset::nodeset(char *n, double val) {
+  name = n ? strdup(n) : nullptr;
   value = val;
-  next = NULL;
+  next = nullptr;
 }
 
-/* The copy constructor creates a new instance of the node set class
-   based on the given node set object. */
-nodeset::nodeset (const nodeset & p) {
-  name = NULL;
-  if (p.name) name = strdup (p.name);
+nodeset::nodeset(const nodeset &p) {
+  name = nullptr;
+  if (p.name)
+    name = strdup(p.name);
   value = p.value;
   next = p.next;
 }
 
-// Destructor deletes the node set object.
-nodeset::~nodeset () {
-  free (name);
-}
+nodeset::~nodeset() { free(name); }
 
 // Sets the name of the node set.
-void nodeset::setName (char * n) {
-  free (name);
-  name = n ? strdup (n) : NULL;
+void nodeset::setName(char *n) {
+  free(name);
+  name = n ? strdup(n) : nullptr;
 }
 
 // Returns the name of the node set.
-char * nodeset::getName (void) {
-  return name;
-}
+char *nodeset::getName(void) { return name; }
 
 /* Goes through the chained list of the node sets and looks for a node
    set matching the given key and returns its value if possible.  If
-   there is no such node set the function returns NULL. */
-nodeset * nodeset::findNodeset (char * n) {
-  for (nodeset * p = this; p != NULL; p = p->getNext ()) {
-    if (!strcmp (p->getName (), n)) return p;
+   there is no such node set the function returns nullptr. */
+nodeset *nodeset::findNodeset(char *n) {
+  for (nodeset *p = this; p != nullptr; p = p->getNext()) {
+    if (!strcmp(p->getName(), n))
+      return p;
   }
-  return NULL;
+  return nullptr;
 }
 
-// properties
-PROP_REQ [] = {
-  { "U", PROP_REAL, { 0, PROP_NO_STR }, PROP_NO_RANGE }, PROP_NO_PROP };
-PROP_OPT [] = {
-  PROP_NO_PROP };
-struct define_t nodeset::miscdef =
-  { "NodeSet", 1, PROP_COMPONENT, PROP_NO_SUBSTRATE, PROP_LINEAR, PROP_DEF };
+PROP_REQ[] = {
+    {"U", PROP_REAL, {0, PROP_NO_STR}, PROP_NO_RANGE},
+    PROP_NO_PROP,
+};
+PROP_OPT[] = {PROP_NO_PROP};
+struct define_t nodeset::miscdef = {
+    "NodeSet", 1, PROP_COMPONENT, PROP_NO_SUBSTRATE, PROP_LINEAR, PROP_DEF,
+};
 
 } // namespace qucs

@@ -69,3 +69,16 @@ target_link_libraries(
   coreMicrostrip
   coreParsers
 )
+
+add_executable(example example.cpp ${SOURCES})
+
+target_link_libraries(
+  example PRIVATE
+  coreAnalyses
+  coreComponents
+  coreDevices
+  coreDigital
+  coreMath
+  coreMicrostrip
+  coreParsers
+)
