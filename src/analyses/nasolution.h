@@ -27,28 +27,20 @@
 
 namespace qucs {
 
-/* The solution entry class. */
-template <class nr_type_t>
-class naentry
-{
- public:
-  naentry () = default;
-  naentry (const naentry &) = default;
-  naentry (nr_type_t &v, int c):
-    current(c), value(v) {};
-  ~naentry () = default;
+template <class nr_type_t> class naentry {
+public:
+  naentry() = default;
+  naentry(const naentry &) = default;
+  naentry(nr_type_t &v, int c) : current(c), value(v) {};
+  ~naentry() = default;
 
- public:
+public:
   int current;
   nr_type_t value;
 };
 
-/* The solution class. */
-template <typename T>
-    using  nasolution = std::unordered_map<std::string,naentry<T> >;
-
+template <typename T> using nasolution = std::unordered_map<std::string, naentry<T>>;
 
 } // namespace qucs
-
 
 #endif /* __NASOLUTION_H__ */

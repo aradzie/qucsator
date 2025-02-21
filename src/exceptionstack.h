@@ -26,19 +26,18 @@ namespace qucs {
 
 class exception;
 
-class exceptionstack
-{
- public:
-  exceptionstack ();
-  exceptionstack (const exceptionstack &);
-  ~exceptionstack ();
-  void push (exception *);
-  exception * pop (void);
-  exception * top (void);
-  void print (const char * prefix = nullptr);
+class exceptionstack {
+public:
+  exceptionstack();
+  exceptionstack(const exceptionstack &);
+  ~exceptionstack();
+  void push(exception *);
+  exception *pop();
+  exception *top();
+  void print(const char *prefix = nullptr);
 
- private:
-  exception * root;
+private:
+  exception *root;
 };
 
 // Global exception stack.
@@ -46,12 +45,11 @@ extern exceptionstack estack;
 
 } /* namespace qucs */
 
-// Some macros used with exception handling.
 #define try_running()        do {
-#define catch_exception()    } while (0); if (estack.top ()) \
-                                       switch (estack.top()->getCode ())
-#define throw_exception(e)   estack.push (e)
-#define top_exception()      estack.top ()
-#define pop_exception()      estack.pop ()
+#define catch_exception()    } while (0); if (estack.top()) \
+                                       switch (estack.top()->getCode())
+#define throw_exception(e)   estack.push(e)
+#define top_exception()      estack.top()
+#define pop_exception()      estack.pop()
 
 #endif /* __EXCEPTIONSTACK_H__ */
