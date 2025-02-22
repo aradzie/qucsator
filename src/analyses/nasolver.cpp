@@ -94,43 +94,8 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_once() {
   runMNA();
 
   if (estack.top()) {
-    switch (estack.top()->getCode()) {
-    case EXCEPTION_PIVOT:
-    case EXCEPTION_WRONG_VOLTAGE: {
-      auto *e = new qucs::exception(EXCEPTION_NA_FAILED);
-      int d = estack.top()->getData();
-      estack.pop();
-      if (d >= countNodes()) {
-        d -= countNodes();
-        e->setText("voltage source `%s' conflicts with some other voltage "
-                   "source",
-                   findVoltageSource(d)->getName());
-      } else {
-        e->setText("circuit admittance matrix in %s solver is singular at "
-                   "node `%s' connected to [%s]",
-                   desc.c_str(), nlist->get(d).c_str(), nlist->getNodeString(d).c_str());
-      }
-      estack.push(e);
-      error++;
-      break;
-    }
-    case EXCEPTION_SINGULAR: {
-      do {
-        int d = estack.top()->getData();
-        estack.pop();
-        if (d < countNodes()) {
-          logprint(LOG_ERROR,
-                   "WARNING: %s: inserted virtual resistance at "
-                   "node `%s' connected to [%s]\n",
-                   getName(), nlist->get(d).c_str(), nlist->getNodeString(d).c_str());
-        }
-      } while (estack.top() != nullptr && estack.top()->getCode() == EXCEPTION_SINGULAR);
-      break;
-    }
-    default:
-      estack.print();
-      return -1;
-    }
+    estack.print();
+    error = -1;
   }
 
   // save results into circuits

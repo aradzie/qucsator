@@ -105,23 +105,21 @@ int trsolver::dcAnalysis() {
   applyNodeset();
 
   // Run the DC solver once.
-  try_running() { error = solve_nonlinear(); }
-  // Appropriate exception handling.
-  catch_exception() {
-  case EXCEPTION_NO_CONVERGENCE:
-    pop_exception();
-    convHelper = CONV_LineSearch;
-    logprint(LOG_ERROR,
-             "WARNING: %s: %s analysis failed, using line search "
-             "fallback\n",
-             getName(), getDescription().c_str());
-    applyNodeset();
-    error = solve_nonlinear();
-    break;
-  default:
-    // Otherwise return.
-    estack.print();
-    return -1;
+  error = solve_nonlinear();
+
+  if (estack.top()) {
+    switch (estack.top()->getCode()) {
+    case EXCEPTION_NO_CONVERGENCE:
+      estack.pop();
+      convHelper = CONV_LineSearch;
+      applyNodeset();
+      error = solve_nonlinear();
+      break;
+    default:
+      // Otherwise return.
+      estack.print();
+      return -1;
+    }
   }
 
   // Save the DC solution.
@@ -233,57 +231,56 @@ int trsolver::solve() {
       // Run corrector process with appropriate exception handling.
       // The corrector iterates through the solutions of the integration
       // process until a certain error tolerance has been reached.
-      try_running() { error += corrector(); }
-      catch_exception() {
-      case EXCEPTION_NO_CONVERGENCE:
-        pop_exception();
+      error = corrector();
 
-        // step back from the current time value to the previous time
-        if (current > 0) {
-          current -= delta;
+      if (estack.top()) {
+        switch (estack.top()->getCode()) {
+        case EXCEPTION_NO_CONVERGENCE:
+          estack.pop();
+
+          // step back from the current time value to the previous time
+          if (current > 0) {
+            current -= delta;
+          }
+          // Reduce step-size (by half) if failed to converge.
+          delta /= 2;
+          if (delta <= deltaMin) {
+            // but do not reduce the step size below a specified minimum
+            delta = deltaMin;
+            // instead reduce the order of the integration
+            adjustOrder(1);
+          }
+          // step forward to the new current time value
+          if (current > 0)
+            current += delta;
+
+          // Update statistics.
+          statRejected++;
+          statConvergence++;
+          rejected++; // mark the previous step size choice as rejected
+          converged = 0;
+          error = 0;
+
+          // Start using damped Newton-Raphson.
+          convHelper = CONV_SteepestDescent;
+          convError = 2;
+          break;
+        default:
+          // Otherwise return.
+          estack.print();
+          return -1;
         }
-        // Reduce step-size (by half) if failed to converge.
-        delta /= 2;
-        if (delta <= deltaMin) {
-          // but do not reduce the step size below a specified minimum
-          delta = deltaMin;
-          // instead reduce the order of the integration
-          adjustOrder(1);
-        }
-        // step forward to the new current time value
-        if (current > 0)
-          current += delta;
-
-        // Update statistics.
-        statRejected++;
-        statConvergence++;
-        rejected++; // mark the previous step size choice as rejected
-        converged = 0;
-        error = 0;
-
-        // Start using damped Newton-Raphson.
-        convHelper = CONV_SteepestDescent;
-        convError = 2;
-#if DEBUG
-        logprint(LOG_ERROR,
-                 "WARNING: delta rejected at t = %.3e, h = %.3e "
-                 "(no convergence)\n",
-                 (double)saveCurrent, (double)delta);
-#endif
-        break;
-      default:
-        // Otherwise return.
-        estack.print();
-        return -1;
       }
 
       // return if any errors occurred other than convergence failure
-      if (error)
+      if (error) {
         return -1;
+      }
 
       // if the step was rejected, the solution loop is restarted here
-      if (rejected)
+      if (rejected) {
         continue;
+      }
 
       // check whether Jacobian matrix is still non-singular
       if (!A->isFinite()) {
@@ -296,8 +293,9 @@ int trsolver::solve() {
 
       // Update statistics and no more damped Newton-Raphson.
       statIterations += iterations;
-      if (--convError < 0)
+      if (--convError < 0) {
         convHelper = 0;
+      }
 
       // Now advance in time or not...
       if (running > 1) {
@@ -323,7 +321,7 @@ int trsolver::solve() {
       } else {
         initHistory(saveCurrent);
       }
-    } while (saveCurrent < time); // Hit a requested time point?
+    } while (saveCurrent < time);
 
     // Save results.
 #if STEPDEBUG
@@ -339,6 +337,7 @@ int trsolver::solve() {
   } // for (int i = 0; i < swp->getSize (); i++)
 
   solve_post();
+
   logprint(LOG_STATUS, "NOTIFY: %s: average time-step %g, %d rejections\n", getName(),
            (double)(saveCurrent / statSteps), statRejected);
   logprint(LOG_STATUS,

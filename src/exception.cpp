@@ -28,8 +28,6 @@
 
 using namespace qucs;
 
-exception::exception() : code(EXCEPTION_UNKNOWN), data(0), text(nullptr), next(nullptr) {}
-
 exception::exception(const int code) : code(code), data(0), text(nullptr), next(nullptr) {}
 
 exception::~exception() { free(text); }

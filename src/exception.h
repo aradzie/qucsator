@@ -25,20 +25,15 @@
 namespace qucs {
 
 enum exception_type {
-  EXCEPTION_UNKNOWN = -1,
   EXCEPTION_PIVOT,
-  EXCEPTION_NA_FAILED,
   EXCEPTION_NO_CONVERGENCE,
-  EXCEPTION_ZERO_DIVISION,
-  EXCEPTION_WRONG_VOLTAGE,
   EXCEPTION_SINGULAR,
   EXCEPTION_MATH,
-  EXCEPTION_UNKNOWN_ETR_MODE,
 };
 
 class exception final {
 public:
-  exception();
+  exception() = delete;
   explicit exception(int);
   exception(const exception &) = delete;
   ~exception();

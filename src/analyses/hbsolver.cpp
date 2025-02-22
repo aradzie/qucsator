@@ -639,7 +639,6 @@ void hbsolver::invertMatrix (tmatrix<nr_complex_t> * A,
   }
   // appropriate exception handling
   catch_exception () {
-  case EXCEPTION_PIVOT:
   default:
     logprint (LOG_ERROR, "WARNING: %s: during TI inversion\n", getName ());
     estack.print ();
@@ -740,7 +739,6 @@ void hbsolver::createMatrixLinearY (void) {
   }
   // appropriate exception handling
   catch_exception () {
-  case EXCEPTION_PIVOT:
   default:
     logprint (LOG_ERROR, "WARNING: %s: during A factorization\n", getName ());
     estack.print ();
@@ -1259,7 +1257,6 @@ void hbsolver::solveVoltages (void) {
   }
   // appropriate exception handling
   catch_exception () {
-  case EXCEPTION_PIVOT:
   default:
     logprint (LOG_ERROR, "WARNING: %s: during NR iteration\n", getName ());
     estack.print ();
@@ -1355,10 +1352,8 @@ void hbsolver::finalSolution (void) {
   }
   // appropriate exception handling
   catch_exception () {
-  case EXCEPTION_PIVOT:
   default:
-    logprint (LOG_ERROR, "WARNING: %s: during final AC analysis\n",
-	      getName ());
+    logprint (LOG_ERROR, "WARNING: %s: during final AC analysis\n", getName ());
     estack.print ();
   }
   for (int i = 0; i < N; i++) x->set (i, V_(i));
