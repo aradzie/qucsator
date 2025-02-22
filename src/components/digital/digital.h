@@ -22,39 +22,38 @@
 #ifndef __DIGITAL_H__
 #define __DIGITAL_H__
 
-class digital : public qucs::circuit
-{
- public:
-  digital ();
-  ~digital ();
-  void initSP (void);
-  void calcSP (double);
-  void initDC (void);
-  void calcDC (void);
-  void initAC (void);
-  void calcAC (double);
-  void initTR (void);
-  void calcTR (double);
-  void calcOperatingPoints (void);
+class digital : public qucs::circuit {
+public:
+  digital();
+  ~digital();
+  void calcAC(double) override;
+  void calcDC() override;
+  void calcSP(double) override;
+  void calcTR(double) override;
+  void initAC() override;
+  void initDC() override;
+  void initSP() override;
+  void initTR() override;
+  void calcOperatingPoints() override;
 
- protected:
-  virtual void calcOutput (void) { }
-  virtual void calcDerivatives (void) { }
-  double getVin (int);
-  double calcTransfer (int);
-  double calcTransferX (int);
-  double calcDerivative (int);
-  double calcDerivativeX (int);
+protected:
+  virtual void calcOutput() {}
+  virtual void calcDerivatives() {}
+  double getVin(int);
+  double calcTransfer(int);
+  double calcTransferX(int);
+  double calcDerivative(int);
+  double calcDerivativeX(int);
 
- protected:
-  double * g;
+protected:
+  double *g;
   double Vout, Veq, Tdelay;
   int i;
   bool delay;
 
- private:
-  void initDigital (void);
-  void freeDigital (void);
+private:
+  void initDigital();
+  void freeDigital();
 };
 
 #endif /* __DIGITAL_H__ */

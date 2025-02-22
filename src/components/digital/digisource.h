@@ -22,17 +22,16 @@
 #ifndef __DIGISOURCE_H__
 #define __DIGISOURCE_H__
 
-class digisource : public qucs::circuit
-{
- public:
-  CREATOR (digisource);
-  void initSP (void);
-  void initDC (void);
-  void initAC (void);
-  void initTR (void);
-  void calcTR (double);
+class digisource final : public qucs::circuit {
+public:
+  CREATOR(digisource);
+  void initSP() override;
+  void initDC() override;
+  void initAC() override;
+  void initTR() override;
+  void calcTR(double) override;
 
- private:
+private:
   double T;
 };
 

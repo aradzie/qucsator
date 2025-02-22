@@ -22,12 +22,11 @@
 #ifndef __INVERTER_H__
 #define __INVERTER_H__
 
-class inverter : public digital
-{
- public:
-  CREATOR (inverter);
-  void calcOutput (void);
-  void calcDerivatives (void);
+class inverter final : public digital {
+public:
+  CREATOR(inverter);
+  void calcOutput() override;
+  void calcDerivatives() override;
 };
 
 #endif /* __INVERTER_H__ */

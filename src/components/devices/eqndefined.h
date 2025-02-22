@@ -22,42 +22,41 @@
 #ifndef __EQNDEFINED_H__
 #define __EQNDEFINED_H__
 
-class eqndefined : public qucs::circuit
-{
- public:
-  CREATOR (eqndefined);
-  ~eqndefined ();
-  void initDC (void);
-  void calcDC (void);
-  void initAC (void);
-  void calcAC (double);
-  void saveOperatingPoints (void);
-  void initSP (void);
-  void calcSP (double);
-  void initTR (void);
-  void calcTR (double);
-  void initHB (int);
-  void calcHB (int);
+class eqndefined final : public qucs::circuit {
+public:
+  CREATOR(eqndefined);
+  ~eqndefined();
+  void calcAC(double) override;
+  void calcDC() override;
+  void calcHB(int) override;
+  void calcSP(double) override;
+  void calcTR(double) override;
+  void initAC() override;
+  void initDC() override;
+  void initHB(int) override;
+  void initSP() override;
+  void initTR() override;
+  void saveOperatingPoints() override;
 
- private:
-  void initModel (void);
-  char * createVariable (const char *, int, int, bool prefix = true);
-  char * createVariable (const char *, int, bool prefix = true);
-  void setResult (void *, double);
-  double getResult (void *);
-  qucs::matrix calcMatrixY (double);
-  void evalOperatingPoints (void);
-  void updateLocals (void);
+private:
+  void initModel();
+  char *createVariable(const char *, int, int, bool prefix = true);
+  char *createVariable(const char *, int, bool prefix = true);
+  void setResult(void *, double);
+  double getResult(void *);
+  qucs::matrix calcMatrixY(double);
+  void evalOperatingPoints();
+  void updateLocals();
 
- private:
-  void ** veqn;
-  void ** ieqn;
-  void ** geqn;
-  void ** qeqn;
-  void ** ceqn;
-  double * _jstat;
-  double * _jdyna;
-  double * _charges;
+private:
+  void **veqn;
+  void **ieqn;
+  void **geqn;
+  void **qeqn;
+  void **ceqn;
+  double *_jstat;
+  double *_jdyna;
+  double *_charges;
   bool doHB;
 };
 

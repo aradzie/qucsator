@@ -22,12 +22,11 @@
 #ifndef __NOR_H__
 #define __NOR_H__
 
-class logicnor : public digital
-{
- public:
-  CREATOR (logicnor);
-  void calcOutput (void);
-  void calcDerivatives (void);
+class logicnor final : public digital {
+public:
+  CREATOR(logicnor);
+  void calcOutput() override;
+  void calcDerivatives() override;
 };
 
 #endif /* __NOR_H__ */

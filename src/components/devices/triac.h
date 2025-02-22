@@ -24,29 +24,28 @@
 
 #include "devstates.h"
 
-class triac : public qucs::circuit, public qucs::devstates
-{
- public:
-  CREATOR (triac);
-  void calcSP (double);
-  void initDC (void);
-  void calcDC (void);
-  void saveOperatingPoints (void);
-  void loadOperatingPoints (void);
-  void calcOperatingPoints (void);
-  void initAC (void);
-  void calcAC (double);
-  void initTR (void);
-  void calcTR (double);
+class triac final : public qucs::circuit, public qucs::devstates {
+public:
+  CREATOR(triac);
+  void calcAC(double) override;
+  void calcDC() override;
+  void calcSP(double) override;
+  void calcTR(double) override;
+  void initAC() override;
+  void initDC() override;
+  void initTR() override;
+  void saveOperatingPoints() override;
+  void loadOperatingPoints();
+  void calcOperatingPoints() override;
 
- private:
+private:
   double Ud, gd, Id, Qi, gi, Ui;
 
   double time_prev, Ud_last;
-  void calcTheModel (bool);
+  void calcTheModel(bool);
 
- private:
-  qucs::matrix calcMatrixY (double);
+private:
+  qucs::matrix calcMatrixY(double);
 };
 
 #endif /* __TRIAC_H__ */

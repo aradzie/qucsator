@@ -22,41 +22,40 @@
 #ifndef __MOSFET_H__
 #define __MOSFET_H__
 
-class mosfet : public qucs::circuit
-{
- public:
-  CREATOR (mosfet);
-  void calcSP (double);
-  void calcNoiseSP (double);
-  void calcDC (void);
-  void initDC (void);
-  void restartDC (void);
-  void initModel (void);
-  void saveOperatingPoints (void);
-  void calcOperatingPoints (void);
-  void loadOperatingPoints (void);
-  void initAC (void);
-  void calcAC (double);
-  void calcNoiseAC (double);
-  void initTR (void);
-  void calcTR (double);
+class mosfet final : public qucs::circuit {
+public:
+  CREATOR(mosfet);
+  void calcAC(double) override;
+  void calcDC() override;
+  void calcNoiseAC(double) override;
+  void calcNoiseSP(double) override;
+  void calcSP(double) override;
+  void calcTR(double) override;
+  void initAC() override;
+  void initDC() override;
+  void initTR() override;
+  void restartDC() override;
+  void saveOperatingPoints() override;
+  void loadOperatingPoints();
+  void calcOperatingPoints() override;
 
- private:
-  double transientChargeTR (int, double&, double, double);
-  double transientChargeSR (int, double&, double, double);
-  qucs::matrix calcMatrixY (double);
-  qucs::matrix calcMatrixCy (double);
+private:
+  void initModel();
+  double transientChargeTR(int, double &, double, double);
+  double transientChargeSR(int, double &, double, double);
+  qucs::matrix calcMatrixY(double);
+  qucs::matrix calcMatrixCy(double);
 
- private:
+private:
   double UbsPrev, UbdPrev, UgsPrev, UgdPrev, UdsPrev, Udsat, Uon;
   double gbs, gbd, gm, gds, gmb, Ids, DrainControl, SourceControl;
   double Leff, MOSdir, beta, Cox, Phi, Ga, Vto, Rs, Rd;
   double Qgd, Qgs, Qbd, Qbs, Qgb, Ibs, Ibd;
   double Ugd, Ugs, Ubs, Ubd, Uds, Ugb;
   int transientMode;
-  qucs::circuit * rs;
-  qucs::circuit * rd;
-  qucs::circuit * rg;
+  qucs::circuit *rs;
+  qucs::circuit *rd;
+  qucs::circuit *rg;
 };
 
 #endif /* __MOSFET_H__ */

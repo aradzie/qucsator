@@ -22,12 +22,11 @@
 #ifndef __NAND_H__
 #define __NAND_H__
 
-class logicnand : public digital
-{
- public:
-  CREATOR (logicnand);
-  void calcOutput (void);
-  void calcDerivatives (void);
+class logicnand final : public digital {
+public:
+  CREATOR(logicnand);
+  void calcOutput() override;
+  void calcDerivatives() override;
 };
 
 #endif /* __NAND_H__ */

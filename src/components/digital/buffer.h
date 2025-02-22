@@ -22,12 +22,11 @@
 #ifndef __BUFFER_H__
 #define __BUFFER_H__
 
-class buffer : public digital
-{
- public:
-  CREATOR (buffer);
-  void calcOutput (void);
-  void calcDerivatives (void);
+class buffer final : public digital {
+public:
+  CREATOR(buffer);
+  void calcOutput() override;
+  void calcDerivatives() override;
 };
 
 #endif /* __BUFFER_H__ */

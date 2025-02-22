@@ -35,8 +35,8 @@ public:
   int solve() override;
 
 private:
-  static void calcDC(dcsolver *);
   void initDC();
+  static void calcDC(dcsolver *);
   void restartDC();
   void saveOperatingPoints();
 

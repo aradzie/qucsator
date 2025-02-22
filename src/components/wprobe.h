@@ -2,8 +2,8 @@
  * wprobe.h - AC/DC and transient watt probe class definitions
  *
  * Copyright (C) 2015, Pedro Macedo
- *		 2017, Alberto Silva, 1120196@isep.ipp.pt	
- *		
+ *		 2017, Alberto Silva, 1120196@isep.ipp.pt
+ *
  * This file is part of Qucs
  *
  * Qucs is free software; you can redistribute it and/or modify
@@ -21,20 +21,17 @@
  *
  */
 
-//Taking vprobe as a basis
-
 #ifndef __WPROBE_H__
 #define __WPROBE_H__
 
-class wprobe : public qucs::circuit
-{
- public:
-  CREATOR (wprobe);
-  void initDC (void);
-  void initAC (void);
-  void initTR (void);
-  void saveOperatingPoints (void);
-  void calcOperatingPoints (void);
+class wprobe final : public qucs::circuit {
+public:
+  CREATOR(wprobe);
+  void initDC() override;
+  void initAC() override;
+  void initTR() override;
+  void saveOperatingPoints() override;
+  void calcOperatingPoints() override;
 };
 
 #endif /* __WPROBE_H__ */

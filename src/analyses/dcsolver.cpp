@@ -100,37 +100,37 @@ int dcsolver::solve() {
     bool retry;
     do {
       retry = false;
-      try_running() {
-        // Run the DC solver once.
-        applyNodeset();
-        error = solve_nonlinear();
+      // Run the DC solver once.
+      applyNodeset();
+      error = solve_nonlinear();
 #if DEBUG
-        if (!error) {
-          logprint(LOG_STATUS, "NOTIFY: %s: convergence reached after %d iterations\n", getName(),
-                   iterations);
-        }
-#endif /* DEBUG */
+      if (!error) {
+        logprint(LOG_STATUS, "NOTIFY: %s: convergence reached after %d iterations\n", getName(),
+                 iterations);
       }
-      catch_exception() {
-      case EXCEPTION_NO_CONVERGENCE:
-        pop_exception();
-        if (preferredHelper && preferredHelper == helpers[fallback]) {
-          fallback++; // Skip the preferred helper.
+#endif /* DEBUG */
+      if (estack.top()) {
+        switch (estack.top()->getCode()) {
+        case EXCEPTION_NO_CONVERGENCE:
+          estack.pop();
+          if (preferredHelper && preferredHelper == helpers[fallback]) {
+            fallback++; // Skip the preferred helper.
+          }
+          convHelper = helpers[fallback++];
+          if (convHelper != -1) {
+            logprint(LOG_ERROR,
+                     "WARNING: %s: %s analysis failed, using fallback "
+                     "#%d (%s)\n",
+                     getName(), getDescription().c_str(), fallback, getHelperDescription());
+            retry = true;
+            restartDC();
+          }
+          break;
+        default:
+          estack.print();
+          error = 1;
+          break;
         }
-        convHelper = helpers[fallback++];
-        if (convHelper != -1) {
-          logprint(LOG_ERROR,
-                   "WARNING: %s: %s analysis failed, using fallback "
-                   "#%d (%s)\n",
-                   getName(), getDescription().c_str(), fallback, getHelperDescription());
-          retry = true;
-          restartDC();
-        }
-        break;
-      default:
-        estack.print();
-        error = 1;
-        break;
       }
     } while (retry);
   }

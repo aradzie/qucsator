@@ -22,12 +22,11 @@
 #ifndef __XOR_H__
 #define __XOR_H__
 
-class logicxor : public digital
-{
- public:
-  CREATOR (logicxor);
-  void calcOutput (void);
-  void calcDerivatives (void);
+class logicxor final : public digital {
+public:
+  CREATOR(logicxor);
+  void calcOutput() override;
+  void calcDerivatives() override;
 };
 
 #endif /* __XOR_H__ */

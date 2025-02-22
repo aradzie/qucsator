@@ -22,12 +22,11 @@
 #ifndef __AND_H__
 #define __AND_H__
 
-class logicand : public digital
-{
- public:
-  CREATOR (logicand);
-  void calcOutput (void);
-  void calcDerivatives (void);
+class logicand final : public digital {
+public:
+  CREATOR(logicand);
+  void calcOutput() override;
+  void calcDerivatives() override;
 };
 
 #endif /* __AND_H__ */

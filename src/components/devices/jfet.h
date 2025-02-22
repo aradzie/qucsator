@@ -22,34 +22,33 @@
 #ifndef __JFET_H__
 #define __JFET_H__
 
-class jfet : public qucs::circuit
-{
- public:
-  CREATOR (jfet);
-  void calcSP (double);
-  void calcNoiseSP (double);
-  void calcDC (void);
-  void initDC (void);
-  void restartDC (void);
-  void saveOperatingPoints (void);
-  void calcOperatingPoints (void);
-  void loadOperatingPoints (void);
-  void initAC (void);
-  void calcAC (double);
-  void calcNoiseAC (double);
-  void initTR (void);
-  void calcTR (double);
+class jfet final : public qucs::circuit {
+public:
+  CREATOR(jfet);
+  void calcAC(double) override;
+  void calcDC() override;
+  void calcNoiseAC(double) override;
+  void calcNoiseSP(double) override;
+  void calcSP(double) override;
+  void calcTR(double) override;
+  void initAC() override;
+  void initDC() override;
+  void initTR() override;
+  void restartDC() override;
+  void saveOperatingPoints() override;
+  void loadOperatingPoints();
+  void calcOperatingPoints() override;
 
- private:
-  qucs::matrix calcMatrixY (double);
-  qucs::matrix calcMatrixCy (double);
-  void initModel (void);
+private:
+  qucs::matrix calcMatrixY(double);
+  qucs::matrix calcMatrixCy(double);
+  void initModel();
 
- private:
+private:
   double Ugs, Ugd, Uds, UgsPrev, UgdPrev;
   double ggs, ggd, gm, gds, Ids, Qgs, Qgd;
-  qucs::circuit * rs;
-  qucs::circuit * rd;
+  qucs::circuit *rs;
+  qucs::circuit *rd;
 };
 
 #endif /* __JFET_H__ */

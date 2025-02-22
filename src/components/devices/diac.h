@@ -24,27 +24,26 @@
 
 #include "devstates.h"
 
-class diac : public qucs::circuit, public qucs::devstates
-{
- public:
-  CREATOR (diac);
-  void calcSP (double);
-  void initDC (void);
-  void calcDC (void);
-  void saveOperatingPoints (void);
-  void loadOperatingPoints (void);
-  void calcOperatingPoints (void);
-  void initAC (void);
-  void calcAC (double);
-  void initTR (void);
-  void calcTR (double);
+class diac final : public qucs::circuit, public qucs::devstates {
+public:
+  CREATOR(diac);
+  void calcAC(double) override;
+  void calcDC() override;
+  void calcSP(double) override;
+  void calcTR(double) override;
+  void initAC() override;
+  void initDC() override;
+  void initTR() override;
+  void saveOperatingPoints() override;
+  void loadOperatingPoints();
+  void calcOperatingPoints() override;
 
- private:
+private:
   double Ud, gd, Id, Qi, gi, Ui, Ud_last, time_prev;
 
- private:
-  void calcTheModel (bool);
-  qucs::matrix calcMatrixY (double);
+private:
+  void calcTheModel(bool);
+  qucs::matrix calcMatrixY(double);
 };
 
 #endif /* __DIAC_H__ */

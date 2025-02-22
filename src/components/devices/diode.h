@@ -24,35 +24,34 @@
 
 #include "devstates.h"
 
-class diode : public qucs::circuit, public qucs::devstates
-{
- public:
-  CREATOR (diode);
-  void calcSP (double);
-  void calcNoiseSP (double);
-  void initDC (void);
-  void calcDC (void);
-  void restartDC (void);
-  void saveOperatingPoints (void);
-  void loadOperatingPoints (void);
-  void calcOperatingPoints (void);
-  void initAC (void);
-  void calcAC (double);
-  void calcNoiseAC (double);
-  void initTR (void);
-  void calcTR (double);
-  void initHB (int);
-  void calcHB (int);
+class diode final : public qucs::circuit, public qucs::devstates {
+public:
+  CREATOR(diode);
+  void calcAC(double) override;
+  void calcDC() override;
+  void calcHB(int) override;
+  void calcNoiseAC(double) override;
+  void calcNoiseSP(double) override;
+  void calcSP(double) override;
+  void calcTR(double) override;
+  void initAC() override;
+  void initDC() override;
+  void initHB(int) override;
+  void initTR() override;
+  void restartDC() override;
+  void saveOperatingPoints() override;
+  void loadOperatingPoints();
+  void calcOperatingPoints() override;
 
- private:
+private:
   double Ud, gd, Id, Qd, Bv;
-  qucs::circuit * rs;
+  qucs::circuit *rs;
   bool doHB;
 
- private:
-  qucs::matrix calcMatrixCy (double);
-  void prepareDC (void);
-  void initModel (void);
+private:
+  qucs::matrix calcMatrixCy(double);
+  void prepareDC();
+  void initModel();
 };
 
 #endif /* __DIODE_H__ */

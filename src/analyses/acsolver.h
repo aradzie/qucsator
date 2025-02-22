@@ -36,9 +36,11 @@ public:
   acsolver(const acsolver &) = delete;
   ~acsolver() override;
   int solve() override;
+
+private:
   void solve_noise();
-  static void calc(acsolver *);
-  void init();
+  void initAC();
+  static void calcAC(acsolver *);
   void saveAllResults(double);
   void saveNoiseResults(qucs::vector *);
 

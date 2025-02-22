@@ -22,24 +22,23 @@
 #ifndef __RESISTOR_H__
 #define __RESISTOR_H__
 
-class resistor : public qucs::circuit
-{
- public:
-  CREATOR (resistor);
-  void initSP (void);
-  void calcSP (double);
-  void calcNoiseSP (double);
-  void calcDC (void);
-  void initDC (void);
-  void calcAC (double);
-  void calcNoiseAC (double);
-  void initAC (void);
-  void calcTR (double);
-  void initTR (void);
-  void initHB (void);
+class resistor final : public qucs::circuit {
+public:
+  CREATOR(resistor);
+  void initSP() override;
+  void calcSP(double) override;
+  void calcNoiseSP(double) override;
+  void calcDC() override;
+  void initDC() override;
+  void calcAC(double) override;
+  void calcNoiseAC(double) override;
+  void initAC() override;
+  void calcTR(double) override;
+  void initTR() override;
+  void initHB() override;
 
- private:
-  void initModel (void);
+private:
+  void initModel();
 };
 
 #endif /* __RESISTOR_H__ */

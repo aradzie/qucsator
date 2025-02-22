@@ -22,12 +22,11 @@
 #ifndef __OR_H__
 #define __OR_H__
 
-class logicor : public digital
-{
- public:
-  CREATOR (logicor);
-  void calcOutput (void);
-  void calcDerivatives (void);
+class logicor final : public digital {
+public:
+  CREATOR(logicor);
+  void calcOutput() override;
+  void calcDerivatives() override;
 };
 
 #endif /* __OR_H__ */

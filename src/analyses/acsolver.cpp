@@ -21,173 +21,177 @@
 
 #include <cstring>
 
-#include "constants.h"
-#include "object.h"
-#include "complex.h"
+#include "acsolver.h"
+#include "analysis.h"
 #include "circuit.h"
+#include "complex.h"
+#include "constants.h"
 #include "dataset.h"
-#include "sweep.h"
+#include "nasolver.h"
 #include "net.h"
 #include "netdefs.h"
-#include "analysis.h"
-#include "nasolver.h"
-#include "acsolver.h"
-#include "vector.h"
 #include "node.h"
+#include "object.h"
+#include "sweep.h"
+#include "vector.h"
 
 namespace qucs {
 
-acsolver::acsolver () : nasolver<nr_complex_t> () {
-  swp = NULL;
+acsolver::acsolver() : nasolver<nr_complex_t>() {
+  swp = nullptr;
   type = ANALYSIS_AC;
-  setDescription ("AC");
-  xn = NULL;
+  setDescription("AC");
+  xn = nullptr;
   noise = 0;
 }
 
-acsolver::acsolver (char * n) : nasolver<nr_complex_t> (n) {
-  swp = NULL;
+acsolver::acsolver(char *n) : nasolver<nr_complex_t>(n) {
+  swp = nullptr;
   type = ANALYSIS_AC;
-  setDescription ("AC");
-  xn = NULL;
+  setDescription("AC");
+  xn = nullptr;
   noise = 0;
 }
 
-acsolver::~acsolver () {
+acsolver::~acsolver() {
   delete swp;
   delete xn;
 }
 
-/* This is the AC netlist solver.  It prepares the circuit list for
-   each requested frequency and solves it then. */
-int acsolver::solve (void) {
+int acsolver::solve() {
   runs++;
 
-  // run additional noise analysis ?
-  noise = !strcmp (getPropertyString ("Noise"), "yes") ? 1 : 0;
+  noise = !strcmp(getPropertyString("Noise"), "yes") ? 1 : 0;
 
-  // create frequency sweep if necessary
-  if (swp == NULL) {
-    swp = createSweep ("acfrequency");
+  if (swp == nullptr) {
+    swp = createSweep("acfrequency");
   }
 
   // initialize node voltages, first guess for non-linear circuits and
   // generate extra circuits if necessary
-  init ();
-  setCalculation ((calculate_func_t) &calc);
-  solve_pre ();
+  initAC();
+  setCalculation((calculate_func_t)&calcAC);
 
-  swp->reset ();
-  for (int i = 0; i < swp->getSize (); i++) {
-    freq = swp->next ();
+  solve_pre();
 
-#if DEBUG && 0
-    logprint (LOG_STATUS, "NOTIFY: %s: solving netlist for f = %e\n",
-	      getName (), (double) freq);
+  swp->reset();
+  for (int i = 0; i < swp->getSize(); i++) {
+    freq = swp->next();
+
+#if DEBUG
+    logprint(LOG_STATUS, "NOTIFY: %s: solving netlist for f = %e\n", getName(), (double)freq);
 #endif
 
-    // start the linear solver
     eqnAlgo = ALGO_LU_DECOMPOSITION;
-    solve_linear ();
+    solve_linear();
+    if (noise) {
+      solve_noise();
+    }
 
-    // compute noise if requested
-    if (noise) solve_noise ();
-
-    // save results
-    saveAllResults (freq);
+    saveAllResults(freq);
   }
-  solve_post ();
+
+  solve_post();
+
   return 0;
 }
 
-/* Goes through the list of circuit objects and runs its calcAC()
-   function. */
-void acsolver::calc (acsolver * self) {
-  circuit * root = self->getNet()->getRoot ();
-  for (circuit * c = root; c != NULL; c = (circuit *) c->getNext ()) {
-    c->calcAC (self->freq);
-    if (self->noise) c->calcNoiseAC (self->freq);
+/* Goes through the list of circuit objects and runs its initAC() function. */
+void acsolver::initAC() {
+  circuit *root = subnet->getRoot();
+  for (circuit *c = root; c != nullptr; c = c->getNext()) {
+    if (c->isNonLinear()) {
+      c->calcOperatingPoints();
+    }
+    c->initAC();
+    if (noise) {
+      c->initNoiseAC();
+    }
   }
 }
 
-/* Goes through the list of circuit objects and runs its initAC()
-   function. */
-void acsolver::init (void) {
-  circuit * root = subnet->getRoot ();
-  for (circuit * c = root; c != NULL; c = (circuit *) c->getNext ()) {
-    if (c->isNonLinear ()) c->calcOperatingPoints ();
-    c->initAC ();
-    if (noise) c->initNoiseAC ();
+/* Goes through the list of circuit objects and runs its calcAC() function. */
+void acsolver::calcAC(acsolver *self) {
+  circuit *root = self->getNet()->getRoot();
+  for (circuit *c = root; c != nullptr; c = c->getNext()) {
+    c->calcAC(self->freq);
+    if (self->noise) {
+      c->calcNoiseAC(self->freq);
+    }
   }
 }
 
-/* This function saves the results of a single solve() functionality
-   (for the given frequency) into the output dataset. */
-void acsolver::saveAllResults (double freq) {
-  qucs::vector * f;
+/* Saves the results of a single solve() functionality (for the given frequency)
+ * into the output dataset. */
+void acsolver::saveAllResults(double freq) {
+  qucs::vector *f = data->findDependency("acfrequency");
   // add current frequency to the dependency of the output dataset
-  if ((f = data->findDependency ("acfrequency")) == NULL) {
-    f = new qucs::vector ("acfrequency");
-    data->addDependency (f);
+  if (f == nullptr) {
+    data->addDependency(f = new qucs::vector("acfrequency"));
   }
-  if (runs == 1) f->add (freq);
-  saveResults ("v", "i", 0, f);
+  if (runs == 1) {
+    f->add(freq);
+  }
+  saveResults("v", "i", 0, f);
 
   // additionally save noise results if requested
   if (noise) {
-    saveNoiseResults (f);
+    saveNoiseResults(f);
   }
 }
 
-/* The function computes the final noise results and puts them into
-   the output dataset. */
-void acsolver::saveNoiseResults (qucs::vector * f) {
-  int N = countNodes ();
-  int M = countVoltageSources ();
+/* Computes the final noise results and puts them into the output dataset. */
+void acsolver::saveNoiseResults(qucs::vector *f) {
+  const int N = countNodes();
+  const int M = countVoltageSources();
   for (int r = 0; r < N + M; r++) {
     // renormalise the results
-    x->set (r, fabs (xn->get (r) * sqrt (kB * T0)));
+    x->set(r, fabs(xn->get(r) * sqrt(kB * T0)));
   }
 
   // apply probe data
-  circuit * root = subnet->getRoot ();
-  for (circuit * c = root; c != NULL; c = (circuit *) c->getNext ()) {
-    if (!c->isProbe ()) continue;
+  circuit *root = subnet->getRoot();
+  for (circuit *c = root; c != nullptr; c = c->getNext()) {
+    if (!c->isProbe())
+      continue;
     int np, nn;
     double vp, vn;
-    np = getNodeNr (c->getNode (NODE_1)->getName ());
-    vp = np > 0 ? xn->get (np - 1) : 0.0;
-    nn = getNodeNr (c->getNode (NODE_2)->getName ());
-    vn = nn > 0 ? xn->get (nn - 1) : 0.0;
-    c->setOperatingPoint ("Vr", fabs ((vp - vn) * sqrt (kB * T0)));
-    c->setOperatingPoint ("Vi", 0.0);
+    np = getNodeNr(c->getNode(NODE_1)->getName());
+    vp = np > 0 ? xn->get(np - 1) : 0.0;
+    nn = getNodeNr(c->getNode(NODE_2)->getName());
+    vn = nn > 0 ? xn->get(nn - 1) : 0.0;
+    c->setOperatingPoint("Vr", fabs((vp - vn) * sqrt(kB * T0)));
+    c->setOperatingPoint("Vi", 0.0);
   }
 
-  saveResults ("vn", "in", 0, f);
+  saveResults("vn", "in", 0, f);
 }
 
-/* This function runs the AC noise analysis.  It saves its results in
+/* Tuns the AC noise analysis.  It saves its results in
    the 'xn' vector. */
-void acsolver::solve_noise (void) {
-  int N = countNodes ();
-  int M = countVoltageSources ();
+void acsolver::solve_noise() {
+  const int N = countNodes();
+  const int M = countVoltageSources();
 
   // save usual AC results
   tvector<nr_complex_t> xsave = *x;
 
   // create the Cy matrix
-  createNoiseMatrix ();
+  createNoiseMatrix();
+
   // create noise result vector if necessary
-  if (xn == NULL) xn = new tvector<double> (N + M);
+  if (xn == nullptr) {
+    xn = new tvector<double>(N + M);
+  }
 
   // temporary result vector for transimpedances
-  tvector<nr_complex_t> zn = tvector<nr_complex_t> (N + M);
+  tvector<nr_complex_t> zn = tvector<nr_complex_t>(N + M);
 
   // create the MNA matrix once again and LU decompose the adjoint matrix
-  createMatrix ();
-  A->transpose ();
+  createMatrix();
+  A->transpose();
   eqnAlgo = ALGO_LU_FACTORIZATION_CROUT;
-  runMNA ();
+  runMNA();
 
   // ensure skipping LU decomposition
   updateMatrix = 0;
@@ -196,30 +200,31 @@ void acsolver::solve_noise (void) {
 
   // compute noise voltage for each node (and voltage source)
   for (int i = 0; i < N + M; i++) {
-    z->set (0); z->set (i, -1); // modify right hand side appropriately
-    runMNA ();                  // solve
-    zn = *x;                    // save transimpedance vector
+    z->set(0);
+    z->set(i, -1); // modify right hand side appropriately
+    runMNA();      // solve
+    zn = *x;       // save transimpedance vector
 
     // compute actual noise voltage
-    xn->set (i, sqrt (real (scalar (zn * (*C), conj (zn)))));
+    xn->set(i, sqrt(real(scalar(zn * (*C), conj(zn)))));
   }
 
   // restore usual AC results
   *x = xsave;
 }
 
-// properties
-PROP_REQ [] = {
-  { "Type", PROP_STR, { PROP_NO_VAL, "lin" }, PROP_RNG_TYP },
-  PROP_NO_PROP };
-PROP_OPT [] = {
-  { "Noise", PROP_STR, { PROP_NO_VAL, "no" }, PROP_RNG_YESNO },
-  { "Start", PROP_REAL, { 1e9, PROP_NO_STR }, PROP_POS_RANGE },
-  { "Stop", PROP_REAL, { 10e9, PROP_NO_STR }, PROP_POS_RANGE },
-  { "Points", PROP_INT, { 10, PROP_NO_STR }, PROP_MIN_VAL (2) },
-  { "Values", PROP_LIST, { 10, PROP_NO_STR }, PROP_POS_RANGE },
-  PROP_NO_PROP };
-struct define_t acsolver::anadef =
-  { "AC", 0, PROP_ACTION, PROP_NO_SUBSTRATE, PROP_LINEAR, PROP_DEF };
+PROP_REQ[] = {
+    {"Type", PROP_STR, {PROP_NO_VAL, "lin"}, PROP_RNG_TYP},
+    PROP_NO_PROP,
+};
+PROP_OPT[] = {
+    {"Noise", PROP_STR, {PROP_NO_VAL, "no"}, PROP_RNG_YESNO},
+    {"Start", PROP_REAL, {1e9, PROP_NO_STR}, PROP_POS_RANGE},
+    {"Stop", PROP_REAL, {10e9, PROP_NO_STR}, PROP_POS_RANGE},
+    {"Points", PROP_INT, {10, PROP_NO_STR}, PROP_MIN_VAL(2)},
+    {"Values", PROP_LIST, {10, PROP_NO_STR}, PROP_POS_RANGE},
+    PROP_NO_PROP,
+};
+struct define_t acsolver::anadef = {"AC", 0, PROP_ACTION, PROP_NO_SUBSTRATE, PROP_LINEAR, PROP_DEF};
 
 } // namespace qucs

@@ -22,19 +22,18 @@
 #ifndef __OPAMP_H__
 #define __OPAMP_H__
 
-class opamp : public qucs::circuit
-{
- public:
-  CREATOR (opamp);
-  void initSP (void);
-  void initDC (void);
-  void calcDC (void);
-  void initAC (void);
-  void initTR (void);
-  void calcTR (double);
-  void calcOperatingPoints (void);
+class opamp final : public qucs::circuit {
+public:
+  CREATOR(opamp);
+  void calcDC();
+  void calcTR(double);
+  void initAC();
+  void initDC();
+  void initSP();
+  void initTR();
+  void calcOperatingPoints();
 
- private:
+private:
   double gv;
 };
 

@@ -38,6 +38,9 @@ public:
   trsolver(const trsolver &) = delete;
   ~trsolver() override;
   int solve() override;
+
+private:
+  int dcAnalysis();
   int predictor();
   int corrector();
   void nextStates();
@@ -63,9 +66,8 @@ public:
   void predictGear();
   void initCircuitTR(circuit *);
   void fillSolution(tvector<double> *);
-  int dcAnalysis();
 
-protected:
+private:
   sweep *swp;
   double predCoeff[8];
   double corrCoeff[8];

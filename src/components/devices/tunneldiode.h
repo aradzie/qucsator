@@ -22,28 +22,27 @@
 #ifndef __TUNNELDIODE_H__
 #define __TUNNELDIODE_H__
 
-class tunneldiode : public qucs::circuit
-{
- public:
-  CREATOR (tunneldiode);
-  void calcSP (double);
-  void initDC (void);
-  void calcDC (void);
-  void saveOperatingPoints (void);
-  void loadOperatingPoints (void);
-  void calcOperatingPoints (void);
-  void initAC (void);
-  void calcAC (double);
-  void initTR (void);
-  void calcTR (double);
+class tunneldiode final : public qucs::circuit {
+public:
+  CREATOR(tunneldiode);
+  void calcAC(double) override;
+  void calcDC() override;
+  void calcSP(double) override;
+  void calcTR(double) override;
+  void initAC() override;
+  void initDC() override;
+  void initTR() override;
+  void saveOperatingPoints() override;
+  void loadOperatingPoints();
+  void calcOperatingPoints() override;
 
- private:
+private:
   double Ud, gd, Id, Qd;
 
- private:
-  qucs::matrix calcMatrixY (double);
+private:
+  qucs::matrix calcMatrixY(double);
 
-  void calcId (double, double&, double&);
+  void calcId(double, double &, double &);
 };
 
 #endif /* __TUNNELDIODE_H__ */
