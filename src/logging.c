@@ -31,7 +31,7 @@ FILE *file_error = NULL;
 
 /* This function prints the given messages format and the appropriate
    arguments to a FILE stream depending on the given log level. */
-void logprint(int level, const char *format, ...) {
+void logprint(const int level, const char *format, ...) {
   FILE *f = level == LOG_STATUS ? file_status : file_error;
   if (f != NULL) {
     va_list args;

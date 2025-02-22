@@ -67,9 +67,9 @@ public:
   }
   const char *getHelperDescription();
 
-  /// Returns the number of node voltages in the circuit.
+  // Returns the number of node voltages in the circuit.
   int getN();
-  /// Returns the number of branch currents in the circuit.
+  // Returns the number of branch currents in the circuit.
   int getM();
 
 protected:
@@ -88,7 +88,7 @@ protected:
   void createMatrix();
   void storeSolution();
   void recallSolution();
-  int checkConvergence();
+  bool checkConvergence();
 
 private:
   void assignVoltageSources();
@@ -112,9 +112,9 @@ private:
 
 protected:
   tvector<nr_type_t> *z;
+  tvector<nr_type_t> *zprev;
   tvector<nr_type_t> *x;
   tvector<nr_type_t> *xprev;
-  tvector<nr_type_t> *zprev;
   tmatrix<nr_type_t> *A;
   tmatrix<nr_type_t> *C;
   int iterations;

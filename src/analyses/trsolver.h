@@ -41,7 +41,7 @@ public:
 
 private:
   int dcAnalysis();
-  int predictor();
+  void predictor();
   int corrector();
   void nextStates();
   void fillStates();

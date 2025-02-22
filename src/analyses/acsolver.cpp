@@ -79,7 +79,7 @@ int acsolver::solve() {
     freq = swp->next();
 
 #if DEBUG
-    logprint(LOG_STATUS, "NOTIFY: %s: solving netlist for f = %e\n", getName(), (double)freq);
+    logprint(LOG_STATUS, "NOTIFY: %s: solving netlist for f = %e\n", getName(), freq);
 #endif
 
     eqnAlgo = ALGO_LU_DECOMPOSITION;
@@ -98,6 +98,8 @@ int acsolver::solve() {
 
 /* Goes through the list of circuit objects and runs its initAC() function. */
 void acsolver::initAC() {
+  logprint(LOG_STATUS, "NOTIFY: %s: acsolver::initAC()\n", getName());
+
   circuit *root = subnet->getRoot();
   for (circuit *c = root; c != nullptr; c = c->getNext()) {
     if (c->isNonLinear()) {
@@ -112,6 +114,8 @@ void acsolver::initAC() {
 
 /* Goes through the list of circuit objects and runs its calcAC() function. */
 void acsolver::calcAC(acsolver *self) {
+  logprint(LOG_STATUS, "NOTIFY: %s: acsolver::calcAC()\n", self->getName());
+
   circuit *root = self->getNet()->getRoot();
   for (circuit *c = root; c != nullptr; c = c->getNext()) {
     c->calcAC(self->freq);
@@ -124,6 +128,8 @@ void acsolver::calcAC(acsolver *self) {
 /* Saves the results of a single solve() functionality (for the given frequency)
  * into the output dataset. */
 void acsolver::saveAllResults(double freq) {
+  logprint(LOG_STATUS, "NOTIFY: %s: acsolver::saveAllResults(%e)\n", getName(), freq);
+
   qucs::vector *f = data->findDependency("acfrequency");
   // add current frequency to the dependency of the output dataset
   if (f == nullptr) {

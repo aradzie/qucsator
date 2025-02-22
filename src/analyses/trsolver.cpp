@@ -93,6 +93,8 @@ void trsolver::initSteps() {
 
 // Performs the initial DC analysis.
 int trsolver::dcAnalysis() {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::dcAnalysis()\n", getName());
+
   int error = 0;
 
   // First calculate the initial state using the non-linear DC analysis.
@@ -119,8 +121,7 @@ int trsolver::dcAnalysis() {
   default:
     // Otherwise return.
     estack.print();
-    error++;
-    break;
+    return -1;
   }
 
   // Save the DC solution.
@@ -137,6 +138,8 @@ int trsolver::dcAnalysis() {
 }
 
 int trsolver::solve() {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::solve()\n", getName());
+
   int error = 0, convError = 0;
   const char *const solver = getPropertyString("Solver");
   relaxTSR = !strcmp(getPropertyString("relaxTSR"), "yes") ? true : false;
@@ -219,7 +222,7 @@ int trsolver::solve() {
 
       // Run predictor to get a start value for the solution vector for
       // the successive iterative corrector process
-      error += predictor();
+      predictor();
 
       // restart Newton iteration
       if (rejected) {
@@ -271,9 +274,9 @@ int trsolver::solve() {
       default:
         // Otherwise return.
         estack.print();
-        error++;
-        break;
+        return -1;
       }
+
       // return if any errors occurred other than convergence failure
       if (error)
         return -1;
@@ -408,8 +411,8 @@ void trsolver::saveHistory(circuit *c) {
 }
 
 /* Predicts a start value for the solution vector for the successive iterative corrector process. */
-int trsolver::predictor() {
-  int error = 0;
+void trsolver::predictor() {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::predictor()\n", getName());
   switch (predType) {
   case INTEGRATOR_GEAR: // explicit GEAR
     predictGear();
@@ -426,7 +429,6 @@ int trsolver::predictor() {
   }
   saveSolution();
   *SOL(0) = *x;
-  return error;
 }
 
 // Stores the given vector into all the solution vectors.
@@ -484,7 +486,11 @@ void trsolver::predictGear() {
 
 /* Iterates through the solutions of the integration process
  * until a certain error tolerance has been reached. */
-int trsolver::corrector() { return solve_nonlinear(); }
+int trsolver::corrector() {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::corrector()\n", getName());
+
+  return solve_nonlinear();
+}
 
 // The function advances one more time-step.
 void trsolver::nextStates() {
@@ -623,6 +629,8 @@ void trsolver::adjustOrder(int reduce) {
 
 /* Goes through the list of circuit objects and runs its initDC() function. */
 void trsolver::initDC() {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::initDC()\n", getName());
+
   circuit *root = subnet->getRoot();
   for (circuit *c = root; c != nullptr; c = c->getNext()) {
     c->initDC();
@@ -631,6 +639,8 @@ void trsolver::initDC() {
 
 /* Goes through the list of circuit objects and runs its calcDC() function. */
 void trsolver::calcDC(trsolver *self) {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::calcDC()\n", self->getName());
+
   circuit *root = self->getNet()->getRoot();
   for (circuit *c = root; c != nullptr; c = c->getNext()) {
     c->calcDC();
@@ -639,6 +649,8 @@ void trsolver::calcDC(trsolver *self) {
 
 /* Goes through the list of circuit objects and runs its initTR() function. */
 void trsolver::initTR() {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::initTR()\n", getName());
+
   const char *const IMethod = getPropertyString("IntegrationMethod");
   double start = getPropertyDouble("Start");
   double stop = getPropertyDouble("Stop");
@@ -709,6 +721,8 @@ void trsolver::initTR() {
 
 /* Goes through the list of circuit objects and runs its calcTR() function. */
 void trsolver::calcTR(trsolver *self) {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::calcTR()\n", self->getName());
+
   circuit *root = self->getNet()->getRoot();
   for (circuit *c = root; c != nullptr; c = c->getNext()) {
     c->calcTR(self->current);
@@ -741,6 +755,8 @@ void trsolver::initCircuitTR(circuit *c) {
 /* Saves the results of a single solve() functionality
    (for the given timestamp) into the output dataset. */
 void trsolver::saveAllResults(double time) {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::saveAllResults(%e)\n", getName(), time);
+
   qucs::vector *t;
   // add current frequency to the dependency of the output dataset
   if ((t = data->findDependency("time")) == nullptr) {

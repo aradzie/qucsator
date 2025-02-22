@@ -49,6 +49,8 @@ dcsolver::dcsolver(char *n) : nasolver<double>(n) {
 dcsolver::~dcsolver() {}
 
 int dcsolver::solve() {
+  logprint(LOG_STATUS, "NOTIFY: %s: dcsolver::solve()\n", getName());
+
   saveOPs |= !strcmp(getPropertyString("saveOPs"), "yes") ? SAVE_OPS : 0;
   saveOPs |= !strcmp(getPropertyString("saveAll"), "yes") ? SAVE_ALL : 0;
 
@@ -56,8 +58,6 @@ int dcsolver::solve() {
   // generate extra circuits if necessary
   initDC();
   setCalculation((calculate_func_t)&calcDC);
-
-  solve_pre();
 
   const char *const solver = getPropertyString("Solver");
   if (!strcmp(solver, "CroutLU"))
@@ -90,6 +90,8 @@ int dcsolver::solve() {
       CONV_SourceStepping, CONV_GMinStepping, CONV_SteepestDescent,
       CONV_LineSearch,     CONV_Attenuation,  -1,
   };
+
+  solve_pre();
 
   int error = 0, fallback = 0;
   if (!subnet->isNonLinear()) {
@@ -128,8 +130,7 @@ int dcsolver::solve() {
           break;
         default:
           estack.print();
-          error = 1;
-          break;
+          return -1;
         }
       }
     } while (retry);
@@ -140,11 +141,14 @@ int dcsolver::solve() {
   saveResults("V", "I", saveOPs);
 
   solve_post();
+
   return error;
 }
 
 /* Goes through the list of circuit objects and runs their initDC() function. */
 void dcsolver::initDC() {
+  logprint(LOG_STATUS, "NOTIFY: %s: dcsolver::initDC()\n", getName());
+
   circuit *root = subnet->getRoot();
   for (circuit *c = root; c != nullptr; c = c->getNext()) {
     c->initDC();
@@ -153,6 +157,8 @@ void dcsolver::initDC() {
 
 /* Goes through the list of circuit objects and runs their calcDC() function. */
 void dcsolver::calcDC(dcsolver *self) {
+  logprint(LOG_STATUS, "NOTIFY: %s: dcsolver::calcDC()\n", self->getName());
+
   circuit *root = self->getNet()->getRoot();
   for (circuit *c = root; c != nullptr; c = c->getNext()) {
     c->calcDC();
@@ -162,6 +168,8 @@ void dcsolver::calcDC(dcsolver *self) {
 /* Goes through the list of non-linear circuit objects
  * and runs their restartDC() function. */
 void dcsolver::restartDC() {
+  logprint(LOG_STATUS, "NOTIFY: %s: dcsolver::restartDC()\n", getName());
+
   circuit *root = subnet->getRoot();
   for (circuit *c = root; c != nullptr; c = c->getNext()) {
     if (c->isNonLinear()) {
@@ -173,6 +181,8 @@ void dcsolver::restartDC() {
 /* Goes through the list of non-linear circuit objects
  * and runs its saveOperatingPoints() function. */
 void dcsolver::saveOperatingPoints() {
+  logprint(LOG_STATUS, "NOTIFY: %s: dcsolver::saveOperatingPoints()\n", getName());
+
   circuit *root = subnet->getRoot();
   for (circuit *c = root; c != nullptr; c = c->getNext()) {
     if (c->isNonLinear()) {

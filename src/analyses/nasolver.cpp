@@ -80,52 +80,57 @@ template <class nr_type_t> nasolver<nr_type_t>::~nasolver() {
 /* Runs the nodal analysis solver once, reports errors if any
  * and saves the results into each circuit. */
 template <class nr_type_t> int nasolver<nr_type_t>::solve_once() {
-  qucs::exception *e;
-  int error = 0, d;
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_once()\n", getName());
 
-  // run the calculation function for each circuit
+  int error = 0;
+
+  // run the calculation function such as calcDC, calcTR, etc, for each circuit
   calculate();
 
   // generate A matrix and z vector
   createMatrix();
 
-  try_running() {
-    runMNA(); // solve equation system
-  }
-  catch_exception() {
-  case EXCEPTION_PIVOT:
-  case EXCEPTION_WRONG_VOLTAGE:
-    e = new qucs::exception(EXCEPTION_NA_FAILED);
-    d = top_exception()->getData();
-    pop_exception();
-    if (d >= countNodes()) {
-      d -= countNodes();
-      e->setText("voltage source `%s' conflicts with some other voltage "
-                 "source",
-                 findVoltageSource(d)->getName());
-    } else {
-      e->setText("circuit admittance matrix in %s solver is singular at "
-                 "node `%s' connected to [%s]",
-                 desc.c_str(), nlist->get(d).c_str(), nlist->getNodeString(d).c_str());
-    }
-    throw_exception(e);
-    error++;
-    break;
-  case EXCEPTION_SINGULAR:
-    do {
-      d = top_exception()->getData();
-      pop_exception();
-      if (d < countNodes()) {
-        logprint(LOG_ERROR,
-                 "WARNING: %s: inserted virtual resistance at "
-                 "node `%s' connected to [%s]\n",
-                 getName(), nlist->get(d).c_str(), nlist->getNodeString(d).c_str());
+  // solve equation system
+  runMNA();
+
+  if (estack.top()) {
+    switch (estack.top()->getCode()) {
+    case EXCEPTION_PIVOT:
+    case EXCEPTION_WRONG_VOLTAGE: {
+      auto *e = new qucs::exception(EXCEPTION_NA_FAILED);
+      int d = estack.top()->getData();
+      estack.pop();
+      if (d >= countNodes()) {
+        d -= countNodes();
+        e->setText("voltage source `%s' conflicts with some other voltage "
+                   "source",
+                   findVoltageSource(d)->getName());
+      } else {
+        e->setText("circuit admittance matrix in %s solver is singular at "
+                   "node `%s' connected to [%s]",
+                   desc.c_str(), nlist->get(d).c_str(), nlist->getNodeString(d).c_str());
       }
-    } while (top_exception() != nullptr && top_exception()->getCode() == EXCEPTION_SINGULAR);
-    break;
-  default:
-    estack.print();
-    break;
+      estack.push(e);
+      error++;
+      break;
+    }
+    case EXCEPTION_SINGULAR: {
+      do {
+        int d = estack.top()->getData();
+        estack.pop();
+        if (d < countNodes()) {
+          logprint(LOG_ERROR,
+                   "WARNING: %s: inserted virtual resistance at "
+                   "node `%s' connected to [%s]\n",
+                   getName(), nlist->get(d).c_str(), nlist->getNodeString(d).c_str());
+        }
+      } while (estack.top() != nullptr && estack.top()->getCode() == EXCEPTION_SINGULAR);
+      break;
+    }
+    default:
+      estack.print();
+      return -1;
+    }
   }
 
   // save results into circuits
@@ -175,6 +180,8 @@ template <class nr_type_t> void nasolver<nr_type_t>::solve_post() {
  * to the current solution vector.
  * Then the function saves the solution vector back into the actual component nodes. */
 template <class nr_type_t> void nasolver<nr_type_t>::applyNodeset(bool nokeep) {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::applyNodeset()\n", getName());
+
   if (x == nullptr || nlist == nullptr)
     return;
 
@@ -209,6 +216,8 @@ template <class nr_type_t> void nasolver<nr_type_t>::applyNodeset(bool nokeep) {
 /* Uses the gMin-stepping algorithm in order to solve the given non-linear netlist
  * by continuous iterations. */
 template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation_gMin() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_nonlinear_continuation_gMin()\n", getName());
+
   const int MaxIter = getPropertyInteger("MaxIter") / 4 + 1;
 
   int error = 0;
@@ -224,14 +233,14 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation
   do {
     // run solving loop until convergence is reached
     int iter = 0;
-    int convergence;
+    bool convergence = false;
     do {
       error = solve_once();
       if (error) {
         break;
       }
       // convergence check
-      convergence = (iter > 0) ? checkConvergence() : 0;
+      convergence = (iter > 0) ? checkConvergence() : false;
       savePreviousIteration();
       iter++;
     } while (!convergence && iter < MaxIter);
@@ -247,7 +256,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation
         e->setText("no convergence in %s analysis after %d gMinStepping "
                    "iterations",
                    desc.c_str(), iterations);
-        throw_exception(e);
+        estack.push(e);
         break;
       }
       gMin = MAX(gPrev - gStep, 0);
@@ -266,6 +275,8 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation
 /* The following function uses the source-stepping algorithm in order
    to solve the given non-linear netlist by continuous iterations. */
 template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation_Source() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_nonlinear_continuation_Source()\n", getName());
+
   const int MaxIter = getPropertyInteger("MaxIter") / 4 + 1;
 
   int error = 0;
@@ -281,7 +292,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation
   do {
     // run solving loop until convergence is reached
     int iter = 0;
-    int convergence;
+    bool convergence;
     do {
       subnet->setSrcFactor(srcFactor);
       error = solve_once();
@@ -289,7 +300,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation
         break;
       }
       // convergence check
-      convergence = (iter > 0) ? checkConvergence() : 0;
+      convergence = (iter > 0) ? checkConvergence() : false;
       savePreviousIteration();
       iter++;
     } while (!convergence && iter < MaxIter);
@@ -311,7 +322,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation
         e->setText("no convergence in %s analysis after %d sourceStepping "
                    "iterations",
                    desc.c_str(), iterations);
-        throw_exception(e);
+        estack.push(e);
         break;
       }
       srcFactor = std::min(sPrev + sStep, 1.0);
@@ -357,22 +368,28 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear() {
     return error;
   }
 
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_nonlinear()\n", getName());
+
   // run solving loop until convergence is reached
-  int convergence, iter = 0;
+  int iter = 0;
+  bool convergence;
   do {
+    logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_nonlinear(), iter=%d\n", getName(), iter);
+
     error = solve_once();
     if (error) {
       break;
     }
+
     // convergence check
-    convergence = (iter > 0) ? checkConvergence() : 0;
+    convergence = (iter > 0) ? checkConvergence() : false;
     savePreviousIteration();
     iter++;
     // control fixpoint iterations
     if (fixpoint) {
       if (convergence && !updateMatrix) {
         updateMatrix = 1;
-        convergence = 0;
+        convergence = false;
       } else {
         updateMatrix = 0;
       }
@@ -382,7 +399,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear() {
   if (iter >= MaxIter || error) {
     const auto e = new qucs::exception(EXCEPTION_NO_CONVERGENCE);
     e->setText("no convergence in %s analysis after %d iterations", desc.c_str(), iter);
-    throw_exception(e);
+    estack.push(e);
     error++;
   }
 
@@ -392,6 +409,8 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear() {
 
 /* The linear nodal analysis netlist solver. */
 template <class nr_type_t> int nasolver<nr_type_t>::solve_linear() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_linear(), iter=%d\n", getName());
+
   updateMatrix = 1;
   return solve_once();
 }
@@ -401,6 +420,8 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_linear() {
    results in a matrix equation of the form Ax = z.  This function
    generates the A and z matrix. */
 template <class nr_type_t> void nasolver<nr_type_t>::createMatrix() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::createMatrix()\n", getName());
+
   /* Generate the A matrix.  The A matrix consists of four (4) minor
      matrices in the form     +-   -+
                           A = | G B |
@@ -657,7 +678,6 @@ template <class nr_type_t> void nasolver<nr_type_t>::createNoiseMatrix() {
    value is zero. */
 template <class nr_type_t> void nasolver<nr_type_t>::createIVector() {
   const int N = countNodes();
-
   // go through each node
   for (int r = 0; r < N; r++) {
     nr_type_t val = 0.0;
@@ -681,7 +701,6 @@ template <class nr_type_t> void nasolver<nr_type_t>::createIVector() {
 template <class nr_type_t> void nasolver<nr_type_t>::createEVector() {
   const int N = countNodes();
   const int M = countVoltageSources();
-
   // go through each voltage source
   for (int r = 0; r < M; r++) {
     circuit *vs = findVoltageSource(r);
@@ -728,7 +747,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::countVoltageSources() {
  * If there is no such voltage source it returns nullptr. */
 template <class nr_type_t> circuit *nasolver<nr_type_t>::findVoltageSource(int n) {
   circuit *root = subnet->getRoot();
-  for (circuit *c = root; c != nullptr; c = (circuit *)c->getNext()) {
+  for (circuit *c = root; c != nullptr; c = c->getNext()) {
     if (n >= c->getVoltageSource() && n <= c->getVoltageSource() + c->getVoltageSources() - 1)
       return c;
   }
@@ -758,7 +777,7 @@ template <class nr_type_t> void nasolver<nr_type_t>::runMNA() {
   eqns->solve();
 
   // if damped Newton-Raphson is requested
-  if (xprev != nullptr && top_exception() == nullptr) {
+  if (xprev != nullptr && estack.top() == nullptr) {
     if (convHelper == CONV_Attenuation) {
       applyAttenuation();
     } else if (convHelper == CONV_LineSearch) {
@@ -872,10 +891,10 @@ template <class nr_type_t> void nasolver<nr_type_t>::steepestDescent() {
   *x = *xprev + alpha * dx;
 }
 
-/* The function checks whether the iterative algorithm for linearizing
-   the non-linear components in the network shows convergence.  It
-   returns non-zero if it converges and zero otherwise. */
-template <class nr_type_t> int nasolver<nr_type_t>::checkConvergence() {
+/* Checks whether the iterative algorithm for linearizing the non-linear components
+ * in the network shows convergence.
+ * It returns non-zero if it converges and zero otherwise. */
+template <class nr_type_t> bool nasolver<nr_type_t>::checkConvergence() {
   const int N = countNodes();
   const int M = countVoltageSources();
 
@@ -884,13 +903,13 @@ template <class nr_type_t> int nasolver<nr_type_t>::checkConvergence() {
     const double v_abs = abs(x->get(r) - xprev->get(r));
     const double v_rel = abs(x->get(r));
     if (v_abs >= vntol + reltol * v_rel) {
-      return 0;
+      return false;
     }
     if (!convHelper) {
       const double i_abs = abs(z->get(r) - zprev->get(r));
       const double i_rel = abs(z->get(r));
       if (i_abs >= abstol + reltol * i_rel) {
-        return 0;
+        return false;
       }
     }
   }
@@ -899,21 +918,24 @@ template <class nr_type_t> int nasolver<nr_type_t>::checkConvergence() {
     const double i_abs = abs(x->get(r + N) - xprev->get(r + N));
     const double i_rel = abs(x->get(r + N));
     if (i_abs >= abstol + reltol * i_rel) {
-      return 0;
+      return false;
     }
     if (!convHelper) {
       const double v_abs = abs(z->get(r + N) - zprev->get(r + N));
       const double v_rel = abs(z->get(r + N));
       if (v_abs >= vntol + reltol * v_rel) {
-        return 0;
+        return false;
       }
     }
   }
-  return 1;
+
+  return true;
 }
 
 /* Saves the solution and right hand vector of the previous iteration. */
 template <class nr_type_t> void nasolver<nr_type_t>::savePreviousIteration() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::savePreviousIteration()\n", getName());
+
   if (xprev != nullptr) {
     *xprev = *x;
   } else {
@@ -928,6 +950,8 @@ template <class nr_type_t> void nasolver<nr_type_t>::savePreviousIteration() {
 
 /* Restores the solution and right hand vector of the previous (successful) iteration. */
 template <class nr_type_t> void nasolver<nr_type_t>::restorePreviousIteration() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::restorePreviousIteration()\n", getName());
+
   if (xprev != nullptr) {
     *x = *xprev;
   }
@@ -938,6 +962,8 @@ template <class nr_type_t> void nasolver<nr_type_t>::restorePreviousIteration() 
 
 /* Restarts the NR iteration for each non-linear circuit. */
 template <class nr_type_t> void nasolver<nr_type_t>::restartNR() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::restartDC()\n", getName());
+
   circuit *root = subnet->getRoot();
   for (circuit *c = root; c != nullptr; c = c->getNext()) {
     if (c->isNonLinear()) {
@@ -980,12 +1006,16 @@ template <class nr_type_t> void nasolver<nr_type_t>::saveBranchCurrents() {
 
 // The function saves the solution vector into each circuit.
 template <class nr_type_t> void nasolver<nr_type_t>::saveSolution() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::saveSolution()\n", getName());
+
   saveNodeVoltages();
   saveBranchCurrents();
 }
 
 // This function stores the solution (node voltages and branch currents).
 template <class nr_type_t> void nasolver<nr_type_t>::storeSolution() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::storeSolution()\n", getName());
+
   // cleanup solution previously
   solution.clear();
   const int N = countNodes();
@@ -1009,6 +1039,8 @@ template <class nr_type_t> void nasolver<nr_type_t>::storeSolution() {
 
 // This function recalls the solution (node voltages and branch currents).
 template <class nr_type_t> void nasolver<nr_type_t>::recallSolution() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::recallSolution()\n", getName());
+
   const int N = countNodes();
   const int M = countVoltageSources();
   // store all nodes except reference node
@@ -1030,11 +1062,12 @@ template <class nr_type_t> void nasolver<nr_type_t>::recallSolution() {
   }
 }
 
-/* This function saves the results of a single solve() functionality
-   into the output dataset. */
+/* Saves the results of a single solve() functionality into the output dataset. */
 template <class nr_type_t>
 void nasolver<nr_type_t>::saveResults(const std::string &volts, const std::string &amps,
                                       int saveOPs, qucs::vector *f) {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::saveResults()\n", getName());
+
   const int N = countNodes();
   const int M = countVoltageSources();
 
