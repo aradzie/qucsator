@@ -22,6 +22,8 @@
 #ifndef __PARASWEEP_H__
 #define __PARASWEEP_H__
 
+#include "analysis.h"
+
 namespace qucs {
 
 class analysis;

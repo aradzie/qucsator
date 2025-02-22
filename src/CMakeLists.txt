@@ -30,7 +30,6 @@ set(
   nodelist.cpp
   nodeset.cpp
   object.cpp
-  parasweep.cpp
   property.cpp
   range.cpp
   receiver.cpp

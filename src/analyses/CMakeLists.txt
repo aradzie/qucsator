@@ -12,6 +12,7 @@ set(
   hbsolver.cpp
   nasolution.h
   nasolver.h
+  parasweep.cpp
   spsolver.cpp
   trsolver.cpp
 )
