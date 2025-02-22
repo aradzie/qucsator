@@ -22,10 +22,9 @@
 #ifndef __CIRCUIT_H__
 #define __CIRCUIT_H__
 
-#include "characteristic.h"
 #include "complex.h"
 #include "object.h"
-#include "operatingpoint.h"
+#include "pair.h"
 
 #define NODE_1 0
 #define NODE_2 1
@@ -258,14 +257,14 @@ public:
   double getOperatingPoint(const std::string &name);
   void setOperatingPoint(const std::string &name, double);
   int hasOperatingPoint(const std::string &name);
-  valuelist<operatingpoint> &getOperatingPoints() { return oper; }
+  valuelist<pair> &getOperatingPoints() { return oper; }
 
   // characteristics functionality
   void addCharacteristic(const std::string &name, double);
   double getCharacteristic(const std::string &name);
   void setCharacteristic(const std::string &name, double);
   int hasCharacteristic(const std::string &name);
-  valuelist<characteristic> &getCharacteristics() { return charac; }
+  valuelist<pair> &getCharacteristics() { return charac; }
 
   // differentiate between linear and non-linear circuits
   void setNonLinear(bool l) { MODFLAG(!l, CIRCUIT_LINEAR); }
@@ -321,8 +320,8 @@ private:
   std::string subcircuit;
   node *nodes;
   substrate *subst;
-  valuelist<operatingpoint> oper;
-  valuelist<characteristic> charac;
+  valuelist<pair> oper;
+  valuelist<pair> charac;
   net *subnet;
   environment *env;
   double *deltas;

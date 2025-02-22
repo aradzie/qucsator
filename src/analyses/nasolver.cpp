@@ -34,7 +34,6 @@
 #include "nodelist.h"
 #include "nodeset.h"
 #include "object.h"
-#include "operatingpoint.h"
 #include "tmatrix.h"
 #include "tvector.h"
 #include "vector.h"
@@ -1077,7 +1076,7 @@ void nasolver<nr_type_t>::saveResults(const std::string &volts, const std::strin
       for (auto ops : c->getOperatingPoints()) {
         // It will only get values if none of the strings are 0
         // Once again most of this is adapted from Vprobe and Iprobe
-        operatingpoint &p = ops.second;
+        qucs::pair &p = ops.second;
         if (strcmp(p.getName(), "Vi") == 0)
           continue;
         if (strcmp(p.getName(), "VAi") == 0)
@@ -1107,7 +1106,7 @@ void nasolver<nr_type_t>::saveResults(const std::string &volts, const std::strin
         continue;
       c->calcOperatingPoints();
       for (auto ops : c->getOperatingPoints()) {
-        operatingpoint &p = ops.second;
+        qucs::pair &p = ops.second;
         std::string n = createOP(c->getName(), p.getName());
         saveVariable(n, p.getValue(), f);
       }

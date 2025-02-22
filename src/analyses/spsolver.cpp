@@ -35,7 +35,6 @@
 #include "sweep.h"
 #include "nodelist.h"
 #include "netdefs.h"
-#include "characteristic.h"
 #include "spsolver.h"
 #include "components/component_id.h"
 #include "components/tee.h"
@@ -1064,7 +1063,7 @@ void spsolver::saveCharacteristics (double freq) {
     if (!c->getSubcircuit ().empty() && !(saveCVs & SAVE_ALL)) continue;
     c->calcCharacteristics (freq);
     for (auto ps: c->getCharacteristics ()) {
-      characteristic &p = ps.second;
+      qucs::pair &p = ps.second;
       n = createCV (c->getName (), p.getName ());
       saveVariable (n, p.getValue (), f);
     }

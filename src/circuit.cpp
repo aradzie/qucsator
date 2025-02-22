@@ -22,7 +22,6 @@
 #include <cassert>
 #include <cstring>
 
-#include "characteristic.h"
 #include "circuit.h"
 #include "complex.h"
 #include "component_id.h"
@@ -32,7 +31,6 @@
 #include "microstrip/substrate.h"
 #include "node.h"
 #include "object.h"
-#include "operatingpoint.h"
 #include "tvector.h"
 #include "valuelist.h"
 
@@ -398,7 +396,7 @@ void circuit::setCV(int port, nr_complex_t cv) { VectorCV[port] = cv; }
 /* This function adds a operating point consisting of a key and a
    value to the circuit. */
 void circuit::addOperatingPoint(const std::string &n, double val) {
-  operatingpoint p(n, val);
+  qucs::pair p(n, val);
   oper.insert({{n, p}});
 }
 
@@ -430,7 +428,7 @@ int circuit::hasOperatingPoint(const std::string &n) { return oper.find(n) != op
 /* This function adds a characteristic point consisting of a key and a
    value to the circuit. */
 void circuit::addCharacteristic(const std::string &n, double val) {
-  characteristic p(n, val);
+  qucs::pair p(n, val);
   charac.insert({{n, p}});
 }
 
