@@ -49,7 +49,6 @@ namespace qucs {
 
 using namespace fourier;
 
-// Constructor creates an unnamed instance of the hbsolver class.
 hbsolver::hbsolver () : analysis () {
   type = ANALYSIS_HBALANCE;
   frequency = 0;
@@ -62,7 +61,6 @@ hbsolver::hbsolver () : analysis () {
   ndfreqs = NULL;
 }
 
-// Constructor creates a named instance of the hbsolver class.
 hbsolver::hbsolver (char * n) : analysis (n) {
   type = ANALYSIS_HBALANCE;
   frequency = 0;
@@ -75,7 +73,6 @@ hbsolver::hbsolver (char * n) : analysis (n) {
   ndfreqs = NULL;
 }
 
-// Destructor deletes the hbsolver class object.
 hbsolver::~hbsolver () {
   // delete nodelists
   delete nlnodes;
@@ -113,24 +110,6 @@ hbsolver::~hbsolver () {
 
   delete x;
   delete[] ndfreqs;
-}
-
-/* The copy constructor creates a new instance of the hbsolver class
-   based on the given hbsolver object. */
-hbsolver::hbsolver (hbsolver & o) : analysis (o) {
-  frequency = o.frequency;
-  negfreqs = o.negfreqs;
-  posfreqs = o.posfreqs;
-  nlnodes = o.nlnodes;
-  lnnodes = o.lnnodes;
-  banodes = o.banodes;
-  nanodes = o.nanodes;
-  Y = Z = A = NULL;
-  NA = YV = JQ = JG = JF = NULL;
-  OM = IR = QR = RH = IG = FQ = VS = VP = FV = IL = IN = IC = IS = NULL;
-  vs = x = NULL;
-  runs = o.runs;
-  ndfreqs = NULL;
 }
 
 #define VS_(r) (*VS) (r)

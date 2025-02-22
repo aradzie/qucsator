@@ -28,22 +28,21 @@ class analysis;
 class variable;
 class sweep;
 
-class parasweep : public analysis
-{
- public:
-  ACREATOR (parasweep);
-  parasweep (char *);
-  parasweep (parasweep &);
-  ~parasweep ();
-  int  initialize (void);
-  int  solve (void);
-  int  cleanup (void);
-  void saveResults (void);
+class parasweep final : public analysis {
+public:
+  ACREATOR(parasweep);
+  explicit parasweep(char *);
+  parasweep(const parasweep &) = delete;
+  ~parasweep() override;
+  int initialize() override;
+  int solve() override;
+  int cleanup() override;
+  void saveResults();
 
- private:
-  variable * var;
-  sweep * swp;
-  void * eqn;
+private:
+  variable *var;
+  sweep *swp;
+  void *eqn;
 };
 
 } // namespace qucs

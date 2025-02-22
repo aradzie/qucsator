@@ -31,13 +31,13 @@ class sweep;
 class circuit;
 class history;
 
-class trsolver : public nasolver<double>, public states<double> {
+class trsolver final : public nasolver<double>, public states<double> {
 public:
   ACREATOR(trsolver);
-  trsolver(const std::string &name);
-  trsolver(trsolver &);
-  ~trsolver();
-  int solve();
+  explicit trsolver(const std::string &name);
+  trsolver(const trsolver &) = delete;
+  ~trsolver() override;
+  int solve() override;
   int predictor();
   int corrector();
   void nextStates();

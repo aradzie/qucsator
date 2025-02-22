@@ -78,28 +78,6 @@ template <class nr_type_t> nasolver<nr_type_t>::~nasolver() {
   delete eqns;
 }
 
-template <class nr_type_t> nasolver<nr_type_t>::nasolver(nasolver &o) : analysis(o) {
-  nlist = o.nlist ? new nodelist(*(o.nlist)) : nullptr;
-  A = o.A ? new tmatrix<nr_type_t>(*(o.A)) : nullptr;
-  C = o.C ? new tmatrix<nr_type_t>(*(o.C)) : nullptr;
-  z = o.z ? new tvector<nr_type_t>(*(o.z)) : nullptr;
-  x = o.x ? new tvector<nr_type_t>(*(o.x)) : nullptr;
-  xprev = zprev = nullptr;
-  reltol = o.reltol;
-  abstol = o.abstol;
-  vntol = o.vntol;
-  desc = o.desc;
-  calculate_func = o.calculate_func;
-  convHelper = o.convHelper;
-  eqnAlgo = o.eqnAlgo;
-  updateMatrix = o.updateMatrix;
-  fixpoint = o.fixpoint;
-  gMin = o.gMin;
-  srcFactor = o.srcFactor;
-  eqns = new eqnsys<nr_type_t>(*(o.eqns));
-  solution = nasolution<nr_type_t>(o.solution);
-}
-
 /* Runs the nodal analysis solver once, reports errors if any
  * and saves the results into each circuit. */
 template <class nr_type_t> int nasolver<nr_type_t>::solve_once() {

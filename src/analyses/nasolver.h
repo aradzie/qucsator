@@ -45,9 +45,9 @@ class vector;
 template <class nr_type_t> class nasolver : public analysis {
 public:
   nasolver();
-  nasolver(const std::string &);
-  nasolver(nasolver &);
-  ~nasolver();
+  explicit nasolver(const std::string &);
+  nasolver(const nasolver &) = delete;
+  ~nasolver() override;
   int solve_once();
   int solve_nonlinear();
   int solve_nonlinear_continuation_gMin();
@@ -57,7 +57,7 @@ public:
   void solve_post();
   void setDescription(const std::string &n) { desc = n; }
   std::string getDescription() const { return desc; }
-  void saveResults(const std::string &, const std::string &, int, qucs::vector *f = NULL);
+  void saveResults(const std::string &, const std::string &, int, qucs::vector *f = nullptr);
   typedef void (*calculate_func_t)(nasolver<nr_type_t> *);
   void setCalculation(calculate_func_t f) { calculate_func = f; }
   void calculate() {

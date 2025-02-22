@@ -33,13 +33,13 @@ class vector;
 class strlist;
 class circuit;
 
-class hbsolver : public analysis {
+class hbsolver final : public analysis {
 public:
   ACREATOR(hbsolver);
-  hbsolver(char *);
-  hbsolver(hbsolver &);
-  ~hbsolver();
-  int solve();
+  explicit hbsolver(char *);
+  hbsolver(const hbsolver &) = delete;
+  ~hbsolver() override;
+  int solve() override;
   void initHB();
   void initDC();
   static void calc(hbsolver *);

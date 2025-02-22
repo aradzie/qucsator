@@ -58,29 +58,29 @@ enum analysis_type {
 class analysis : public object {
 public:
   analysis();
-  analysis(const std::string &);
-  analysis(analysis &);
+  explicit analysis(const std::string &);
+  analysis(const analysis &) = delete;
   virtual ~analysis();
   virtual int solve() { return 0; }
   virtual int initialize() { return 0; }
   virtual int cleanup() { return 0; }
   virtual bool isExternal() { return false; }
-  dataset *getData() { return data; }
-  void setData(dataset *d) { data = d; }
-  net *getNet() { return subnet; }
-  void setNet(net *netlist) { subnet = netlist; }
-  environment *getEnv() { return env; }
-  void setEnv(environment *e) { env = e; }
-  ptrlist<analysis> *getAnalysis() { return actions; }
-  void setAnalysis(ptrlist<analysis> *a) { actions = a; }
+  dataset *getData() const { return this->data; }
+  void setData(dataset *data) { this->data = data; }
+  net *getNet() { return this->subnet; }
+  void setNet(net *netlist) { this->subnet = netlist; }
+  environment *getEnv() { return this->env; }
+  void setEnv(environment *env) { this->env = env; }
+  ptrlist<analysis> *getAnalysis() { return this->actions; }
+  void setAnalysis(ptrlist<analysis> *actions) { this->actions = actions; }
   void addAnalysis(analysis *);
   void delAnalysis(analysis *);
-  int getType() { return type; }
-  void setType(int t) { type = t; }
+  int getType() { return this->type; }
+  void setType(int type) { this->type = type; }
   sweep *createSweep(const std::string &);
   void saveVariable(const std::string &, nr_complex_t, qucs::vector *);
-  bool getProgress() { return progress; }
-  void setProgress(bool p) { progress = p; }
+  bool getProgress() const { return this->progress; }
+  void setProgress(bool progress) { this->progress = progress; }
 
 protected:
   int runs;

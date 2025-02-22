@@ -53,7 +53,6 @@
 
 namespace qucs {
 
-// Constructor creates an unnamed instance of the spsolver class.
 spsolver::spsolver () : analysis () {
   type = ANALYSIS_SPARAMETER;
   swp = NULL;
@@ -64,7 +63,6 @@ spsolver::spsolver () : analysis () {
   gnd = NULL;
 }
 
-// Constructor creates a named instance of the spsolver class.
 spsolver::spsolver (char * n) : analysis (n) {
   type = ANALYSIS_SPARAMETER;
   swp = NULL;
@@ -75,30 +73,14 @@ spsolver::spsolver (char * n) : analysis (n) {
   gnd = NULL;
 }
 
-// Destructor deletes the spsolver class object.
 spsolver::~spsolver () {
   delete swp;
   delete nlist;
 }
 
-/* The copy constructor creates a new instance of the spsolver class
-   based on the given spsolver object. */
-spsolver::spsolver (spsolver & n) : analysis (n) {
-  tees = n.tees;
-  crosses = n.crosses;
-  opens = n.opens;
-  grounds = n.grounds;
-  noise = n.noise;
-  saveCVs = n.saveCVs;
-  swp = n.swp ? new sweep (*n.swp) : NULL;
-  nlist = n.nlist ? new nodelist (*n.nlist) : NULL;
-  gnd = n.gnd;
-}
-
 /* This function joins two nodes of a single circuit (interconnected
    nodes) and returns the resulting circuit. */
 circuit * spsolver::interconnectJoin (node * n1, node * n2) {
-
   circuit * s = n1->getCircuit ();
   circuit * result = new circuit (s->getSize () - 2);
   nr_complex_t p;

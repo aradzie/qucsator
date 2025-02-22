@@ -37,7 +37,6 @@
 
 namespace qucs {
 
-// Constructor creates an unnamed instance of the acsolver class.
 acsolver::acsolver () : nasolver<nr_complex_t> () {
   swp = NULL;
   type = ANALYSIS_AC;
@@ -46,7 +45,6 @@ acsolver::acsolver () : nasolver<nr_complex_t> () {
   noise = 0;
 }
 
-// Constructor creates a named instance of the acsolver class.
 acsolver::acsolver (char * n) : nasolver<nr_complex_t> (n) {
   swp = NULL;
   type = ANALYSIS_AC;
@@ -55,18 +53,9 @@ acsolver::acsolver (char * n) : nasolver<nr_complex_t> (n) {
   noise = 0;
 }
 
-// Destructor deletes the acsolver class object.
 acsolver::~acsolver () {
   delete swp;
   delete xn;
-}
-
-/* The copy constructor creates a new instance of the acsolver class
-   based on the given acsolver object. */
-acsolver::acsolver (acsolver & o) : nasolver<nr_complex_t> (o) {
-  swp = o.swp ? new sweep (*(o.swp)) : NULL;
-  xn = o.xn ? new tvector<double> (*(o.xn)) : NULL;
-  noise = o.noise;
 }
 
 /* This is the AC netlist solver.  It prepares the circuit list for

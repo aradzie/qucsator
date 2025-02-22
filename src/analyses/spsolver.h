@@ -33,16 +33,16 @@ class vector;
 class sweep;
 class nodelist;
 
-class spsolver : public analysis {
+class spsolver final : public analysis {
 public:
   ACREATOR(spsolver);
-  spsolver(char *);
-  spsolver(spsolver &);
-  ~spsolver();
+  explicit spsolver(char *);
+  spsolver(const spsolver &) = delete;
+  ~spsolver() override;
+  int solve() override;
   void calc(double);
   void init();
   void reduce();
-  int solve();
   void insertConnections();
   void insertDifferentialPorts();
   void insertTee(node **, const char *);

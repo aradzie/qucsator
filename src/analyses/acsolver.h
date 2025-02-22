@@ -29,13 +29,13 @@ namespace qucs {
 class sweep;
 class vector;
 
-class acsolver : public nasolver<nr_complex_t> {
+class acsolver final : public nasolver<nr_complex_t> {
 public:
   ACREATOR(acsolver);
-  acsolver(char *);
-  acsolver(acsolver &);
-  ~acsolver();
-  int solve();
+  explicit acsolver(char *);
+  acsolver(const acsolver &) = delete;
+  ~acsolver() override;
+  int solve() override;
   void solve_noise();
   static void calc(acsolver *);
   void init();

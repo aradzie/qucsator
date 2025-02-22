@@ -26,13 +26,13 @@
 
 namespace qucs {
 
-class dcsolver : public nasolver<double> {
+class dcsolver final : public nasolver<double> {
 public:
   ACREATOR(dcsolver);
-  dcsolver(char *);
-  dcsolver(dcsolver &);
-  ~dcsolver();
-  int solve();
+  explicit dcsolver(char *);
+  dcsolver(const dcsolver &) = delete;
+  ~dcsolver() override;
+  int solve() override;
 
 private:
   static void calcDC(dcsolver *);

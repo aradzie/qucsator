@@ -55,16 +55,6 @@ analysis::analysis(const std::string &n) : object(n) {
 
 analysis::~analysis() { delete actions; }
 
-analysis::analysis(analysis &a) : object(a) {
-  data = a.data;
-  subnet = a.subnet;
-  env = a.env;
-  actions = a.actions ? new ptrlist<analysis>(*a.actions) : nullptr;
-  type = a.type;
-  runs = a.runs;
-  progress = a.progress;
-}
-
 void analysis::addAnalysis(analysis *a) {
   if (!actions) {
     actions = new ptrlist<analysis>();

@@ -37,7 +37,6 @@ using namespace qucs::eqn;
 
 namespace qucs {
 
-// Constructor creates an unnamed instance of the parasweep class.
 parasweep::parasweep () : analysis () {
   var = NULL;
   swp = NULL;
@@ -45,7 +44,6 @@ parasweep::parasweep () : analysis () {
   type = ANALYSIS_SWEEP;
 }
 
-// Constructor creates a named instance of the parasweep class.
 parasweep::parasweep (char * n) : analysis (n) {
   var = NULL;
   swp = NULL;
@@ -53,16 +51,8 @@ parasweep::parasweep (char * n) : analysis (n) {
   type = ANALYSIS_SWEEP;
 }
 
-// Destructor deletes the parasweep class object.
 parasweep::~parasweep () {
   delete swp;
-}
-
-/* The copy constructor creates a new instance of the parasweep class
-   based on the given parasweep object. */
-parasweep::parasweep (parasweep & p) : analysis (p) {
-  var = new variable (*p.var);
-  if (p.swp) swp = new sweep (*p.swp);
 }
 
 // Short macro in order to obtain the correct constant value.

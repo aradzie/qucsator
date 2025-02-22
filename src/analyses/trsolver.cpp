@@ -52,7 +52,6 @@ namespace qucs {
 
 using namespace transient;
 
-// Constructor creates an unnamed instance of the trsolver class.
 trsolver::trsolver ()
     : nasolver<double> (), states<double> ()
 {
@@ -65,7 +64,6 @@ trsolver::trsolver ()
     initialDC = true;
 }
 
-// Constructor creates a named instance of the trsolver class.
 trsolver::trsolver (const std::string &n)
     : nasolver<double> (n), states<double> ()
 {
@@ -78,7 +76,6 @@ trsolver::trsolver (const std::string &n)
     initialDC = true;
 }
 
-// Destructor deletes the trsolver class object.
 trsolver::~trsolver ()
 {
     delete swp;
@@ -90,18 +87,6 @@ trsolver::~trsolver ()
         }
     }
     delete tHistory;
-}
-
-/* The copy constructor creates a new instance of the trsolver class
-   based on the given trsolver object. */
-trsolver::trsolver (trsolver & o)
-    : nasolver<double> (o), states<double> (o)
-{
-    swp = o.swp ? new sweep (*o.swp) : NULL;
-    for (int i = 0; i < 8; i++) solution[i] = NULL;
-    tHistory = o.tHistory ? new history (*o.tHistory) : NULL;
-    relaxTSR = o.relaxTSR;
-    initialDC = o.initialDC;
 }
 
 // This function creates the time sweep if necessary.

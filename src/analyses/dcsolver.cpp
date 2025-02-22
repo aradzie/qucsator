@@ -46,8 +46,6 @@ dcsolver::dcsolver(char *n) : nasolver<double>(n) {
   setDescription("DC");
 }
 
-dcsolver::dcsolver(dcsolver &o) : nasolver<double>(o) { saveOPs = o.saveOPs; }
-
 dcsolver::~dcsolver() {}
 
 int dcsolver::solve() {
