@@ -197,7 +197,7 @@ void acsolver::solve_noise() {
   createMatrix();
   A->transpose();
   eqnAlgo = ALGO_LU_FACTORIZATION_CROUT;
-  runMNA();
+  solveLinearEquations();
 
   // ensure skipping LU decomposition
   updateMatrix = 0;
@@ -208,7 +208,7 @@ void acsolver::solve_noise() {
   for (int i = 0; i < N + M; i++) {
     z->set(0);
     z->set(i, -1); // modify right hand side appropriately
-    runMNA();      // solve
+    solveLinearEquations();      // solve
     zn = *x;       // save transimpedance vector
 
     // compute actual noise voltage

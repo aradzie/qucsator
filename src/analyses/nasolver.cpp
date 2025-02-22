@@ -91,7 +91,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_once() {
   createMatrix();
 
   // solve equation system
-  runMNA();
+  solveLinearEquations();
 
   if (estack.top()) {
     estack.print();
@@ -739,7 +739,7 @@ template <class nr_type_t> void nasolver<nr_type_t>::assignVoltageSources() {
 
 /* The matrix equation Ax = z is solved by x = A^-1*z.  The function
    applies the operation to the previously generated matrices. */
-template <class nr_type_t> void nasolver<nr_type_t>::runMNA() {
+template <class nr_type_t> void nasolver<nr_type_t>::solveLinearEquations() {
   // just solve the equation system here
   eqns->setAlgo(eqnAlgo);
   eqns->passEquationSys(updateMatrix ? A : nullptr, x, z);

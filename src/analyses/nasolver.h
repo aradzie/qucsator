@@ -85,7 +85,7 @@ protected:
   circuit *findVoltageSource(int);
   void applyNodeset(bool nokeep = true);
   void createNoiseMatrix();
-  void runMNA();
+  void solveLinearEquations();
   void createMatrix();
   bool checkConvergence();
 
