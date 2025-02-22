@@ -19,54 +19,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cstdarg>
 
 #include "exception.h"
 
 using namespace qucs;
 
-// Constructor creates an instance of the exception class.
-exception::exception () {
-  code = EXCEPTION_UNKNOWN;
-  txt = NULL;
-  data = 0;
-}
+exception::exception() : code(EXCEPTION_UNKNOWN), data(0), text(nullptr), next(nullptr) {}
 
-// Constructor creates an typified instance of the exception class.
-exception::exception (int type) {
-  code = type;
-  txt = NULL;
-  data = 0;
-}
+exception::exception(const int code) : code(code), data(0), text(nullptr), next(nullptr) {}
 
-/* This copy constructor creates a instance of the exception class based
-   on the given exception. */
-exception::exception (const exception & e) {
-  txt = e.txt ? strdup (e.txt) : NULL;
-  code = e.code;
-  data = e.data;
-}
+exception::~exception() { free(text); }
 
-// Destructor deletes an instance of the exception class.
-exception::~exception () {
-  free (txt);
-}
-
-/* This function save the given messages format and the appropriate
-   arguments to the internal text property of the exception object. */
-void exception::setText (const char * format, ...) {
-  char * str;
+void exception::setText(const char *format, ...) {
   va_list args;
 
-  free (txt);
-  str = (char *) malloc (1024); // this should be enough
-  va_start (args, format);
-  vsprintf (str, format, args);
-  va_end (args);
+  const auto str = (char *)malloc(1024); // this should be enough
+  va_start(args, format);
+  vsprintf(str, format, args);
+  va_end(args);
 
-  // copy string to text buffer
-  txt = strdup (str); free (str);
+  free(text);
+  text = strdup(str);
+  free(str);
 }

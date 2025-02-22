@@ -29,7 +29,7 @@ class exception;
 class exceptionstack {
 public:
   exceptionstack();
-  exceptionstack(const exceptionstack &);
+  exceptionstack(const exceptionstack &) = delete;
   ~exceptionstack();
   void push(exception *);
   exception *pop();
@@ -40,7 +40,7 @@ private:
   exception *root;
 };
 
-// Global exception stack.
+// The global exception stack.
 extern exceptionstack estack;
 
 } /* namespace qucs */

@@ -19,75 +19,52 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "logging.h"
-#include "exception.h"
 #include "exceptionstack.h"
+#include "exception.h"
+#include "logging.h"
 
 using namespace qucs;
 
-// Global exception stack.
+// The global exception stack.
 exceptionstack qucs::estack;
 
-// Constructor creates an instance of the exception stack class.
-exceptionstack::exceptionstack () {
-  root = nullptr;
-}
+exceptionstack::exceptionstack() : root(nullptr) {}
 
-/* This copy constructor creates a instance of the exception stack
-   class based on the given exception stack. */
-exceptionstack::exceptionstack (const exceptionstack & e) {
-  exception * last, * prev = nullptr;
-  for (exception * next = e.root; next != nullptr; next = next->getNext ()) {
-    last = new exception (*next);
-    if (prev != nullptr)
-      prev->setNext (last);
-    else
-      root = last;
-    prev = last;
-  }
-}
-
-// Destructor deletes an instance of the exception stack class.
-exceptionstack::~exceptionstack () {
-  exception * next;
+exceptionstack::~exceptionstack() {
   while (root) {
-    next = root->getNext ();
+    exception *next = root->getNext();
     delete root;
     root = next;
   }
 }
 
-// The function pushes a new exception onto the exception stack.
-void exceptionstack::push (exception * e) {
-  e->setNext (root);
+// Pushes a new exception onto the exception stack.
+void exceptionstack::push(exception *e) {
+  e->setNext(root);
   root = e;
 }
 
-/* This function removes the top exception from the exception stack
-   and returns the new top exception. */
-exception * exceptionstack::pop (void) {
+/* Removes the top exception from the exception stack and returns the new top exception. */
+exception *exceptionstack::pop() {
   if (root != nullptr) {
-    exception * next = root->getNext ();
+    exception *next = root->getNext();
     delete root;
     root = next;
   }
   return root;
 }
 
-// The function returns the top exception.
-exception * exceptionstack::top (void) {
-  return root;
-}
+// Returns the top exception.
+exception *exceptionstack::top() { return root; }
 
-/* This function prints the complete exception stack and removes each
-   exception from the stack. */
-void exceptionstack::print (const char * prefix) {
-  exception * next;
-  if (root)
-    logprint (LOG_ERROR, "%s%sexception stack\n",
-	      prefix ? prefix : "", prefix ? " " : "");
-  while ((next = top ()) != nullptr) {
-    logprint (LOG_ERROR, "  %03d: %s\n", next->getCode (), next->getText ());
-    pop ();
+/* Prints the complete exception stack and removes each exception from the stack. */
+void exceptionstack::print(const char *prefix) {
+  if (root) {
+    logprint(LOG_ERROR, "%s%sexception stack\n", prefix ? prefix : "", prefix ? " " : "");
+  }
+  exception *next;
+  while ((next = top()) != nullptr) {
+    logprint(LOG_ERROR, "  %03d: %s\n", next->getCode(), next->getText());
+    pop();
   }
 }

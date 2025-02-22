@@ -24,7 +24,6 @@
 
 namespace qucs {
 
-/* Enumerate exception type identifiers. */
 enum exception_type {
   EXCEPTION_UNKNOWN = -1,
   EXCEPTION_PIVOT,
@@ -37,27 +36,26 @@ enum exception_type {
   EXCEPTION_UNKNOWN_ETR_MODE,
 };
 
-class exception
-{
- public:
-  exception ();
-  exception (int);
-  exception (const exception &);
-  ~exception ();
-  int getCode (void) { return code; }
-  void setCode (int c) { code = c; }
-  char * getText (void) { return txt; }
-  void setText (const char *, ...);
-  exception * getNext (void) { return next; }
-  void setNext (exception * e) { next = e; }
-  void setData (int d) { data = d; }
-  int getData (void) { return data; }
+class exception final {
+public:
+  exception();
+  explicit exception(int);
+  exception(const exception &) = delete;
+  ~exception();
+  [[nodiscard]] int getCode() const { return this->code; }
+  void setCode(const int code) { this->code = code; }
+  [[nodiscard]] int getData() const { return this->data; }
+  void setData(const int data) { this->data = data; }
+  [[nodiscard]] char *getText() const { return this->text; }
+  void setText(const char *, ...);
+  [[nodiscard]] exception *getNext() const { return this->next; }
+  void setNext(exception *next) { this->next = next; }
 
- private:
+private:
   int code;
   int data;
-  char * txt;
-  exception * next;
+  char *text;
+  exception *next;
 };
 
 } /* namespace qucs */
