@@ -33,7 +33,7 @@ sweep::sweep() : object() {
   type = SWEEP_UNKNOWN;
   data = nullptr;
   size = 0;
-  txt = nullptr;
+  text = nullptr;
   counter = 0;
 }
 
@@ -41,25 +41,13 @@ sweep::sweep(const std::string &n) : object(n) {
   type = SWEEP_UNKNOWN;
   data = nullptr;
   size = 0;
-  txt = nullptr;
+  text = nullptr;
   counter = 0;
 }
 
 sweep::~sweep() {
   free(data);
-  free(txt);
-}
-
-sweep::sweep(sweep &s) : object(s) {
-  type = s.type;
-  size = s.size;
-  counter = s.counter;
-  data = (double *)malloc(sizeof(double) * size);
-  if (s.data) {
-    memcpy(data, s.data, sizeof(double) * size);
-  } else {
-    memset(data, 0, sizeof(double) * size);
-  }
+  free(text);
 }
 
 // Returns the value at the given position.
@@ -92,24 +80,24 @@ void sweep::setSize(int points) {
 }
 
 char *sweep::toString() {
-  free(txt);
+  free(text);
   if (data == nullptr || size == 0) {
     return (char *)"";
   }
   int len = 3 + size - 1;
-  txt = (char *)malloc(len);
-  strcpy(txt, "[");
+  text = (char *)malloc(len);
+  strcpy(text, "[");
   for (int i = 0; i < size; i++) {
     static char str[256]; // enough for a real number
     sprintf(str, "%g", get(i));
-    txt = (char *)realloc(txt, len += strlen(str));
-    strcat(txt, str);
+    text = (char *)realloc(text, len += strlen(str));
+    strcat(text, str);
     if (i != size - 1) {
-      strcat(txt, ";");
+      strcat(text, ";");
     }
   }
-  strcat(txt, "]");
-  return txt;
+  strcat(text, "]");
+  return text;
 }
 
 /* Reverses the values order inside the sweep definition. */

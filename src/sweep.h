@@ -39,21 +39,21 @@ class object;
 class sweep : public object {
 public:
   sweep();
-  sweep(const std::string &);
-  sweep(sweep &);
+  explicit sweep(const std::string &);
+  sweep(const sweep &) = delete;
   ~sweep();
-  int getSize() { return size; }
-  int getType() { return type; }
+  int getSize() const { return this->size; }
+  int getType() const { return this->type; }
+  void setSize(int);
   double get(int);
+  void set(int, double);
   double next();
   double prev();
-  void set(int, double);
-  void setSize(int);
-  char *toString();
   void reverse();
-  void reset() { counter = 0; };
-  object *getParent() { return parent; }
-  void setParent(object *p) { parent = p; }
+  void reset() { this->counter = 0; };
+  object *getParent() const { return this->parent; }
+  void setParent(object *parent) { this->parent = parent; }
+  char *toString();
 
 protected:
   int type;
@@ -61,7 +61,7 @@ protected:
 private:
   double *data;
   int size;
-  char *txt;
+  char *text;
   int counter;
   object *parent;
 };
@@ -69,7 +69,7 @@ private:
 class linsweep : public sweep {
 public:
   linsweep();
-  linsweep(const std::string &);
+  explicit linsweep(const std::string &);
   ~linsweep();
   void create(double, double, int);
 };
@@ -77,7 +77,7 @@ public:
 class logsweep : public sweep {
 public:
   logsweep();
-  logsweep(const std::string &);
+  explicit logsweep(const std::string &);
   ~logsweep();
   void create(double, double, int);
 };
@@ -85,7 +85,7 @@ public:
 class consweep : public sweep {
 public:
   consweep();
-  consweep(const std::string &);
+  explicit consweep(const std::string &);
   ~consweep();
   void create(double);
 };
@@ -93,7 +93,7 @@ public:
 class lstsweep : public sweep {
 public:
   lstsweep();
-  lstsweep(const std::string &);
+  explicit lstsweep(const std::string &);
   ~lstsweep();
   void create(int);
 };
