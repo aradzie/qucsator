@@ -10,7 +10,6 @@ set(
   analysis.cpp
   dcsolver.cpp
   hbsolver.cpp
-  nasolution.h
   nasolver.h
   parasweep.cpp
   spsolver.cpp

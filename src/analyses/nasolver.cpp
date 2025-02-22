@@ -993,7 +993,7 @@ template <class nr_type_t> void nasolver<nr_type_t>::storeSolution() {
   for (int r = 0; r < N; r++) {
     struct nodelist_t *n = nlist->getNode(r);
     nr_type_t gr = x->get(r);
-    qucs::naentry<nr_type_t> entry(gr, 0);
+    naentry<nr_type_t> entry(gr, 0);
     solution.insert({{n->name, entry}});
   }
   // store all branch currents of voltage sources
@@ -1001,7 +1001,7 @@ template <class nr_type_t> void nasolver<nr_type_t>::storeSolution() {
     circuit *vs = findVoltageSource(r);
     int vn = r - vs->getVoltageSource() + 1;
     nr_type_t xg = x->get(r + N);
-    qucs::naentry<nr_type_t> entry(xg, vn);
+    naentry<nr_type_t> entry(xg, vn);
     solution.insert({{vs->getName(), entry}});
   }
 }
