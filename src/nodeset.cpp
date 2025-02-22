@@ -47,14 +47,6 @@ nodeset::nodeset(char *n, double val) {
   next = nullptr;
 }
 
-nodeset::nodeset(const nodeset &p) {
-  name = nullptr;
-  if (p.name)
-    name = strdup(p.name);
-  value = p.value;
-  next = p.next;
-}
-
 nodeset::~nodeset() { free(name); }
 
 // Sets the name of the node set.

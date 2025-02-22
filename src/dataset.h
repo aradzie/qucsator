@@ -31,8 +31,8 @@ class vector;
 class dataset : public object {
 public:
   dataset();
-  dataset(char *);
-  dataset(const dataset &);
+  explicit dataset(char *);
+  dataset(const dataset &) = delete;
   ~dataset();
   void addDependency(qucs::vector *);
   void addDependencies(qucs::vector *);
@@ -46,7 +46,7 @@ public:
   void delDependency(qucs::vector *);
   void delVariable(qucs::vector *);
 
-  void assignDependency(const char *const, const char *const);
+  void assignDependency(const char *, const char *);
   char *getFile();
   void setFile(const char *);
   void print();

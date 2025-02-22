@@ -47,19 +47,6 @@ dataset::dataset(char *n) : object(n) {
   file = nullptr;
 }
 
-dataset::dataset(const dataset &d) : object(d) {
-  file = d.file ? strdup(d.file) : nullptr;
-  vector *v;
-  // copy dependency vectors
-  for (v = d.dependencies; v != nullptr; v = (vector *)v->getNext()) {
-    addDependency(new vector(*v));
-  }
-  // copy variable vectors
-  for (v = variables; v != nullptr; v = (vector *)v->getNext()) {
-    addVariable(new vector(*v));
-  }
-}
-
 dataset::~dataset() {
   vector *n, *v;
   // delete dependency vectors

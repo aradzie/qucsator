@@ -38,9 +38,9 @@ class environment;
 
 class net : public object {
 public:
-  net();
-  net(const std::string &);
-  net(net &);
+  explicit net();
+  explicit net(const std::string &);
+  net(const net &) = delete;
   ~net();
   circuit *getRoot() { return root; }
   void setRoot(circuit *c) { root = c; }

@@ -48,9 +48,9 @@
 
 #define CREATOR(val)                                                                               \
   val();                                                                                           \
-  static qucs::circuit *create(void) { return new val(); }                                         \
+  static qucs::circuit *create() { return new val(); }                                             \
   static struct define_t cirdef;                                                                   \
-  static struct define_t *definition(void) { return &cirdef; }
+  static struct define_t *definition() { return &cirdef; }
 
 #include <map>
 #include <string>
@@ -80,14 +80,13 @@ class net;
 class environment;
 class history;
 
-/* This is the base class for all circuit elements and provides
- * the functionality required for all simulation types. *
- */
+/* The base class for all circuit elements and provides the functionality
+ * required for all simulation types. */
 class circuit : public object, public integrator {
 public:
-  circuit *getNext(void) const { return this->next; }
+  circuit *getNext() const { return this->next; }
   void setNext(circuit *const o) { this->next = o; }
-  circuit *getPrev(void) const { return prev; }
+  circuit *getPrev() const { return prev; }
   void setPrev(circuit *const o) { this->prev = o; }
 
 private:
@@ -95,31 +94,30 @@ private:
   circuit *prev;
 
 public:
-  // constructor and destructor set
-  circuit();
-  circuit(int);
-  circuit(const circuit &);
+  explicit circuit();
+  explicit circuit(int);
+  circuit(const circuit &) = delete;
   virtual ~circuit();
 
-  virtual void initSP(void) { allocMatrixS(); }
+  virtual void initSP() { allocMatrixS(); }
   virtual void calcSP(double) {}
-  virtual void initDC(void) { allocMatrixMNA(); }
-  virtual void calcDC(void) {}
-  virtual void restartDC(void) {}
-  virtual void initNoiseSP(void) { allocMatrixN(); }
+  virtual void initDC() { allocMatrixMNA(); }
+  virtual void calcDC() {}
+  virtual void restartDC() {}
+  virtual void initNoiseSP() { allocMatrixN(); }
   virtual void calcNoiseSP(double) {}
-  virtual void initNoiseAC(void) { allocMatrixN(vsources); }
+  virtual void initNoiseAC() { allocMatrixN(vsources); }
   virtual void calcNoiseAC(double) {}
-  virtual void initAC(void) { allocMatrixMNA(); }
+  virtual void initAC() { allocMatrixMNA(); }
   virtual void calcAC(double) {}
-  virtual void initTR(void) { allocMatrixMNA(); }
+  virtual void initTR() { allocMatrixMNA(); }
   virtual void calcTR(double) {}
-  virtual void initHB(void) { allocMatrixMNA(); }
+  virtual void initHB() { allocMatrixMNA(); }
   virtual void calcHB(double) {}
   virtual void initHB(int) { allocMatrixMNA(); }
   virtual void calcHB(int) {}
-  virtual void calcOperatingPoints(void) {}
-  virtual void saveOperatingPoints(void) {}
+  virtual void calcOperatingPoints() {}
+  virtual void saveOperatingPoints() {}
   virtual void calcCharacteristics(double) {}
   virtual void saveCharacteristics(double) {}
   virtual void saveCharacteristics(nr_complex_t) {}
@@ -128,9 +126,9 @@ public:
   void setNode(int, const std::string &, int intern = 0);
   node *getNode(int);
   void setType(int t) { type = t; }
-  int getType(void) { return type; }
+  int getType() { return type; }
   /* Gets the number of ports the circuit element has. */
-  int getSize(void) { return size; }
+  int getSize() { return size; }
   /* Sets/changes the number of ports the circuit element has.
    * On setting this value, previously stored node and matrix
    * information is completely lost unless the new size equals
@@ -138,37 +136,37 @@ public:
   void setSize(int);
   /* Returns true if the circuit element is enabled or false
    * otherwise. */
-  bool isEnabled(void) { return RETFLAG(CIRCUIT_ENABLED); }
+  bool isEnabled() { return RETFLAG(CIRCUIT_ENABLED); }
   /* Sets the circuit element to be enabled or disabled. */
   void setEnabled(bool e) { MODFLAG(e, CIRCUIT_ENABLED); }
-  bool isVariableSized(void) { return RETFLAG(CIRCUIT_VARSIZE); }
+  bool isVariableSized() { return RETFLAG(CIRCUIT_VARSIZE); }
   void setVariableSized(bool v) { MODFLAG(v, CIRCUIT_VARSIZE); }
-  bool isProbe(void) { return RETFLAG(CIRCUIT_PROBE); }
+  bool isProbe() { return RETFLAG(CIRCUIT_PROBE); }
   void setProbe(bool p) { MODFLAG(p, CIRCUIT_PROBE); }
   void setNet(net *n) { subnet = n; }
-  net *getNet(void) { return subnet; }
+  net *getNet() { return subnet; }
 
   // subcircuitry
-  std::string getSubcircuit(void) { return subcircuit; }
+  std::string getSubcircuit() { return subcircuit; }
   void setSubcircuit(const std::string &);
 
   // environment specific
-  environment *getEnv(void) { return env; }
+  environment *getEnv() { return env; }
   void setEnv(environment *e) { env = e; }
 
   // nodal analyses helpers
   void setInternalVoltageSource(bool i) { MODFLAG(i, CIRCUIT_INTVSOURCE); }
-  bool isInternalVoltageSource(void) { return RETFLAG(CIRCUIT_INTVSOURCE); }
+  bool isInternalVoltageSource() { return RETFLAG(CIRCUIT_INTVSOURCE); }
   void setVoltageSource(int s) { vsource = s; }
-  int getVoltageSource(void) { return vsource; }
-  int getVoltageSources(void);
+  int getVoltageSource() { return vsource; }
+  int getVoltageSources();
   void setVoltageSources(int);
   void voltageSource(int, int, int, double value = 0.0);
-  bool isVSource(void) { return RETFLAG(CIRCUIT_VSOURCE); }
+  bool isVSource() { return RETFLAG(CIRCUIT_VSOURCE); }
   void setVSource(bool v) { MODFLAG(v, CIRCUIT_VSOURCE); }
-  bool isISource(void) { return RETFLAG(CIRCUIT_ISOURCE); }
+  bool isISource() { return RETFLAG(CIRCUIT_ISOURCE); }
   void setISource(bool i) { MODFLAG(i, CIRCUIT_ISOURCE); }
-  int getNoiseSources(void);
+  int getNoiseSources();
   void setNoiseSources(int);
 
   // transient analyses helpers
@@ -181,34 +179,34 @@ public:
   void transientCapacitanceC2V(int, int, int, double, double);
   void transientCapacitanceC2Q(int, int, int, double, double);
   void setDelta(double *d) { deltas = d; }
-  double *getDelta(void) { return deltas; }
+  double *getDelta() { return deltas; }
 
   // history specific functionality
-  bool hasHistory(void) { return RETFLAG(CIRCUIT_HISTORY); }
+  bool hasHistory() { return RETFLAG(CIRCUIT_HISTORY); }
   void setHistory(bool h) { MODFLAG(h, CIRCUIT_HISTORY); }
   void initHistory(double);
-  void deleteHistory(void);
+  void deleteHistory();
   void truncateHistory(double);
   void appendHistory(int, double);
   void applyHistory(history *);
   double getV(int, double);
   double getV(int, int);
   double getJ(int, double);
-  double getHistoryAge(void);
+  double getHistoryAge();
   void setHistoryAge(double);
-  int getHistorySize(void);
+  int getHistorySize();
   double getHistoryTFromIndex(int);
 
   // s-parameter helpers
-  int getPort(void) { return pacport; }
+  int getPort() { return pacport; }
   void setPort(int p) { pacport = p; }
-  int getInserted(void) { return inserted; }
+  int getInserted() { return inserted; }
   void setInserted(int i) { inserted = i; }
-  bool isOriginal(void) { return RETFLAG(CIRCUIT_ORIGINAL); }
+  bool isOriginal() { return RETFLAG(CIRCUIT_ORIGINAL); }
   void setOriginal(bool o) { MODFLAG(o, CIRCUIT_ORIGINAL); }
 
   // microstrip helpers
-  substrate *getSubstrate(void);
+  substrate *getSubstrate();
   void setSubstrate(substrate *);
 
   // matrix entry modificators
@@ -242,14 +240,14 @@ public:
   void setV(int, nr_complex_t);
   void setQ(int, nr_complex_t);
   void setG(int, int, double);
-  void clearB(void);
-  void clearC(void);
-  void clearD(void);
-  void clearE(void);
-  void clearI(void);
-  void clearJ(void);
-  void clearV(void);
-  void clearY(void);
+  void clearB();
+  void clearC();
+  void clearD();
+  void clearE();
+  void clearI();
+  void clearJ();
+  void clearV();
+  void clearY();
   void addY(int, int, nr_complex_t);
   void addY(int, int, double);
   void addI(int, nr_complex_t);
@@ -260,37 +258,37 @@ public:
   double getOperatingPoint(const std::string &name);
   void setOperatingPoint(const std::string &name, double);
   int hasOperatingPoint(const std::string &name);
-  valuelist<operatingpoint> &getOperatingPoints(void) { return oper; }
+  valuelist<operatingpoint> &getOperatingPoints() { return oper; }
 
   // characteristics functionality
   void addCharacteristic(const std::string &name, double);
   double getCharacteristic(const std::string &name);
   void setCharacteristic(const std::string &name, double);
   int hasCharacteristic(const std::string &name);
-  valuelist<characteristic> &getCharacteristics(void) { return charac; }
+  valuelist<characteristic> &getCharacteristics() { return charac; }
 
   // differentiate between linear and non-linear circuits
   void setNonLinear(bool l) { MODFLAG(!l, CIRCUIT_LINEAR); }
-  bool isNonLinear(void) { return !RETFLAG(CIRCUIT_LINEAR); }
+  bool isNonLinear() { return !RETFLAG(CIRCUIT_LINEAR); }
 
   // miscellaneous functionality
-  void print(void);
+  void print();
   static std::string createInternal(const std::string &, const std::string &);
   void setInternalNode(int, const std::string &);
 
   // matrix operations
-  void allocMatrixS(void);
+  void allocMatrixS();
   void allocMatrixN(int sources = 0);
-  void allocMatrixMNA(void);
-  void freeMatrixMNA(void);
-  void allocMatrixHB(void);
-  void freeMatrixHB(void);
+  void allocMatrixMNA();
+  void freeMatrixMNA();
+  void allocMatrixHB();
+  void freeMatrixHB();
   void setMatrixS(matrix);
-  matrix getMatrixS(void);
+  matrix getMatrixS();
   void setMatrixN(matrix);
-  matrix getMatrixN(void);
+  matrix getMatrixN();
   void setMatrixY(matrix);
-  matrix getMatrixY(void);
+  matrix getMatrixY();
 
   static const double z0;
 

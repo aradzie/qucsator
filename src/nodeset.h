@@ -29,9 +29,9 @@ namespace qucs {
 class nodeset {
 public:
   MCREATOR(nodeset);
-  nodeset(char *);
-  nodeset(char *, double);
-  nodeset(const nodeset &);
+  explicit nodeset(char *);
+  explicit nodeset(char *, double);
+  nodeset(const nodeset &) = delete;
   virtual ~nodeset();
   nodeset *getNext() { return next; }
   void setNext(nodeset *p) { next = p; }

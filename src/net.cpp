@@ -78,17 +78,6 @@ net::~net() {
   delete actions;
 }
 
-net::net(net &n) : object(n) {
-  root = drop = nullptr;
-  nPorts = nCircuits = nSources = 0;
-  insertedNodes = inserted = reduced = 0;
-  actions = n.actions ? new ptrlist<analysis>(*n.actions) : nullptr;
-  orgacts = new ptrlist<analysis>();
-  env = n.env;
-  nset = nullptr;
-  srcFactor = 1;
-}
-
 /* Prepends the given circuit to the list of registered circuits. */
 void net::insertCircuit(circuit *c) {
   assert(!containsCircuit(c));

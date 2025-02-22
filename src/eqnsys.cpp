@@ -34,7 +34,6 @@
 
 namespace qucs {
 
-//! Constructor creates an unnamed instance of the eqnsys class.
 template <class nr_type_t>
 eqnsys<nr_type_t>::eqnsys () {
   A = V = NULL;
@@ -48,7 +47,6 @@ eqnsys<nr_type_t>::eqnsys () {
   N = 0;
 }
 
-//! Destructor deletes the eqnsys class object.
 template <class nr_type_t>
 eqnsys<nr_type_t>::~eqnsys () {
   delete R;
@@ -60,22 +58,6 @@ eqnsys<nr_type_t>::~eqnsys () {
   delete[] rMap;
   delete[] cMap;
   delete[] nPvt;
-}
-
-/*! The copy constructor creates a new instance of the eqnsys class
-   based on the given eqnsys object. */
-template <class nr_type_t>
-eqnsys<nr_type_t>::eqnsys (eqnsys & e) {
-  A = e.A;
-  V = NULL;
-  S = E = NULL;
-  T = R = NULL;
-  B = e.B ? new tvector<nr_type_t> (*(e.B)) : NULL;
-  cMap = rMap = NULL;
-  nPvt = NULL;
-  update = 1;
-  X = e.X;
-  N = 0;
 }
 
 /*! With this function the describing matrices for the equation system
