@@ -30,13 +30,12 @@
 #ifndef __ANALYSES_H__
 #define __ANALYSES_H__
 
-#include "analysis.h"
-#include "spsolver.h"
-#include "dcsolver.h"
-#include "parasweep.h"
 #include "acsolver.h"
-#include "trsolver.h"
+#include "analysis.h"
+#include "dcsolver.h"
 #include "hbsolver.h"
+#include "parasweep.h"
+#include "spsolver.h"
 #include "trsolver.h"
 
 #endif /* __ANALYSES_H__ */

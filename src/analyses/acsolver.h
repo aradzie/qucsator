@@ -29,25 +29,24 @@ namespace qucs {
 class sweep;
 class vector;
 
-class acsolver : public nasolver<nr_complex_t>
-{
- public:
-  ACREATOR (acsolver);
-  acsolver (char *);
-  acsolver (acsolver &);
-  ~acsolver ();
-  int  solve (void);
-  void solve_noise (void);
-  static void calc (acsolver *);
-  void init (void);
-  void saveAllResults (double);
-  void saveNoiseResults (qucs::vector *);
+class acsolver : public nasolver<nr_complex_t> {
+public:
+  ACREATOR(acsolver);
+  acsolver(char *);
+  acsolver(acsolver &);
+  ~acsolver();
+  int solve();
+  void solve_noise();
+  static void calc(acsolver *);
+  void init();
+  void saveAllResults(double);
+  void saveNoiseResults(qucs::vector *);
 
- private:
-  sweep * swp;
+private:
+  sweep *swp;
   double freq;
   int noise;
-  tvector<double> * xn;
+  tvector<double> *xn;
 };
 
 } // namespace qucs

@@ -33,48 +33,46 @@ class vector;
 class sweep;
 class nodelist;
 
-class spsolver : public analysis
-{
- public:
-  ACREATOR (spsolver);
-  spsolver (char *);
-  spsolver (spsolver &);
-  ~spsolver ();
-  void calc (double);
-  void init (void);
-  void reduce (void);
-  int  solve (void);
-  void insertConnections (void);
-  void insertDifferentialPorts (void);
-  void insertTee (node **, const char *);
-  void insertCross (node **, const char *);
-  void insertConnectors (node *);
-  void insertOpen (node *);
-  void insertGround (node *);
-  circuit * interconnectJoin (node *, node *);
-  circuit * connectedJoin (node *, node *);
-  void noiseConnect (circuit *, node *, node *);
-  void noiseInterconnect (circuit *, node *, node *);
-  void saveResults (double);
-  void saveNoiseResults (nr_complex_t[4], nr_complex_t[4],
-			 double, vector *);
-  char * createSP (int, int);
-  const char * createCV (const std::string &c, const std::string &n);
-  void saveCharacteristics (double);
-  void dropTee (circuit *);
-  void dropCross (circuit *);
-  void dropOpen (circuit *);
-  void dropGround (circuit *);
-  void dropDifferentialPort (circuit *);
-  void dropConnections (void);
+class spsolver : public analysis {
+public:
+  ACREATOR(spsolver);
+  spsolver(char *);
+  spsolver(spsolver &);
+  ~spsolver();
+  void calc(double);
+  void init();
+  void reduce();
+  int solve();
+  void insertConnections();
+  void insertDifferentialPorts();
+  void insertTee(node **, const char *);
+  void insertCross(node **, const char *);
+  void insertConnectors(node *);
+  void insertOpen(node *);
+  void insertGround(node *);
+  circuit *interconnectJoin(node *, node *);
+  circuit *connectedJoin(node *, node *);
+  void noiseConnect(circuit *, node *, node *);
+  void noiseInterconnect(circuit *, node *, node *);
+  void saveResults(double);
+  void saveNoiseResults(nr_complex_t[4], nr_complex_t[4], double, vector *);
+  char *createSP(int, int);
+  const char *createCV(const std::string &c, const std::string &n);
+  void saveCharacteristics(double);
+  void dropTee(circuit *);
+  void dropCross(circuit *);
+  void dropOpen(circuit *);
+  void dropGround(circuit *);
+  void dropDifferentialPort(circuit *);
+  void dropConnections();
 
- private:
+private:
   int tees, crosses, grounds, opens;
   int noise;
   int saveCVs;
-  sweep * swp;
-  nodelist * nlist;
-  circuit * gnd;
+  sweep *swp;
+  nodelist *nlist;
+  circuit *gnd;
 };
 
 } // namespace qucs

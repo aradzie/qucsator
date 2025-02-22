@@ -31,72 +31,70 @@ class sweep;
 class circuit;
 class history;
 
-class trsolver : public nasolver<double>, public states<double>
-{
+class trsolver : public nasolver<double>, public states<double> {
 public:
-    ACREATOR (trsolver);
-    trsolver (const std::string  &name);
-    trsolver (trsolver &);
-    ~trsolver ();
-    int  solve (void);
-    int  predictor (void);
-    int  corrector (void);
-    void nextStates (void);
-    void fillStates (void);
-    void setMode (int);
-    void setDelta (void);
-    void adjustDelta (double);
-    void adjustOrder (int reduce = 0);
-    void initTR (void);
-    void deinitTR (void);
-    static void calcTR (trsolver *);
-    void initDC (void);
-    static void calcDC (trsolver *);
-    void initSteps (void);
-    void saveAllResults (double);
-    double checkDelta (void);
-    void updateCoefficients (double);
-    void initHistory (double);
-    void updateHistory (double);
-    void saveHistory (circuit *);
-    void predictBashford (void);
-    void predictEuler (void);
-    void predictGear (void);
-    void initCircuitTR (circuit *);
-    void fillSolution (tvector<double> *);
-    int  dcAnalysis (void);
+  ACREATOR(trsolver);
+  trsolver(const std::string &name);
+  trsolver(trsolver &);
+  ~trsolver();
+  int solve();
+  int predictor();
+  int corrector();
+  void nextStates();
+  void fillStates();
+  void setMode(int);
+  void setDelta();
+  void adjustDelta(double);
+  void adjustOrder(int reduce = 0);
+  void initTR();
+  void deinitTR();
+  static void calcTR(trsolver *);
+  void initDC();
+  static void calcDC(trsolver *);
+  void initSteps();
+  void saveAllResults(double);
+  double checkDelta();
+  void updateCoefficients(double);
+  void initHistory(double);
+  void updateHistory(double);
+  void saveHistory(circuit *);
+  void predictBashford();
+  void predictEuler();
+  void predictGear();
+  void initCircuitTR(circuit *);
+  void fillSolution(tvector<double> *);
+  int dcAnalysis();
 
 protected:
-    sweep * swp;
-    double predCoeff[8];
-    double corrCoeff[8];
-    double deltas[8];
-    double delta;
-    double deltaMax;
-    double deltaMin;
-    double deltaOld;
-    double stepDelta;
-    int CMethod;      // user specified corrector method
-    int PMethod;      // user specified predictor method
-    int corrMaxOrder; // maximum corrector order
-    int predMaxOrder; // maximum predictor order
-    int corrType;     // current corrector method
-    int predType;     // current predictor method
-    int corrOrder;    // current corrector order
-    int predOrder;    // current predictor order
-    int rejected;
-    int converged;
-    tvector<double> * solution[8];
-    double current;
-    int statSteps;
-    int statRejected;
-    int statIterations;
-    int statConvergence;
-    history * tHistory;
-    bool relaxTSR;
-    bool initialDC;
-    int ohm;
-
+  sweep *swp;
+  double predCoeff[8];
+  double corrCoeff[8];
+  double deltas[8];
+  double delta;
+  double deltaMax;
+  double deltaMin;
+  double deltaOld;
+  double stepDelta;
+  int CMethod;      // user specified corrector method
+  int PMethod;      // user specified predictor method
+  int corrMaxOrder; // maximum corrector order
+  int predMaxOrder; // maximum predictor order
+  int corrType;     // current corrector method
+  int predType;     // current predictor method
+  int corrOrder;    // current corrector order
+  int predOrder;    // current predictor order
+  int rejected;
+  int converged;
+  tvector<double> *solution[8];
+  double current;
+  int statSteps;
+  int statRejected;
+  int statIterations;
+  int statConvergence;
+  history *tHistory;
+  bool relaxTSR;
+  bool initialDC;
+  int ohm;
 };
 
 } // namespace qucs

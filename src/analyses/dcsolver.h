@@ -26,20 +26,21 @@
 
 namespace qucs {
 
-class dcsolver : public nasolver<double>
-{
- public:
-  ACREATOR (dcsolver);
-  dcsolver (char *);
-  dcsolver (dcsolver &);
-  ~dcsolver ();
-  int  solve (void);
-  static void calc (dcsolver *);
-  void init (void);
-  void restart (void);
-  void saveOperatingPoints (void);
+class dcsolver : public nasolver<double> {
+public:
+  ACREATOR(dcsolver);
+  dcsolver(char *);
+  dcsolver(dcsolver &);
+  ~dcsolver();
+  int solve();
 
- private:
+private:
+  static void calcDC(dcsolver *);
+  void initDC();
+  void restartDC();
+  void saveOperatingPoints();
+
+private:
   int saveOPs;
 };
 
