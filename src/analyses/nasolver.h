@@ -23,7 +23,6 @@
 #define __NASOLVER_H__
 
 #include <string>
-#include <unordered_map>
 
 #include "analysis.h"
 #include "eqnsys.h"
@@ -43,18 +42,6 @@ class analysis;
 class circuit;
 class nodelist;
 class vector;
-
-template <class nr_type_t> class naentry {
-public:
-  naentry() = default;
-  naentry(const naentry &) = default;
-  naentry(nr_type_t &v, int c) : current(c), value(v) {};
-  ~naentry() = default;
-
-public:
-  int current;
-  nr_type_t value;
-};
 
 template <class nr_type_t> class nasolver : public analysis {
 public:
@@ -100,8 +87,6 @@ protected:
   void createNoiseMatrix();
   void runMNA();
   void createMatrix();
-  void storeSolution();
-  void recallSolution();
   bool checkConvergence();
 
 private:
@@ -145,7 +130,6 @@ private:
   double reltol;
   double abstol;
   double vntol;
-  std::unordered_map<std::string, naentry<nr_type_t>> solution;
 
 private:
   calculate_func_t calculate_func;

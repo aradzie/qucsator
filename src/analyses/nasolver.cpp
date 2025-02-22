@@ -981,56 +981,6 @@ template <class nr_type_t> void nasolver<nr_type_t>::saveSolution() {
   saveBranchCurrents();
 }
 
-// This function stores the solution (node voltages and branch currents).
-template <class nr_type_t> void nasolver<nr_type_t>::storeSolution() {
-  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::storeSolution()\n", getName());
-
-  // cleanup solution previously
-  solution.clear();
-  const int N = countNodes();
-  const int M = countVoltageSources();
-  // store all nodes except reference node
-  for (int r = 0; r < N; r++) {
-    struct nodelist_t *n = nlist->getNode(r);
-    nr_type_t gr = x->get(r);
-    naentry<nr_type_t> entry(gr, 0);
-    solution.insert({{n->name, entry}});
-  }
-  // store all branch currents of voltage sources
-  for (int r = 0; r < M; r++) {
-    circuit *vs = findVoltageSource(r);
-    int vn = r - vs->getVoltageSource() + 1;
-    nr_type_t xg = x->get(r + N);
-    naentry<nr_type_t> entry(xg, vn);
-    solution.insert({{vs->getName(), entry}});
-  }
-}
-
-// This function recalls the solution (node voltages and branch currents).
-template <class nr_type_t> void nasolver<nr_type_t>::recallSolution() {
-  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::recallSolution()\n", getName());
-
-  const int N = countNodes();
-  const int M = countVoltageSources();
-  // store all nodes except reference node
-  for (int r = 0; r < N; r++) {
-    struct nodelist_t *n = nlist->getNode(r);
-    auto na = solution.find(n->name);
-    if (na != solution.end())
-      if ((*na).second.current == 0)
-        x->set(r, (*na).second.value);
-  }
-  // store all branch currents of voltage sources
-  for (int r = 0; r < M; r++) {
-    circuit *vs = findVoltageSource(r);
-    int vn = r - vs->getVoltageSource() + 1;
-    auto na = solution.find(vs->getName());
-    if (na != solution.end())
-      if ((*na).second.current == vn)
-        x->set(r + N, (*na).second.value);
-  }
-}
-
 /* Saves the results of a single solve() functionality into the output dataset. */
 template <class nr_type_t>
 void nasolver<nr_type_t>::saveResults(const std::string &volts, const std::string &amps,

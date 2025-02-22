@@ -22,6 +22,9 @@
 #ifndef __TRSOLVER_H__
 #define __TRSOLVER_H__
 
+#include <string>
+#include <unordered_map>
+
 #include "nasolver.h"
 #include "states.h"
 
@@ -30,6 +33,18 @@ namespace qucs {
 class sweep;
 class circuit;
 class history;
+
+class naentry {
+public:
+  naentry() = default;
+  naentry(const naentry &) = default;
+  naentry(double &v, int c) : current(c), value(v) {};
+  ~naentry() = default;
+
+public:
+  int current;
+  double value;
+};
 
 class trsolver final : public nasolver<double>, public states<double> {
 public:
@@ -67,6 +82,9 @@ private:
   void initCircuitTR(circuit *);
   void fillSolution(tvector<double> *);
 
+  void storeDcSolution();
+  void recallDcSolution();
+
 private:
   sweep *swp;
   double predCoeff[8];
@@ -97,6 +115,8 @@ private:
   bool relaxTSR;
   bool initialDC;
   int ohm;
+
+  std::unordered_map<std::string, naentry> dcSolution;
 };
 
 } // namespace qucs

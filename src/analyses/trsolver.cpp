@@ -123,7 +123,7 @@ int trsolver::dcAnalysis() {
   }
 
   // Save the DC solution.
-  storeSolution();
+  storeDcSolution();
 
   // Cleanup nodal analysis solver.
   solve_post();
@@ -180,7 +180,7 @@ int trsolver::solve() {
   swp->reset();
 
   // Recall the DC solution.
-  recallSolution();
+  recallDcSolution();
 
   // Apply the nodesets and adjust previous solutions.
   applyNodeset(false);
@@ -821,6 +821,58 @@ void trsolver::updateCoefficients(double delta) {
   saveState(dState, deltas);
   calcCorrectorCoeff(corrType, corrOrder, corrCoeff, deltas);
   calcPredictorCoeff(predType, predOrder, predCoeff, deltas);
+}
+
+// Stores the DC solution (node voltages and branch currents).
+void trsolver::storeDcSolution() {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::storeDcSolution()\n", getName());
+
+  // cleanup solution previously
+  dcSolution.clear();
+  const int N = countNodes();
+  const int M = countVoltageSources();
+  // store all nodes except reference node
+  for (int r = 0; r < N; r++) {
+    struct nodelist_t *n = nlist->getNode(r);
+    double gr = x->get(r);
+    naentry entry(gr, 0);
+    dcSolution.insert({{n->name, entry}});
+    logprint(LOG_STATUS, "NOTIFY: %s: save solution entry %s=%e\n", getName(), n->name.c_str(), gr);
+  }
+  // store all branch currents of voltage sources
+  for (int r = 0; r < M; r++) {
+    circuit *vs = findVoltageSource(r);
+    int vn = r - vs->getVoltageSource() + 1;
+    double xg = x->get(r + N);
+    naentry entry(xg, vn);
+    dcSolution.insert({{vs->getName(), entry}});
+    logprint(LOG_STATUS, "NOTIFY: %s: save solution entry %s=%e\n", getName(), vs->getName(), xg);
+  }
+}
+
+// Recalls the DC solution (node voltages and branch currents).
+void trsolver::recallDcSolution() {
+  logprint(LOG_STATUS, "NOTIFY: %s: trsolver::recallDcSolution()\n", getName());
+
+  const int N = countNodes();
+  const int M = countVoltageSources();
+  // store all nodes except reference node
+  for (int r = 0; r < N; r++) {
+    struct nodelist_t *n = nlist->getNode(r);
+    auto na = dcSolution.find(n->name);
+    if (na != dcSolution.end())
+      if ((*na).second.current == 0)
+        x->set(r, (*na).second.value);
+  }
+  // store all branch currents of voltage sources
+  for (int r = 0; r < M; r++) {
+    circuit *vs = findVoltageSource(r);
+    int vn = r - vs->getVoltageSource() + 1;
+    auto na = dcSolution.find(vs->getName());
+    if (na != dcSolution.end())
+      if ((*na).second.current == vn)
+        x->set(r + N, (*na).second.value);
+  }
 }
 
 PROP_REQ[] = {
