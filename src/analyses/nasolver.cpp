@@ -335,6 +335,8 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear() {
 
   logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_nonlinear()\n", getName());
 
+  log_indent();
+
   // run solving loop until convergence is reached
   int iter = 0;
   bool convergence;
@@ -367,6 +369,8 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear() {
     estack.push(e);
     error++;
   }
+
+  log_dedent();
 
   iterations = iter;
   return error;

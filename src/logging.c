@@ -22,6 +22,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "logging.h"
 
@@ -29,11 +30,18 @@
 FILE *file_status = NULL;
 FILE *file_error = NULL;
 
-/* This function prints the given messages format and the appropriate
-   arguments to a FILE stream depending on the given log level. */
+static int indent_level = 0;
+
+void log_indent() { indent_level = indent_level + 1; }
+
+void log_dedent() { indent_level = indent_level > 0 ? indent_level - 1 : 0; }
+
 void logprint(const int level, const char *format, ...) {
   FILE *f = level == LOG_STATUS ? file_status : file_error;
   if (f != NULL) {
+    for (int i = 0; i < indent_level; i++) {
+      fputs("  ", f);
+    }
     va_list args;
     va_start(args, format);
     vfprintf(f, format, args);

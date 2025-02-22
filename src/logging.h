@@ -35,6 +35,8 @@
 
 __BEGIN_DECLS
 
+void log_indent();
+void log_dedent();
 void logprint(int, const char *, ...);
 void loginit(void);
 void redirect_status_to_stdout();

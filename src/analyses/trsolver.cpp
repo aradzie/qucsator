@@ -205,6 +205,8 @@ int trsolver::solve() {
 
     do // while (saveCurrent < time), i.e. until a requested breakpoint is hit
     {
+      logprint(LOG_STATUS, "DEBUG: %s: t = %.3e\n", getName(), current);
+
 #if STEPDEBUG
       if (delta == deltaMin) {
         // the integrator step size has become smaller than the
@@ -347,6 +349,7 @@ int trsolver::solve() {
 
   // cleanup
   deinitTR();
+
   return 0;
 }
 
