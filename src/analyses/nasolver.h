@@ -83,7 +83,7 @@ protected:
   int countVoltageSources();
   void saveSolution();
   circuit *findVoltageSource(int);
-  void applyNodeset(bool nokeep = true);
+  void applyNodeset(bool discard = true);
   void createNoiseMatrix();
   void solveLinearEquations();
   void createMatrix();
@@ -116,6 +116,7 @@ protected:
   tvector<nr_type_t> *xprev;
   tmatrix<nr_type_t> *A;
   tmatrix<nr_type_t> *C;
+
   int iterations;
   int convHelper;
   int fixpoint;

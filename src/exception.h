@@ -25,6 +25,7 @@
 namespace qucs {
 
 enum exception_type {
+  NO_ERROR = 0,
   EXCEPTION_PIVOT,
   EXCEPTION_NO_CONVERGENCE,
   EXCEPTION_SINGULAR,

@@ -38,21 +38,18 @@ namespace qucs {
  * and thereby to the circuits it is connected to. */
 nodelist::nodelist(net *subnet) {
   sorting = 0;
-
-  circuit *c;
   // go through circuit list and find unique nodes
-  for (c = subnet->getRoot(); c != nullptr; c = c->getNext()) {
+  for (circuit *c = subnet->getRoot(); c != nullptr; c = c->getNext()) {
     for (int i = 0; i < c->getSize(); i++) {
       node *n = c->getNode(i);
       if (contains(n->getName()) == 0) {
         root.push_front(new nodelist_t(n->getName(), n->getInternal()));
-        ;
       }
     }
   }
   // add circuit nodes to each unique node in the list
   for (auto &n : this->root) {
-    for (c = subnet->getRoot(); c != nullptr; c = c->getNext()) {
+    for (circuit *c = subnet->getRoot(); c != nullptr; c = c->getNext()) {
       for (int i = 0; i < c->getSize(); i++) {
         assert(c->getNode(i)->getName() != nullptr);
         if (n->name == c->getNode(i)->getName()) {
@@ -63,17 +60,16 @@ nodelist::nodelist(net *subnet) {
   }
 }
 
-// Destructor deletes an instance of the nodelist class.
 nodelist::~nodelist() {
   for (auto &n : root) {
     delete n;
   }
 }
 
-// This function counts the node names in the list.
+// Counts the node names in the list.
 int nodelist::length() const { return root.size(); }
 
-// This function finds the specified node name in the list.
+// Finds the specified node name in the list.
 bool nodelist::contains(const std::string &str) const {
   return std::find_if(root.begin(), root.end(), [str](nodelist_t *n) { return n->name == str; }) !=
          root.end();
@@ -81,7 +77,6 @@ bool nodelist::contains(const std::string &str) const {
 
 // Returns the node number of the given node name.
 int nodelist::getNodeNr(const std::string &str) const {
-
   if (sorting) {
     auto it =
         std::find_if(narray.begin(), narray.end(), [str](nodelist_t *n) { return n->name == str; });
@@ -95,16 +90,16 @@ int nodelist::getNodeNr(const std::string &str) const {
   return (*it)->n;
 }
 
-/* This function returns the node name positioned at the specified
+/* Returns the node name positioned at the specified
    location in the node name list. */
 std::string nodelist::get(int nr) const { return narray[nr + 1]->name; }
 
-/* This function returns non-zero if the node positioned at the
+/* Returns non-zero if the node positioned at the
    specified location in the node name list is marked internal and
    zero otherwise. */
 bool nodelist::isInternal(int nr) const { return narray[nr + 1]->internal; }
 
-/* The function returns the nodelist structure with the given name in
+/* Returns the nodelist structure with the given name in
    the node name list.  It returns nullptr if there is no such node. */
 nodelist_t *nodelist::getNode(const std::string &str) const {
   auto it = std::find_if(root.begin(), root.end(), [str](nodelist_t *n) { return n->name == str; });
@@ -155,12 +150,12 @@ void nodelist::assignNodes() {
   }
 }
 
-/* The function appends a node pointer to the given nodelist
-   structure. */
+/* Appends a node pointer to the given nodelist structure. */
 void nodelist::addCircuitNode(nodelist_t *nl, node *n) {
   (*nl).push_back(n);
-  if (n->getInternal())
+  if (n->getInternal()) {
     nl->internal = n->getInternal();
+  }
 }
 
 /* This function is used as sorting criteria for the S-parameter
@@ -180,17 +175,16 @@ static int sortfunc(nodelist_t *n) {
   return p;
 }
 
-/* The function evaluates the sorting criteria of the given two nodes.
-   It returns non-zero if 'n1' should be inserted before 'n2'. */
+/* Evaluates the sorting criteria of the given two nodes.
+ * It returns non-zero if 'n1' should be inserted before 'n2'. */
 static int insfunc(nodelist_t *n1, nodelist_t *n2) {
   int p1 = sortfunc(n1);
   int p2 = sortfunc(n2);
   return p1 >= 0 && (p1 <= p2 || p2 < 0);
 }
 
-/* The function inserts the given node structure into the node list.
-   If the nodelist is sorted then the node gets inserted at a certain
-   position. */
+/* Inserts the given node structure into the node list.
+ * If the nodelist is sorted then the node gets inserted at a certain position. */
 void nodelist::insert(nodelist_t *n) {
   // first node at all
   if (root.empty()) {
@@ -208,8 +202,9 @@ void nodelist::insert(nodelist_t *n) {
         break;
       }
     }
-    if (!added)
+    if (!added) {
       root.push_back(n);
+    }
     return;
   }
 
@@ -275,26 +270,26 @@ void nodelist::insert(circuit *c) {
   }
 }
 
-/* The function completely rebuilds the nodelist.  Once sort()'ed it
-   keeps being sorted when removing or inserting new circuits. */
+/* Completely rebuilds the nodelist.  Once sort()'ed it keeps being sorted
+ * when removing or inserting new circuits. */
 void nodelist::sort() {
   nodelist *nodes = new nodelist();
-  nodelist_t *cand;
-  int i, ports, MaxPorts, len = length();
+  int len = length();
 
   // go through the list until there is no node left
-  for (i = 0; i < len; i++) {
+  for (int i = 0; i < len; i++) {
     // find last order node
-    cand = nullptr;
-    auto nl = root.begin();
-    for (MaxPorts = -1, nl = root.begin(); nl != root.end(); nl++) {
-      ports = sortfunc(*nl);
+    nodelist_t *cand = nullptr;
+    int MaxPorts = -1;
+    for (auto nl = root.begin(); nl != root.end(); nl++) {
+      int ports = sortfunc(*nl);
       if (ports > MaxPorts || MaxPorts < 0 || ports == -1) {
         cand = *nl;
         MaxPorts = ports;
       }
-      if (ports == -1)
+      if (ports == -1) {
         break;
+      }
     }
     // add last order node
     root.erase(std::remove(root.begin(), root.end(), cand), root.end());
@@ -317,21 +312,19 @@ void nodelist::sortedNodes(node **node1, node **node2) {
   *node2 = (**(root.begin()))[1];
 }
 
-#if DEBUG
-// Debug function: Prints the entire nodelist.
 void nodelist::print() const {
   for (auto n : root) {
     logprint(LOG_STATUS, "DEBUG: node %s-%d [", n->name.c_str(), n->n);
     std::size_t i = 0;
     for (const auto &currentnode : *n) {
       logprint(LOG_STATUS, "%s", currentnode->getCircuit()->getName());
-      if (i != n->size() - 1)
+      if (i != n->size() - 1) {
         logprint(LOG_STATUS, ",");
-      ++i;
+      }
+      i += 1;
     }
     logprint(LOG_STATUS, "]\n");
   }
 }
-#endif /* DEBUG */
 
 } // namespace qucs

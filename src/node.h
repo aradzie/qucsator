@@ -22,33 +22,43 @@
 #ifndef __NODE_H__
 #define __NODE_H__
 
+#include <string>
+
 namespace qucs {
 
 class circuit;
 
-class node : public object {
+class node final {
 public:
-  node() : object(), nNode(0), port(0), internal(0), _circuit(nullptr) {};
-  node(char *const n) : object(n), nNode(0), port(0), internal(0), _circuit(nullptr) {};
+  node() : name(), nNode(0), port(0), internal(0), cir(nullptr) {};
+  node(char *const n) : name(n), nNode(0), port(0), internal(0), cir(nullptr) {};
+
+  void setName(const std::string &n) { this->name = n; };
+  const char *getName() const { return this->name.c_str(); };
+
   // Sets the unique number of this node
   void setNode(const int n) { this->nNode = n; };
   // Returns the unique number of this node.
   int getNode() const { return this->nNode; };
+
   // Sets the port number of this node.
   void setPort(const int p) { this->port = p; };
   // Returns the port number of this node.
   int getPort() const { return this->port; };
+
   // Sets this node's circuit.
-  void setCircuit(circuit *const c) { this->_circuit = c; };
-  circuit *getCircuit() const { return this->_circuit; };
+  void setCircuit(circuit *const c) { this->cir = c; };
+  circuit *getCircuit() const { return this->cir; };
+
   void setInternal(int i) { internal = i; }
   int getInternal() { return internal; }
 
 private:
-  int nNode;
-  int port;
+  std::string name;
+  int nNode; // The unique number of this node.
+  int port; // The port number of this node.
   int internal;
-  circuit *_circuit;
+  circuit *cir;
 };
 
 } // namespace qucs

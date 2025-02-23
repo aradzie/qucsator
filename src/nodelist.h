@@ -49,9 +49,9 @@ public:
   typedef detail::nodevector::const_reference const_reference;
   typedef detail::nodevector::const_iterator erase_iterator;
 
-  /*! alias node number */
+  /* alias node number */
   std::size_t n;
-  /*! name of node */
+  /* name of node */
   std::string name;
   bool internal;
 

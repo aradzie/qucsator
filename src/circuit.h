@@ -98,34 +98,40 @@ public:
   circuit(const circuit &) = delete;
   virtual ~circuit();
 
-  virtual void initSP() { allocMatrixS(); }
-  virtual void calcSP(double) {}
   virtual void initDC() { allocMatrixMNA(); }
   virtual void calcDC() {}
-  virtual void restartDC() {}
-  virtual void initNoiseSP() { allocMatrixN(); }
-  virtual void calcNoiseSP(double) {}
-  virtual void initNoiseAC() { allocMatrixN(vsources); }
-  virtual void calcNoiseAC(double) {}
-  virtual void initAC() { allocMatrixMNA(); }
-  virtual void calcAC(double) {}
+  virtual void restartDC() {} // ARA: What is this method for?
+
   virtual void initTR() { allocMatrixMNA(); }
   virtual void calcTR(double) {}
+
+  virtual void initAC() { allocMatrixMNA(); }
+  virtual void calcAC(double) {}
+  virtual void initNoiseAC() { allocMatrixN(vsources); }
+  virtual void calcNoiseAC(double) {}
+
+  virtual void initSP() { allocMatrixS(); }
+  virtual void calcSP(double) {}
+  virtual void initNoiseSP() { allocMatrixN(); }
+  virtual void calcNoiseSP(double) {}
+
   virtual void initHB() { allocMatrixMNA(); }
-  virtual void calcHB(double) {}
   virtual void initHB(int) { allocMatrixMNA(); }
+  virtual void calcHB(double) {}
   virtual void calcHB(int) {}
+
   virtual void calcOperatingPoints() {}
   virtual void saveOperatingPoints() {}
+
   virtual void calcCharacteristics(double) {}
   virtual void saveCharacteristics(double) {}
   virtual void saveCharacteristics(nr_complex_t) {}
 
-  // basic circuit element functionality
   void setNode(int, const std::string &, int intern = 0);
   node *getNode(int);
-  void setType(int t) { type = t; }
+
   int getType() { return type; }
+
   /* Gets the number of ports the circuit element has. */
   int getSize() { return size; }
   /* Sets/changes the number of ports the circuit element has.
@@ -133,15 +139,19 @@ public:
    * information is completely lost unless the new size equals
    * the original size. */
   void setSize(int);
+
   /* Returns true if the circuit element is enabled or false
    * otherwise. */
   bool isEnabled() { return RETFLAG(CIRCUIT_ENABLED); }
   /* Sets the circuit element to be enabled or disabled. */
   void setEnabled(bool e) { MODFLAG(e, CIRCUIT_ENABLED); }
+
   bool isVariableSized() { return RETFLAG(CIRCUIT_VARSIZE); }
   void setVariableSized(bool v) { MODFLAG(v, CIRCUIT_VARSIZE); }
+
   bool isProbe() { return RETFLAG(CIRCUIT_PROBE); }
   void setProbe(bool p) { MODFLAG(p, CIRCUIT_PROBE); }
+
   void setNet(net *n) { subnet = n; }
   net *getNet() { return subnet; }
 
@@ -161,10 +171,13 @@ public:
   int getVoltageSources();
   void setVoltageSources(int);
   void voltageSource(int, int, int, double value = 0.0);
+
   bool isVSource() { return RETFLAG(CIRCUIT_VSOURCE); }
   void setVSource(bool v) { MODFLAG(v, CIRCUIT_VSOURCE); }
+
   bool isISource() { return RETFLAG(CIRCUIT_ISOURCE); }
   void setISource(bool i) { MODFLAG(i, CIRCUIT_ISOURCE); }
+
   int getNoiseSources();
   void setNoiseSources(int);
 
@@ -177,6 +190,7 @@ public:
   void transientCapacitanceC(int, int, double, double);
   void transientCapacitanceC2V(int, int, int, double, double);
   void transientCapacitanceC2Q(int, int, int, double, double);
+
   void setDelta(double *d) { deltas = d; }
   double *getDelta() { return deltas; }
 
@@ -188,9 +202,11 @@ public:
   void truncateHistory(double);
   void appendHistory(int, double);
   void applyHistory(history *);
+
   double getV(int, double);
   double getV(int, int);
   double getJ(int, double);
+
   double getHistoryAge();
   void setHistoryAge(double);
   int getHistorySize();
@@ -305,18 +321,18 @@ private:
   int flag;
   nr_complex_t *MatrixS;
   nr_complex_t *MatrixN;
-  nr_complex_t *MatrixY;
-  nr_complex_t *MatrixB;
-  nr_complex_t *MatrixC;
-  nr_complex_t *MatrixD;
-  nr_complex_t *VectorE;
-  nr_complex_t *VectorI;
-  nr_complex_t *VectorV;
-  nr_complex_t *VectorJ;
-  nr_complex_t *VectorQ;
-  nr_complex_t *MatrixQV;
-  nr_complex_t *VectorGV;
-  nr_complex_t *VectorCV;
+  nr_complex_t *MatrixY; // ARA: Devices update this vector. The `nasolver` class reads this value. AC analysis.
+  nr_complex_t *MatrixB; // ARA: Devices update this vector. The `nasolver` class reads this value. DC/TR analysis.
+  nr_complex_t *MatrixC; // ARA: Devices update this vector. The `nasolver` class reads this value. DC/TR analysis.
+  nr_complex_t *MatrixD; // ARA: Devices update this vector. The `nasolver` class reads this value. DC/TR analysis.
+  nr_complex_t *VectorE; // ARA: Device currents. Devices update this vector. The `nasolver` class reads this value. DC/TR analysis.
+  nr_complex_t *VectorI; // ARA: Device voltages. Devices update this vector. The `nasolver` class reads this value. DC/TR analysis.
+  nr_complex_t *VectorV; // ARA: The `nasolver` class updates this vector with the solved node voltages. Devices read this value. DC/TR analysis.
+  nr_complex_t *VectorJ; // ARA: The `nasolver` class updates this vector with the solved branch currents. Devices read this value. DC/TR analysis.
+  nr_complex_t *VectorQ; // ARA: For HB analysis only.
+  nr_complex_t *MatrixQV; // ARA: For HB analysis only.
+  nr_complex_t *VectorGV; // ARA: For HB analysis only.
+  nr_complex_t *VectorCV; // ARA: For HB analysis only.
   std::string subcircuit;
   node *nodes;
   substrate *subst;
@@ -339,8 +355,8 @@ typedef struct define_t *defs_t();
 
 // our global factories defined in module.cpp
 extern "C" {
-extern std::map<std::string, creator_t *, std::less<std::string>> factorycreate;
-extern std::map<std::string, defs_t *, std::less<std::string>> factorydef;
+extern std::map<std::string, creator_t *> factorycreate;
+extern std::map<std::string, defs_t *> factorydef;
 }
 
 #endif /* __CIRCUIT_H__ */
