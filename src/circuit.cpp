@@ -469,15 +469,6 @@ nr_complex_t circuit::getN(int r, int c) { return MatrixN[c + r * (size + nsourc
 // Sets the noise-correlation-parameter at the given matrix position.
 void circuit::setN(int r, int c, nr_complex_t z) { MatrixN[c + r * (size + nsources)] = z; }
 
-// Returns the number of internal voltage sources for DC analysis.
-int circuit::getVoltageSources() { return vsources; }
-
-// Sets the number of internal voltage sources for DC analysis.
-void circuit::setVoltageSources(int s) {
-  assert(s >= 0);
-  vsources = s;
-}
-
 // Returns the number of internal noise sources for AC analysis.
 int circuit::getNoiseSources() { return nsources; }
 

@@ -580,8 +580,8 @@ template <class nr_type_t> void nasolver<nr_type_t>::createNoiseMatrix() {
 
 // Loads the right hand side vector.
 template <class nr_type_t> void nasolver<nr_type_t>::createZVector() {
-  createIVector(); // Reads device VectorI values.
-  createEVector(); // Reads device VectorE values.
+  createIVector(); // ARA: Reads device VectorI values.
+  createEVector(); // ARA: Reads device VectorE values.
 }
 
 /* The i matrix is an 1xN matrix with each element of the matrix
@@ -600,7 +600,8 @@ template <class nr_type_t> void nasolver<nr_type_t>::createIVector() {
       circuit *is = currentn->getCircuit();
       // is this a current source?
       if (is->isISource() || is->isNonLinear()) {
-        val += MatVal(is->getI(currentn->getPort())); // ARA: Read current from the device VectorI.
+        int port = currentn->getPort();
+        val += MatVal(is->getI(port)); // ARA: Read current from the device VectorI.
       }
     }
     // put value into i vector

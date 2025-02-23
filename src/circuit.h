@@ -165,17 +165,20 @@ public:
 
   // nodal analyses helpers
   void setInternalVoltageSource(bool i) { MODFLAG(i, CIRCUIT_INTVSOURCE); }
-  bool isInternalVoltageSource() { return RETFLAG(CIRCUIT_INTVSOURCE); }
+  bool isInternalVoltageSource() const { return RETFLAG(CIRCUIT_INTVSOURCE); }
+
   void setVoltageSource(int s) { vsource = s; }
-  int getVoltageSource() { return vsource; }
-  int getVoltageSources();
-  void setVoltageSources(int);
+  int getVoltageSource() const { return vsource; }
+
+  int getVoltageSources() const { return vsources; };
+  void setVoltageSources(int s) { vsources = s; };
+
   void voltageSource(int, int, int, double value = 0.0);
 
-  bool isVSource() { return RETFLAG(CIRCUIT_VSOURCE); }
+  bool isVSource() const { return RETFLAG(CIRCUIT_VSOURCE); }
   void setVSource(bool v) { MODFLAG(v, CIRCUIT_VSOURCE); }
 
-  bool isISource() { return RETFLAG(CIRCUIT_ISOURCE); }
+  bool isISource() const { return RETFLAG(CIRCUIT_ISOURCE); }
   void setISource(bool i) { MODFLAG(i, CIRCUIT_ISOURCE); }
 
   int getNoiseSources();
@@ -195,7 +198,7 @@ public:
   double *getDelta() { return deltas; }
 
   // history specific functionality
-  bool hasHistory() { return RETFLAG(CIRCUIT_HISTORY); }
+  bool hasHistory() const { return RETFLAG(CIRCUIT_HISTORY); }
   void setHistory(bool h) { MODFLAG(h, CIRCUIT_HISTORY); }
   void initHistory(double);
   void deleteHistory();
@@ -213,11 +216,11 @@ public:
   double getHistoryTFromIndex(int);
 
   // s-parameter helpers
-  int getPort() { return pacport; }
+  int getPort() const { return pacport; }
   void setPort(int p) { pacport = p; }
-  int getInserted() { return inserted; }
+  int getInserted() const { return inserted; }
   void setInserted(int i) { inserted = i; }
-  bool isOriginal() { return RETFLAG(CIRCUIT_ORIGINAL); }
+  bool isOriginal() const { return RETFLAG(CIRCUIT_ORIGINAL); }
   void setOriginal(bool o) { MODFLAG(o, CIRCUIT_ORIGINAL); }
 
   // microstrip helpers
