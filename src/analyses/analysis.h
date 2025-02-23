@@ -79,8 +79,6 @@ public:
   void setType(int type) { this->type = type; }
   sweep *createSweep(const std::string &);
   void saveVariable(const std::string &, nr_complex_t, qucs::vector *);
-  bool getProgress() const { return this->progress; }
-  void setProgress(bool progress) { this->progress = progress; }
 
 protected:
   int runs;
@@ -89,7 +87,6 @@ protected:
   dataset *data;
   environment *env;
   ptrlist<analysis> *actions;
-  bool progress;
 };
 
 } // namespace qucs

@@ -93,7 +93,6 @@ int parasweep::initialize() {
   if (actions != nullptr) {
     for (auto *a : *actions) {
       a->initialize();
-      a->setProgress(false);
     }
   }
   return 0;

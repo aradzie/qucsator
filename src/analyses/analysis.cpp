@@ -40,7 +40,6 @@ analysis::analysis() : object() {
   actions = nullptr;
   type = ANALYSIS_UNKNOWN;
   runs = 0;
-  progress = true;
 }
 
 analysis::analysis(const std::string &n) : object(n) {
@@ -50,7 +49,6 @@ analysis::analysis(const std::string &n) : object(n) {
   actions = nullptr;
   type = ANALYSIS_UNKNOWN;
   runs = 0;
-  progress = true;
 }
 
 analysis::~analysis() { delete actions; }
