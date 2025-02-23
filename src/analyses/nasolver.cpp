@@ -613,6 +613,52 @@ template <class nr_type_t> void nasolver<nr_type_t>::createEVector() {
   }
 }
 
+// Saves the solution vector into each circuit.
+// ARA: Do not confuse with saveResults, which updates the output dataset.
+template <class nr_type_t> void nasolver<nr_type_t>::saveSolution() {
+  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::saveSolution()\n", getName());
+
+  saveNodeVoltages();
+  saveBranchCurrents();
+}
+
+/* Goes through solution (the x vector) and saves the node voltages of the last iteration
+ * into each non-linear circuit. */
+template <class nr_type_t> void nasolver<nr_type_t>::saveNodeVoltages() {
+  const int N = countNodes();
+  // save all nodes except reference node
+  for (int r = 0; r < N; r++) {
+    struct nodelist_t *n = nlist->getNode(r);
+    for (auto &currentn : *n) {
+      circuit *circuit = currentn->getCircuit();
+      int port = currentn->getPort();
+      nr_type_t v = x->get(r);
+      circuit->setV(port, v); // ARA: Copy the computed node voltage to the device.
+    }
+  }
+  // save reference node
+  struct nodelist_t *n = nlist->getNode(-1);
+  for (auto &currentn : *n) {
+    circuit *circuit = currentn->getCircuit();
+    int port = currentn->getPort();
+    nr_type_t x = 0.0;
+    circuit->setV(port, x); // ARA: Copy the computed node voltage to the device.
+  }
+}
+
+/* Goes through solution (the x vector) and saves the branch currents through the voltage sources
+ * of the last iteration into each circuit. */
+template <class nr_type_t> void nasolver<nr_type_t>::saveBranchCurrents() {
+  const int N = countNodes();
+  const int M = countVoltageSources();
+  // save all branch currents of voltage sources
+  for (int r = 0; r < M; r++) {
+    circuit *circuit = findVoltageSource(r);
+    nr_type_t j = x->get(r + N);
+    circuit->setJ(r, j); // ARA: Copy the computed branch current to the device.
+  }
+}
+
 // Returns the number of nodes in the nodelist, excluding the ground node.
 template <class nr_type_t> int nasolver<nr_type_t>::countNodes() { return nlist->length() - 1; }
 
@@ -867,52 +913,6 @@ template <class nr_type_t> void nasolver<nr_type_t>::restartNR() {
     if (c->isNonLinear()) {
       c->restartDC();
     }
-  }
-}
-
-// Saves the solution vector into each circuit.
-// ARA: Do not confuse with saveResults, which updates the output dataset.
-template <class nr_type_t> void nasolver<nr_type_t>::saveSolution() {
-  logprint(LOG_STATUS, "NOTIFY: %s: nasolver::saveSolution()\n", getName());
-
-  saveNodeVoltages();
-  saveBranchCurrents();
-}
-
-/* Goes through solution (the x vector) and saves the node voltages of the last iteration
- * into each non-linear circuit. */
-template <class nr_type_t> void nasolver<nr_type_t>::saveNodeVoltages() {
-  const int N = countNodes();
-  // save all nodes except reference node
-  for (int r = 0; r < N; r++) {
-    struct nodelist_t *n = nlist->getNode(r);
-    for (auto &currentn : *n) {
-      circuit *circuit = currentn->getCircuit();
-      int port = currentn->getPort();
-      nr_type_t v = x->get(r);
-      circuit->setV(port, v); // ARA: Copy the computed node voltage to the device.
-    }
-  }
-  // save reference node
-  struct nodelist_t *n = nlist->getNode(-1);
-  for (auto &currentn : *n) {
-    circuit *circuit = currentn->getCircuit();
-    int port = currentn->getPort();
-    nr_type_t x = 0.0;
-    circuit->setV(port, x); // ARA: Copy the computed node voltage to the device.
-  }
-}
-
-/* Goes through solution (the x vector) and saves the branch currents through the voltage sources
- * of the last iteration into each circuit. */
-template <class nr_type_t> void nasolver<nr_type_t>::saveBranchCurrents() {
-  const int N = countNodes();
-  const int M = countVoltageSources();
-  // save all branch currents of voltage sources
-  for (int r = 0; r < M; r++) {
-    circuit *circuit = findVoltageSource(r);
-    nr_type_t j = x->get(r + N);
-    circuit->setJ(r, j); // ARA: Copy the computed branch current to the device.
   }
 }
 

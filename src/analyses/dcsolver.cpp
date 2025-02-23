@@ -91,6 +91,7 @@ int dcsolver::solve() {
       CONV_LineSearch,     CONV_Attenuation,  -1,
   };
 
+  // Allocate the nodes, SLE matrices and vectors.
   solve_pre();
 
   int error = 0, fallback = 0;
@@ -99,6 +100,7 @@ int dcsolver::solve() {
     convHelper = CONV_None;
     error = solve_linear();
   } else {
+    // Iterate to find the solution.
     bool retry;
     do {
       retry = false;
@@ -140,6 +142,7 @@ int dcsolver::solve() {
   saveOperatingPoints();
   saveResults("V", "I", saveOPs);
 
+  // Free the nodes, SLE matrices and vectors.
   solve_post();
 
   return error;
