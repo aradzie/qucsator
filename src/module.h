@@ -22,8 +22,6 @@
 #ifndef __MODULE_H__
 #define __MODULE_H__
 
-#include <list>
-
 #include "hash.h"
 
 namespace qucs {
@@ -32,41 +30,34 @@ class circuit;
 class analysis;
 
 // function typedefs for circuits and analyses
-typedef circuit * (* circuit_creator_t) (void);
-typedef analysis * (* analysis_creator_t) (void);
-typedef struct define_t * (* circuit_definer_t) (void);
-typedef struct define_t * (* analysis_definer_t) (void);
-typedef struct define_t * (* misc_definer_t) (void);
+typedef circuit *(*circuit_creator_t)();
+typedef analysis *(*analysis_creator_t)();
+typedef struct define_t *(*circuit_definer_t)();
+typedef struct define_t *(*analysis_definer_t)();
+typedef struct define_t *(*misc_definer_t)();
 
-class module
-{
- public:
-  module ();
-  ~module ();
+class module {
+public:
+  module();
+  ~module();
 
-  static void registerModule (circuit_definer_t, circuit_creator_t);
-  static void registerModules (void);
-  static void unregisterModules (void);
-  static struct define_t * getModule (char *);
-  static void print (void);
+  static void registerModule(circuit_definer_t, circuit_creator_t);
+  static void registerModules();
+  static struct define_t *getModule(char *);
 
-  static void registerDynamicModules (char *proj, std::list<std::string> modlist);
-  static void closeDynamicLibs (void);
+private:
+  static void registerModule(analysis_definer_t, analysis_creator_t);
+  static void registerModule(struct define_t *);
+  static void registerModule(misc_definer_t);
+  static void registerModule(const char *, module *);
 
- private:
-  static void registerModule (analysis_definer_t , analysis_creator_t);
-  static void registerModule (struct define_t *);
-  static void registerModule (misc_definer_t);
-  static void registerModule (const char *, module *);
-
- public:
+public:
   static qucs::hash<module> modules;
 
- public:
-  struct define_t * definition;
+public:
+  struct define_t *definition;
   circuit_creator_t circreate;
   analysis_creator_t anacreate;
-
 };
 
 } // namespace qucs
