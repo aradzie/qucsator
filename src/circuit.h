@@ -140,9 +140,7 @@ public:
    * the original size. */
   void setSize(int);
 
-  /* Sets the circuit element to be enabled or disabled. */
   void setEnabled(bool e) { MODFLAG(e, CIRCUIT_ENABLED); }
-  /* Returns true if the circuit element is enabled or false otherwise. */
   bool isEnabled() const { return RETFLAG(CIRCUIT_ENABLED); }
 
   void setVariableSized(bool v) { MODFLAG(v, CIRCUIT_VARSIZE); }
@@ -371,11 +369,11 @@ protected:
   int pol;
 
 private:
-  int size;
-  int pacport;
-  int vsource; // ARA: Index of the voltage source in the MNA matrix.
-  int vsources;
-  int nsources;
+  int size; // The number of ports/nodes.
+  int pacport; // ARA: Something for S-parameters.
+  int vsource; // ARA: Index of the first voltage source in the MNA matrix.
+  int vsources; // ARA: The number of internal voltage sources.
+  int nsources; // ARA: The number of internal voltage noise sources for AC analysis.
   int inserted;
   int flag;
   nr_complex_t *MatrixS;
@@ -388,9 +386,9 @@ private:
                           // DC/TR analysis.
   nr_complex_t *MatrixD;  // ARA: Devices update this vector. The `nasolver` class reads this value.
                           // DC/TR analysis.
-  nr_complex_t *VectorE;  // ARA: Device currents. Devices update this vector. The `nasolver` class
+  nr_complex_t *VectorE;  // ARA: Device voltages. Devices update this vector. The `nasolver` class
                           // reads this value. DC/TR analysis.
-  nr_complex_t *VectorI;  // ARA: Device voltages. Devices update this vector. The `nasolver` class
+  nr_complex_t *VectorI;  // ARA: Device currents. Devices update this vector. The `nasolver` class
                           // reads this value. DC/TR analysis.
   nr_complex_t *VectorV;  // ARA: The `nasolver` class updates this vector with the solved node
                           // voltages. Devices read this value. DC/TR analysis.

@@ -85,15 +85,15 @@ template <class nr_type_t> void nasolver<nr_type_t>::solve_pre() {
   // create node list, enumerate nodes and voltage sources
   logprint(LOG_STATUS, "NOTIFY: %s: creating node list for %s analysis\n", getName(), desc.c_str());
 
-  // ARA: What is this?
   nlist = new nodelist(subnet);
   nlist->assignNodes();
-  assignVoltageSources(); // ARA: Count the number of nodes and branches.
+  assignVoltageSources(); // ARA: Count the number of nodes and branches, assign unique indices to
+                          // voltage sources.
   nlist->print();
 
   // create matrix, solution vector and right hand side vector
   const int M = countVoltageSources(); // ARA: See assignVoltageSources above.
-  const int N = countNodes(); // ARA: same as nlist->length() - 1
+  const int N = countNodes();          // ARA: same as nlist->length() - 1
 
   delete A;
   A = new tmatrix<nr_type_t>(M + N);
@@ -121,6 +121,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_once() {
   calculate();
 
   // generate matrix `A` and vector `z`
+  // ARA: This reads circuit's input matrices and vectors.
   createMatrix();
 
   // solve the system of linear equations
@@ -132,7 +133,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_once() {
   }
 
   // save results into circuits
-  // ARA: This copies the solution vector to the circuit (device) vectors `VectorV` and `VectorJ`.
+  // ARA: This copies the solution vector to the circuit output vectors `VectorV` and `VectorJ`.
   saveSolution();
 
   return NO_ERROR;

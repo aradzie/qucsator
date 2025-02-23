@@ -78,6 +78,7 @@ public:
   int getM();
 
 protected:
+  /* Apply starting value to previous iteration value. */
   void restartNR();
   void savePreviousIteration();
   void restorePreviousIteration();
@@ -134,7 +135,7 @@ protected:
   int updateMatrix;
   double gMin, srcFactor;
   std::string desc;
-  nodelist *nlist; // ARA: This list exists for the duration of a single solution.
+  nodelist *nlist; // ARA: This list exists for the duration of a single analysis.
 
 private:
   eqnsys<nr_type_t> *eqns;
