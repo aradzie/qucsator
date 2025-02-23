@@ -92,8 +92,9 @@ sweep *analysis::createSweep(const std::string &n) {
     int points = values->getSize();
     swp = new lstsweep(n);
     ((lstsweep *)swp)->create(points);
-    for (int i = 0; i < values->getSize(); i++)
+    for (int i = 0; i < values->getSize(); i++) {
       swp->set(i, real(values->get(i)));
+    }
   }
 
   // constant value
@@ -110,12 +111,13 @@ sweep *analysis::createSweep(const std::string &n) {
 
 /* Saves the given variable into the dataset.  Creates the dataset vector if necessary. */
 void analysis::saveVariable(const std::string &n, nr_complex_t z, vector *f) {
-  vector *d;
-  if ((d = data->findVariable(n)) == nullptr) {
+  vector *d = data->findVariable(n);
+  if (d == nullptr) {
     d = new vector(n);
     if (f != nullptr) {
-      d->setDependencies(new strlist());
-      d->getDependencies()->add(f->getName());
+      auto *deps = new strlist();
+      deps->add(f->getName());
+      d->setDependencies(deps);
     }
     d->setOrigin(getName());
     data->addVariable(d);

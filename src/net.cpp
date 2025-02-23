@@ -207,10 +207,8 @@ dataset *net::runAnalysis(int &err) {
 
   // apply some data to all analyses
   for (auto *a : *actions) {
-    if (!a->isExternal()) {
-      a->setNet(this);
-      a->setData(out);
-    }
+    a->setNet(this);
+    a->setData(out);
   }
 
   // re-order analyses
@@ -218,24 +216,18 @@ dataset *net::runAnalysis(int &err) {
 
   // initialize analyses
   for (auto *a : *actions) {
-    if (!a->isExternal()) {
-      err |= a->initialize();
-    }
+    err |= a->initialize();
   }
 
   // solve the analyses
   for (auto *a : *actions) {
-    if (!a->isExternal()) {
-      a->getEnv()->runSolver();
-      err |= a->solve();
-    }
+    a->getEnv()->runSolver();
+    err |= a->solve();
   }
 
   // cleanup analyses
   for (auto *a : *actions) {
-    if (!a->isExternal()) {
-      err |= a->cleanup();
-    }
+    err |= a->cleanup();
   }
 
   return out;

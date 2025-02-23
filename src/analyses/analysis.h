@@ -52,7 +52,7 @@ enum analysis_type {
   ANALYSIS_HBALANCE,
   ANALYSIS_TRANSIENT,
   ANALYSIS_SPARAMETER,
-  ANALYSIS_E_TRANSIENT
+  ANALYSIS_E_TRANSIENT,
 };
 
 class analysis : public object {
@@ -61,28 +61,34 @@ public:
   explicit analysis(const std::string &);
   analysis(const analysis &) = delete;
   virtual ~analysis();
-  virtual int solve() { return 0; }
+
+  int getType() const { return this->type; }
+
   virtual int initialize() { return 0; }
+  virtual int solve() { return 0; }
   virtual int cleanup() { return 0; }
-  virtual bool isExternal() { return false; }
+
   dataset *getData() const { return this->data; }
   void setData(dataset *data) { this->data = data; }
+
   net *getNet() { return this->subnet; }
-  void setNet(net *netlist) { this->subnet = netlist; }
+  void setNet(net *subnet) { this->subnet = subnet; }
+
   environment *getEnv() { return this->env; }
   void setEnv(environment *env) { this->env = env; }
+
   ptrlist<analysis> *getAnalysis() { return this->actions; }
   void setAnalysis(ptrlist<analysis> *actions) { this->actions = actions; }
   void addAnalysis(analysis *);
   void delAnalysis(analysis *);
-  int getType() { return this->type; }
-  void setType(int type) { this->type = type; }
+
   sweep *createSweep(const std::string &);
+
   void saveVariable(const std::string &, nr_complex_t, qucs::vector *);
 
 protected:
-  int runs;
   int type;
+  int runs;
   net *subnet;
   dataset *data;
   environment *env;

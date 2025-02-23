@@ -49,16 +49,20 @@ public:
   explicit nasolver(const std::string &);
   nasolver(const nasolver &) = delete;
   ~nasolver() override;
+
+  void solve_pre();
+  void solve_post();
   int solve_once();
+  int solve_linear();
   int solve_nonlinear();
   int solve_nonlinear_continuation_gMin();
   int solve_nonlinear_continuation_Source();
-  int solve_linear();
-  void solve_pre();
-  void solve_post();
+
   void setDescription(const std::string &n) { desc = n; }
   std::string getDescription() const { return desc; }
+
   void saveResults(const std::string &, const std::string &, int, qucs::vector *f = nullptr);
+
   typedef void (*calculate_func_t)(nasolver<nr_type_t> *);
   void setCalculation(calculate_func_t f) { calculate_func = f; }
   void calculate() {
@@ -84,13 +88,15 @@ protected:
   void saveSolution();
   circuit *findVoltageSource(int);
   void applyNodeset(bool discard = true);
-  void createNoiseMatrix();
   void solveLinearEquations();
-  void createMatrix();
   bool checkConvergence();
+
+  void createMatrix();
+  void createNoiseMatrix();
 
 private:
   void assignVoltageSources();
+
   void createGMatrix();
   void createBMatrix();
   void createCMatrix();
@@ -98,14 +104,18 @@ private:
   void createIVector();
   void createEVector();
   void createZVector();
+
   void applyAttenuation();
   void lineSearch();
   void steepestDescent();
+
   std::string createV(int, const std::string &, int);
   std::string createI(int, const std::string &, int);
   std::string createOP(const std::string &, const std::string &);
+
   void saveNodeVoltages();
   void saveBranchCurrents();
+
   nr_type_t MatValX(nr_complex_t, nr_complex_t *);
   nr_type_t MatValX(nr_complex_t, double *);
 

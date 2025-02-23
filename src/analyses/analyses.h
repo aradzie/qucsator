@@ -19,14 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*! \file analyses.h
- * \brief global analysis header file
- *
- * Contains includes of all the analysis types available in
- * Qucs.
- *
- */
-
 #ifndef __ANALYSES_H__
 #define __ANALYSES_H__
 
