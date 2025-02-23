@@ -225,7 +225,7 @@ int trsolver::solve() {
 
       // restart Newton iteration
       if (rejected) {
-        restartNR(); // restart non-linear devices
+        restartDC(); // restart non-linear devices
         rejected = 0;
       }
 

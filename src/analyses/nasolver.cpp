@@ -905,7 +905,7 @@ template <class nr_type_t> void nasolver<nr_type_t>::restorePreviousIteration() 
 }
 
 /* Restarts the NR iteration for each non-linear circuit. */
-template <class nr_type_t> void nasolver<nr_type_t>::restartNR() {
+template <class nr_type_t> void nasolver<nr_type_t>::restartDC() {
   logprint(LOG_STATUS, "NOTIFY: %s: nasolver::restartDC()\n", getName());
 
   circuit *root = subnet->getRoot();
@@ -954,7 +954,7 @@ template <class nr_type_t> void nasolver<nr_type_t>::applyNodeset(bool discard) 
   saveSolution();
 
   // propagate the solution to the non-linear circuits
-  restartNR();
+  restartDC();
 }
 
 /* Saves the results of a single solve() functionality into the output dataset. */

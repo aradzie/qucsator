@@ -79,7 +79,7 @@ public:
 
 protected:
   /* Apply starting value to previous iteration value. */
-  void restartNR();
+  void restartDC();
   void savePreviousIteration();
   void restorePreviousIteration();
   int countNodes();

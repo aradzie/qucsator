@@ -169,19 +169,6 @@ void dcsolver::calcDC(dcsolver *self) {
 }
 
 /* Goes through the list of non-linear circuit objects
- * and runs their restartDC() function. */
-void dcsolver::restartDC() {
-  logprint(LOG_STATUS, "NOTIFY: %s: dcsolver::restartDC()\n", getName());
-
-  circuit *root = subnet->getRoot();
-  for (circuit *c = root; c != nullptr; c = c->getNext()) {
-    if (c->isNonLinear()) {
-      c->restartDC();
-    }
-  }
-}
-
-/* Goes through the list of non-linear circuit objects
  * and runs its saveOperatingPoints() function. */
 void dcsolver::saveOperatingPoints() {
   logprint(LOG_STATUS, "NOTIFY: %s: dcsolver::saveOperatingPoints()\n", getName());

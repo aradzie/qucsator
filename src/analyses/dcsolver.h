@@ -37,7 +37,6 @@ public:
 private:
   void initDC();
   static void calcDC(dcsolver *);
-  void restartDC();
   void saveOperatingPoints();
 
 private:
