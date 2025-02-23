@@ -22,16 +22,15 @@
 #ifndef __ATTENUATOR_H__
 #define __ATTENUATOR_H__
 
-class attenuator : public qucs::circuit
-{
- public:
-  CREATOR (attenuator);
-  void initSP (void);
-  void calcNoiseSP (double);
-  void initDC (void);
-  void initAC (void);
-  void calcNoiseAC (double);
-  void initTR (void);
+class attenuator final : public qucs::circuit {
+public:
+  CREATOR(attenuator);
+  void initSP() override;
+  void calcNoiseSP(double) override;
+  void initDC() override;
+  void initAC() override;
+  void calcNoiseAC(double) override;
+  void initTR() override;
 };
 
 #endif /* __ATTENUATOR_H__ */

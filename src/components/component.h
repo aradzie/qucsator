@@ -25,16 +25,16 @@
 #include <cassert>
 #include <cstring>
 
-#include "logging.h"
-#include "complex.h"
-#include "object.h"
-#include "vector.h"
-#include "matrix.h"
-#include "node.h"
-#include "net.h"
 #include "circuit.h"
+#include "complex.h"
 #include "component_id.h"
 #include "constants.h"
+#include "logging.h"
+#include "matrix.h"
+#include "net.h"
 #include "netdefs.h"
+#include "node.h"
+#include "object.h"
+#include "vector.h"
 
 #endif /* __COMPONENT_H__ */

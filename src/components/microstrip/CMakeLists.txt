@@ -1,7 +1,7 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}/src
   ${CMAKE_SOURCE_DIR}/src/components
-  ${CMAKE_SOURCE_DIR}/src/components/devices
+  ${CMAKE_SOURCE_DIR}/src/components/nonlinear
   ${CMAKE_SOURCE_DIR}/src/components/microstrip
   ${CMAKE_SOURCE_DIR}/src/math
 )
@@ -31,4 +31,4 @@ set(
   substrate.cpp
 )
 
-add_library(coreMicrostrip OBJECT ${SOURCES})
+add_library(coreCompMicrostrip OBJECT ${SOURCES})

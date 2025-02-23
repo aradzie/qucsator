@@ -1,7 +1,7 @@
 /*
- * capacitor.h - capacitor class definitions
+ * relais.h - relais class definitions
  *
- * Copyright (C) 2003, 2004, 2006, 2008 Stefan Jahn <stefan@lkcc.org>
+ * Copyright (C) 2006, 2008 Stefan Jahn <stefan@lkcc.org>
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,23 +19,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef __CAPACITOR_H__
-#define __CAPACITOR_H__
+#ifndef __RELAIS_H__
+#define __RELAIS_H__
 
-/*\brief Capacitor class */
-class capacitor : public qucs::circuit
-{
- public:
-  CREATOR (capacitor);
-  void calcSP (double);
-  void initDC (void);
-  void calcAC (double);
-  void initAC (void);
-  void calcTR (double);
-  void initTR (void);
-  void initHB (void);
-  void calcHB (double);
+class relais final : public qucs::circuit {
+public:
+  CREATOR(relais);
+  void initSP() override;
+  void initDC() override;
+  void calcDC() override;
+  void initAC() override;
+  void initTR() override;
+  void calcTR(double) override;
+  void calcNoiseSP(double) override;
+  void calcNoiseAC(double) override;
+  void saveOperatingPoints() override;
 
+private:
+  int state;
+  double r;
 };
 
-#endif /* __CAPACITOR_H__ */
+#endif /* __RELAIS_H__ */

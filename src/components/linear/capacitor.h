@@ -1,7 +1,7 @@
 /*
- * indq.h - Lossy inductor class definition
+ * capacitor.h - capacitor class definitions
  *
- * Copyright (C) 2015 Andres Martinez-Mera <andresmartinezmera@gmail.com>
+ * Copyright (C) 2003, 2004, 2006, 2008 Stefan Jahn <stefan@lkcc.org>
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,30 +17,22 @@
  * along with this package; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
  * Boston, MA 02110-1301, USA.
- *
  */
 
-#ifndef INDQ_H
-#define INDQ_H
-#include "matrix.h"
+#ifndef __CAPACITOR_H__
+#define __CAPACITOR_H__
 
-
-class indq : public qucs::circuit
-{
- public:
-  CREATOR (indq);
-  void calcSP (double);
-  void calcNoiseSP (double);
-  void initDC (void);
-  void calcDC (void);
-  void initAC (void);
-  void initSP (void);
-  void calcAC (double);
-  void calcNoiseAC (double);
-
- private:
-  void calcZs (double);
-  nr_complex_t Zs;
+class capacitor final : public qucs::circuit {
+public:
+  CREATOR(capacitor);
+  void calcSP(double) override;
+  void initDC() override;
+  void calcAC(double) override;
+  void initAC() override;
+  void calcTR(double) override;
+  void initTR() override;
+  void initHB() override;
+  void calcHB(double) override;
 };
 
-#endif /* __indq_H__ */
+#endif /* __CAPACITOR_H__ */

@@ -1,5 +1,5 @@
 /*
- * mutual2.h - three mutual inductors class definitions
+ * mutual.h - two mutual inductors class definitions
  *
  * Copyright (C) 2005, 2008 Stefan Jahn <stefan@lkcc.org>
  *
@@ -19,22 +19,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef __MUTUAL2_H__
-#define __MUTUAL2_H__
+#ifndef __MUTUAL_H__
+#define __MUTUAL_H__
 
-class mutual2 : public qucs::circuit
-{
- public:
-  CREATOR (mutual2);
-  void calcSP (double);
-  void initDC (void);
-  void initAC (void);
-  void calcAC (double);
-  void initTR (void);
-  void calcTR (double);
+class mutual final : public qucs::circuit {
+public:
+  CREATOR(mutual);
+  void calcSP(double) override;
+  void initDC() override;
+  void initAC() override;
+  void calcAC(double) override;
+  void initTR() override;
+  void calcTR(double) override;
 
- private:
-  qucs::matrix calcMatrixY (double);
+private:
+  qucs::matrix calcMatrixY(double);
 };
 
-#endif /* __MUTUAL2_H__ */
+#endif /* __MUTUAL_H__ */

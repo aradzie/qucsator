@@ -37,11 +37,11 @@
 #include "netdefs.h"
 #include "spsolver.h"
 #include "components/component_id.h"
-#include "components/tee.h"
-#include "components/open.h"
-#include "components/itrafo.h"
-#include "components/cross.h"
-#include "components/ground.h"
+#include "components/helpers/tee.h"
+#include "components/helpers/open.h"
+#include "components/helpers/itrafo.h"
+#include "components/helpers/cross.h"
+#include "components/helpers/ground.h"
 
 /* Evolved optimization flags. */
 #define USE_GROUNDS 1   // use extra grounds ?

@@ -24,6 +24,7 @@
 #include "component.h"
 #include "indq.h"
 #include "iostream"
+
 using namespace qucs;
 
 //--------------------------------------------------------

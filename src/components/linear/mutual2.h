@@ -1,7 +1,7 @@
 /*
- * relais.h - relais class definitions
+ * mutual2.h - three mutual inductors class definitions
  *
- * Copyright (C) 2006, 2008 Stefan Jahn <stefan@lkcc.org>
+ * Copyright (C) 2005, 2008 Stefan Jahn <stefan@lkcc.org>
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,26 +19,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef __RELAIS_H__
-#define __RELAIS_H__
+#ifndef __MUTUAL2_H__
+#define __MUTUAL2_H__
 
-class relais : public qucs::circuit
-{
- public:
-  CREATOR (relais);
-  void initSP (void);
-  void initDC (void);
-  void calcDC (void);
-  void initAC (void);
-  void initTR (void);
-  void calcTR (double);
-  void saveOperatingPoints (void);
-  void calcNoiseSP (double);
-  void calcNoiseAC (double);
+class mutual2 final : public qucs::circuit {
+public:
+  CREATOR(mutual2);
+  void calcSP(double) override;
+  void initDC() override;
+  void initAC() override;
+  void calcAC(double) override;
+  void initTR() override;
+  void calcTR(double) override;
 
- private:
-  int state;
-  double r;
+private:
+  qucs::matrix calcMatrixY(double);
 };
 
-#endif /* __RELAIS_H__ */
+#endif /* __MUTUAL2_H__ */

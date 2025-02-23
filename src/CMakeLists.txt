@@ -50,9 +50,14 @@ include_directories(
 
 add_subdirectory(analyses)
 add_subdirectory(components)
-add_subdirectory(components/devices)
 add_subdirectory(components/digital)
+add_subdirectory(components/helpers)
+add_subdirectory(components/linear)
 add_subdirectory(components/microstrip)
+add_subdirectory(components/noise)
+add_subdirectory(components/nonlinear)
+add_subdirectory(components/probes)
+add_subdirectory(components/sources)
 add_subdirectory(math)
 add_subdirectory(parsers)
 
@@ -61,11 +66,16 @@ add_executable(qucsator main.cpp ${SOURCES})
 target_link_libraries(
   qucsator PRIVATE
   coreAnalyses
+  coreCompDigtal
+  coreCompHelpers
+  coreCompLinear
+  coreCompMicrostrip
+  coreCompNoise
+  coreCompNonlinear
+  coreCompProbes
+  coreCompSources
   coreComponents
-  coreDevices
-  coreDigital
   coreMath
-  coreMicrostrip
   coreParsers
 )
 
@@ -74,10 +84,15 @@ add_executable(example example.cpp ${SOURCES})
 target_link_libraries(
   example PRIVATE
   coreAnalyses
+  coreCompDigtal
+  coreCompHelpers
+  coreCompLinear
+  coreCompMicrostrip
+  coreCompNoise
+  coreCompNonlinear
+  coreCompProbes
+  coreCompSources
   coreComponents
-  coreDevices
-  coreDigital
   coreMath
-  coreMicrostrip
   coreParsers
 )

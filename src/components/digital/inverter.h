@@ -22,6 +22,8 @@
 #ifndef __INVERTER_H__
 #define __INVERTER_H__
 
+#include "digital.h"
+
 class inverter final : public digital {
 public:
   CREATOR(inverter);

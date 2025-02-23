@@ -1,7 +1,7 @@
 /*
- * mutual.h - two mutual inductors class definitions
+ * indq.h - Lossy inductor class definition
  *
- * Copyright (C) 2005, 2008 Stefan Jahn <stefan@lkcc.org>
+ * Copyright (C) 2015 Andres Martinez-Mera <andresmartinezmera@gmail.com>
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,22 +19,24 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef __MUTUAL_H__
-#define __MUTUAL_H__
+#ifndef INDQ_H
+#define INDQ_H
 
-class mutual : public qucs::circuit
-{
- public:
-  CREATOR (mutual);
-  void calcSP (double);
-  void initDC (void);
-  void initAC (void);
-  void calcAC (double);
-  void initTR (void);
-  void calcTR (double);
+class indq final : public qucs::circuit {
+public:
+  CREATOR(indq);
+  void calcSP(double) override;
+  void calcNoiseSP(double) override;
+  void initDC() override;
+  void calcDC() override;
+  void initAC() override;
+  void initSP() override;
+  void calcAC(double) override;
+  void calcNoiseAC(double) override;
 
- private:
-  qucs::matrix calcMatrixY (double);
+private:
+  void calcZs(double);
+  nr_complex_t Zs;
 };
 
-#endif /* __MUTUAL_H__ */
+#endif /* __indq_H__ */

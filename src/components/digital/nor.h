@@ -22,6 +22,8 @@
 #ifndef __NOR_H__
 #define __NOR_H__
 
+#include "digital.h"
+
 class logicnor final : public digital {
 public:
   CREATOR(logicnor);

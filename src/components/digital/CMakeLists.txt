@@ -19,4 +19,4 @@ set(
   xor.cpp
 )
 
-add_library(coreDigital OBJECT ${SOURCES})
+add_library(coreCompDigtal OBJECT ${SOURCES})

@@ -1,8 +1,7 @@
 /*
- * amplifier.h - amplifier class definitions
+ * inductor.h - inductor class definitions
  *
- * Copyright (C) 2004, 2008 Stefan Jahn <stefan@lkcc.org>
- * Copyright (C) 2008 Michael Margraf <Michael.Margraf@alumni.TU-Berlin.DE>
+ * Copyright (C) 2003, 2004, 2006, 2008 Stefan Jahn <stefan@lkcc.org>
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,25 +19,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef __AMPLIFIER_H__
-#define __AMPLIFIER_H__
+#ifndef __INDUCTOR_H__
+#define __INDUCTOR_H__
 
-/*! Ideal and linear amplifier
-
-    An ideal amplifier increases signal strength from input to output and
-    blocks all signals flowing into the output.
-    The ideal amplifier is an isolator with voltage gain \f$G\f$
-*/
-class amplifier : public qucs::circuit
-{
- public:
-  CREATOR (amplifier);
-  void initSP (void);
-  void calcNoiseSP (double);
-  void initDC (void);
-  void initAC (void);
-  void calcNoiseAC (double);
-  void initTR (void);
+class inductor final : public qucs::circuit {
+public:
+  CREATOR(inductor);
+  void calcSP(double) override;
+  void initDC() override;
+  void calcDC() override;
+  void initAC() override;
+  void calcAC(double) override;
+  void initTR() override;
+  void calcTR(double) override;
+  void initHB() override;
+  void calcHB(double) override;
 };
 
-#endif /* __AMPLIFIER_H__ */
+#endif /* __INDUCTOR_H__ */

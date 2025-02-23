@@ -22,6 +22,8 @@
 #ifndef __XOR_H__
 #define __XOR_H__
 
+#include "digital.h"
+
 class logicxor final : public digital {
 public:
   CREATOR(logicxor);

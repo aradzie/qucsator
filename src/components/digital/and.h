@@ -22,6 +22,8 @@
 #ifndef __AND_H__
 #define __AND_H__
 
+#include "digital.h"
+
 class logicand final : public digital {
 public:
   CREATOR(logicand);

@@ -22,6 +22,8 @@
 #ifndef __BUFFER_H__
 #define __BUFFER_H__
 
+#include "digital.h"
+
 class buffer final : public digital {
 public:
   CREATOR(buffer);

@@ -1,7 +1,7 @@
 /*
- * inductor.h - inductor class definitions
+ * capq.h - Lossy inductor class definition
  *
- * Copyright (C) 2003, 2004, 2006, 2008 Stefan Jahn <stefan@lkcc.org>
+ * Copyright (C) 2015 Andres Martinez-Mera <andresmartinezmera@gmail.com>
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,22 +19,23 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef __INDUCTOR_H__
-#define __INDUCTOR_H__
+#ifndef CAPQ_H
+#define CAPQ_H
 
-class inductor : public qucs::circuit
-{
- public:
-  CREATOR (inductor);
-  void calcSP (double);
-  void initDC (void);
-  void calcDC (void);
-  void initAC (void);
-  void calcAC (double);
-  void initTR (void);
-  void calcTR (double);
-  void initHB (void);
-  void calcHB (double);
+class capq final : public qucs::circuit {
+public:
+  CREATOR(capq);
+  void calcSP(double) override;
+  void calcNoiseSP(double) override;
+  void initDC() override;
+  void initAC() override;
+  void initSP() override;
+  void calcAC(double) override;
+  void calcNoiseAC(double) override;
+
+private:
+  void calcYp(double);
+  nr_complex_t Yp;
 };
 
-#endif /* __INDUCTOR_H__ */
+#endif /* __capq_H__ */

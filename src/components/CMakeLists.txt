@@ -6,77 +6,24 @@ include_directories(
 
 set(
   SOURCES
-  amplifier.cpp
-  attenuator.cpp
-  biastee.cpp
-  capacitor.cpp
-  capq.cpp
-  cccs.cpp
-  ccvs.cpp
   circline.cpp
   circulator.cpp
   coaxline.cpp
-  coupler.cpp
-  cross.cpp
   ctline.cpp
-  dcblock.cpp
-  dcfeed.cpp
   ecvs.cpp
-  taperedline.cpp
-  ground.cpp
-  gyrator.cpp
-  hybrid.cpp
-  iac.cpp
-  idc.cpp
-  iexp.cpp
-  ifile.cpp
-  iinoise.cpp
-  inductor.cpp
-  indq.cpp
-  inoise.cpp
-  iprobe.cpp
-  ipulse.cpp
-  irect.cpp
-  isolator.cpp
-  itrafo.cpp
-  ivnoise.cpp
-  mutual.cpp
-  mutual2.cpp
-  mutualx.cpp
-  opamp.cpp
-  open.cpp
   pac.cpp
-  phaseshifter.cpp
   rectline.cpp
-  relais.cpp
-  resistor.cpp
   rfedd.cpp
   rlcg.cpp
-  short.cpp
-  spfile.cpp
-  spembed.cpp
   spdeembed.cpp
+  spembed.cpp
+  spfile.cpp
   strafo.cpp
-  tee.cpp
+  taperedline.cpp
   tline.cpp
   tline4p.cpp
   trafo.cpp
-  tswitch.cpp
   twistedpair.cpp
-  vac.cpp
-  vam.cpp
-  vccs.cpp
-  vcvs.cpp
-  vdc.cpp
-  vexp.cpp
-  vfile.cpp
-  vnoise.cpp
-  vpm.cpp
-  vprobe.cpp
-  vpulse.cpp
-  vrect.cpp
-  vvnoise.cpp
-  wprobe.cpp
 )
 
 add_library(coreComponents OBJECT ${SOURCES})

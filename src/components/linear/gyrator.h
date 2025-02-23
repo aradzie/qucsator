@@ -22,14 +22,13 @@
 #ifndef __GYRATOR_H__
 #define __GYRATOR_H__
 
-class gyrator : public qucs::circuit
-{
- public:
-  CREATOR (gyrator);
-  void initSP (void);
-  void initDC (void);
-  void initAC (void);
-  void initTR (void);
+class gyrator final : public qucs::circuit {
+public:
+  CREATOR(gyrator);
+  void initSP() override;
+  void initDC() override;
+  void initAC() override;
+  void initTR() override;
 };
 
 #endif /* __GYRATOR_H__ */

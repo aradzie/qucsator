@@ -1,7 +1,7 @@
 /*
- * capq.h - Lossy inductor class definition
+ * mutualx.h - multiple mutual inductors class definitions
  *
- * Copyright (C) 2015 Andres Martinez-Mera <andresmartinezmera@gmail.com>
+ * Copyright (C) 2007, 2008 Stefan Jahn <stefan@lkcc.org>
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,26 +19,22 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef CAPQ_H
-#define CAPQ_H
-#include "matrix.h"
+#ifndef __MUTUALX_H__
+#define __MUTUALX_H__
 
+class mutualx final : public qucs::circuit {
+public:
+  CREATOR(mutualx);
+  void calcSP(double) override;
+  void initDC() override;
+  void initAC() override;
+  void calcAC(double) override;
+  void initTR() override;
+  void calcTR(double) override;
 
-class capq : public qucs::circuit
-{
- public:
-  CREATOR (capq);
-  void calcSP (double);
-  void calcNoiseSP (double);
-  void initDC (void);
-  void initAC (void);
-  void initSP (void);
-  void calcAC (double);
-  void calcNoiseAC (double);
-
- private:
-  void calcYp (double);
-  nr_complex_t Yp;
+private:
+  qucs::matrix calcMatrixZ(double);
+  qucs::matrix calcMatrixY(double);
 };
 
-#endif /* __capq_H__ */
+#endif /* __MUTUALX_H__ */
