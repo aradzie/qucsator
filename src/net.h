@@ -94,7 +94,7 @@ private:
   ptrlist<analysis> *orgacts;
   environment *env;
   int nPorts;
-  int nSources;
+  int nSources; // ARA: The number of voltage sources in the whole circuit. This influences the size of the system of linear equations.
   int nCircuits;
   int reduced;
   int inserted;

@@ -54,7 +54,7 @@ public:
   int getInternal() { return internal; }
 
 private:
-  std::string name;
+  std::string name; // Name, like "gnd", "_net2", etc.
   int nNode; // The unique number of this node.
   int port; // The port number of this node.
   int internal;

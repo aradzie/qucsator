@@ -49,7 +49,7 @@ public:
   typedef detail::nodevector::const_reference const_reference;
   typedef detail::nodevector::const_iterator erase_iterator;
 
-  /* alias node number */
+  /* Unique node index. `gnd` has index 0. */
   std::size_t n;
   /* name of node */
   std::string name;

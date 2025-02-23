@@ -134,7 +134,7 @@ protected:
   int updateMatrix;
   double gMin, srcFactor;
   std::string desc;
-  nodelist *nlist;
+  nodelist *nlist; // ARA: This list exists for the duration of a single solution.
 
 private:
   eqnsys<nr_type_t> *eqns;

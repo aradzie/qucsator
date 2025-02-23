@@ -314,7 +314,7 @@ protected:
 private:
   int size;
   int pacport;
-  int vsource;
+  int vsource; // ARA: Index of the voltage source in the MNA matrix.
   int vsources;
   int nsources;
   int inserted;
