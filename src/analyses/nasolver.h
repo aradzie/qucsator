@@ -121,10 +121,11 @@ private:
   nr_type_t MatValX(nr_complex_t, double *);
 
 protected:
-  tvector<nr_type_t> *z;
-  tvector<nr_type_t> *zprev;
-  tvector<nr_type_t> *x;
-  tvector<nr_type_t> *xprev;
+  /* The right hand side input vector of the SLE. */
+  tvector<nr_type_t> *z, *zprev;
+  /* The solution vector of the SLE, the result of A*x=z. */
+  tvector<nr_type_t> *x, *xprev;
+  /* The left hand side input matrix of the SLE. */
   tmatrix<nr_type_t> *A;
   tmatrix<nr_type_t> *C;
 

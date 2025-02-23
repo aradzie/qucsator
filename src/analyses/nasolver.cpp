@@ -118,10 +118,11 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_once() {
   logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_once()\n", getName());
 
   // run the calculation function such as calcDC, calcTR, etc, for each circuit
+  // ARA: Circuits update their internal matrices and vectors.
   calculate();
 
   // generate matrix `A` and vector `z`
-  // ARA: This reads circuit's input matrices and vectors.
+  // ARA: Read circuit internal matrices and vectors such as MatrixY, VectorI.
   createMatrix();
 
   // solve the system of linear equations
@@ -133,7 +134,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_once() {
   }
 
   // save results into circuits
-  // ARA: This copies the solution vector to the circuit output vectors `VectorV` and `VectorJ`.
+  // ARA: Copy the solution vector to the circuit output vectors `VectorV` and `VectorJ`.
   saveSolution();
 
   return NO_ERROR;
