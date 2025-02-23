@@ -130,7 +130,6 @@ protected:
 
   int iterations;
   int convHelper;
-  int fixpoint;
   int eqnAlgo;
   int updateMatrix;
   double gMin, srcFactor;

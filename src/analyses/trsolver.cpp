@@ -147,7 +147,6 @@ int trsolver::solve() {
   double saveCurrent = current = 0;
   stepDelta = -1;
   converged = 0;
-  fixpoint = 0;
   statRejected = statSteps = statIterations = statConvergence = 0;
 
   if (!strcmp(solver, "CroutLU"))

@@ -46,7 +46,7 @@ template <class nr_type_t> nasolver<nr_type_t>::nasolver() : analysis() {
   z = x = xprev = zprev = nullptr;
   reltol = abstol = vntol = 0;
   calculate_func = nullptr;
-  convHelper = fixpoint = 0;
+  convHelper = 0;
   eqnAlgo = ALGO_LU_DECOMPOSITION;
   updateMatrix = 1;
   gMin = srcFactor = 0;
@@ -59,7 +59,7 @@ template <class nr_type_t> nasolver<nr_type_t>::nasolver(const std::string &n) :
   z = x = xprev = zprev = nullptr;
   reltol = abstol = vntol = 0;
   calculate_func = nullptr;
-  convHelper = fixpoint = 0;
+  convHelper = 0;
   eqnAlgo = ALGO_LU_DECOMPOSITION;
   updateMatrix = 1;
   gMin = srcFactor = 0;
@@ -187,16 +187,6 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear() {
     convergence = (iter > 0) ? checkConvergence() : false;
     savePreviousIteration();
     iter++;
-
-    // control fixpoint iterations
-    if (fixpoint) {
-      if (convergence && !updateMatrix) {
-        updateMatrix = 1;
-        convergence = false;
-      } else {
-        updateMatrix = 0;
-      }
-    }
   } while (!convergence && iter < MaxIter * (1 + convHelper ? 1 : 0));
 
   if (iter >= MaxIter) {
@@ -218,7 +208,6 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation
   const int MaxIter = getPropertyInteger("MaxIter") / 4 + 1;
 
   updateMatrix = 1;
-  fixpoint = 0;
 
   // initialize the stepper
   double gPrev = gMin = 0.01;
@@ -268,7 +257,6 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation
   int error = NO_ERROR;
 
   updateMatrix = 1;
-  fixpoint = 0;
 
   // initialize the stepper
   double sPrev = srcFactor = 0;
