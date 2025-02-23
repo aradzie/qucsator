@@ -254,11 +254,7 @@ void circuit::setNode(int i, const std::string &n, int intern) {
   nodes[i].setInternal(intern);
 }
 
-// Returns one of the circuit's nodes.
-node *circuit::getNode(int i) { return &nodes[i]; }
-
-// Sets the subcircuit reference for the circuit object.
-void circuit::setSubcircuit(const std::string &n) { subcircuit = n; }
+node *circuit::getNode(int i) const { return &nodes[i]; }
 
 #if DEBUG
 // DEBUG function:  Prints the S parameters of this circuit object.
@@ -273,128 +269,7 @@ void circuit::print() {
 }
 #endif /* DEBUG */
 
-/* Returns the current substrate of the circuit object.  Used for microstrip components only. */
-substrate *circuit::getSubstrate() { return subst; }
-
-// Sets the substrate of the circuit object.
-void circuit::setSubstrate(substrate *s) { subst = s; }
-
-/* Returns the circuits B-MNA matrix value of the given voltage source
-   built in the circuit depending on the port number. */
-nr_complex_t circuit::getB(int port, int nr) { return MatrixB[(nr - vsource) * size + port]; }
-
-/* Sets the circuits B-MNA matrix value of the given voltage source
-   built in the circuit depending on the port number. */
-void circuit::setB(int port, int nr, nr_complex_t z) { MatrixB[nr * size + port] = z; }
-
-/* Returns the circuits C-MNA matrix value of the given voltage source
-   built in the circuit depending on the port number. */
-nr_complex_t circuit::getC(int nr, int port) { return MatrixC[(nr - vsource) * size + port]; }
-
-/* Sets the circuits C-MNA matrix value of the given voltage source
-   built in the circuit depending on the port number. */
-void circuit::setC(int nr, int port, nr_complex_t z) { MatrixC[nr * size + port] = z; }
-
-/* Returns the circuits D-MNA matrix value of the given voltage source
-   built in the circuit. */
-nr_complex_t circuit::getD(int r, int c) { return MatrixD[(r - vsource) * vsources + c - vsource]; }
-
-/* Sets the circuits D-MNA matrix value of the given voltage source
-   built in the circuit. */
-void circuit::setD(int r, int c, nr_complex_t z) { MatrixD[r * vsources + c] = z; }
-
-/* Returns the circuits E-MNA matrix value of the given voltage source
-   built in the circuit. */
-nr_complex_t circuit::getE(int nr) { return VectorE[nr - vsource]; }
-
-/* Sets the circuits E-MNA matrix value of the given voltage source
-   built in the circuit. */
-void circuit::setE(int nr, nr_complex_t z) { VectorE[nr] = z; }
-
-/* Returns the circuits I-MNA matrix value of the current source built
-   in the circuit. */
-nr_complex_t circuit::getI(int port) { return VectorI[port]; }
-
-/* Sets the circuits I-MNA matrix value of the current source built in
-   the circuit depending on the port number. */
-void circuit::setI(int port, nr_complex_t z) { VectorI[port] = z; }
-
-/* Modifies the circuits I-MNA matrix value of the current source
-   built in the circuit depending on the port number. */
-void circuit::addI(int port, nr_complex_t i) { VectorI[port] += i; }
-
-/* Same as above with different argument type. */
-void circuit::addI(int port, double i) { VectorI[port] += i; }
-
-/* Returns the circuits Q-HB vector value. */
-nr_complex_t circuit::getQ(int port) { return VectorQ[port]; }
-
-/* Sets the circuits Q-HB vector value. */
-void circuit::setQ(int port, nr_complex_t q) { VectorQ[port] = q; }
-
-/* Returns the circuits J-MNA matrix value of the given voltage source
-   built in the circuit. */
-nr_complex_t circuit::getJ(int nr) { return VectorJ[nr]; }
-
-/* Sets the circuits J-MNA matrix value of the given voltage source
-   built in the circuit. */
-void circuit::setJ(int nr, nr_complex_t z) { VectorJ[nr - vsource] = z; }
-
-// Returns the circuits voltage value at the given port.
-nr_complex_t circuit::getV(int port) { return VectorV[port]; }
-
-// Sets the circuits voltage value at the given port.
-void circuit::setV(int port, nr_complex_t z) { VectorV[port] = z; }
-
-/* Returns the circuits G-MNA matrix value depending on the port
-   numbers. */
-nr_complex_t circuit::getY(int r, int c) { return MatrixY[r * size + c]; }
-
-/* Sets the circuits G-MNA matrix value depending on the port
-   numbers. */
-void circuit::setY(int r, int c, nr_complex_t y) { MatrixY[r * size + c] = y; }
-
-/* Modifies the circuits G-MNA matrix value depending on the port
-   numbers. */
-void circuit::addY(int r, int c, nr_complex_t y) { MatrixY[r * size + c] += y; }
-
-/* Same as above with different argument type. */
-void circuit::addY(int r, int c, double y) { MatrixY[r * size + c] += y; }
-
-/* Returns the circuits G-MNA matrix value depending on the port
-   numbers. */
-double circuit::getG(int r, int c) { return real(MatrixY[r * size + c]); }
-
-/* Sets the circuits G-MNA matrix value depending on the port
-   numbers. */
-void circuit::setG(int r, int c, double y) { MatrixY[r * size + c] = y; }
-
-/* Returns the circuits C-HB matrix value depending on the port
-   numbers. */
-nr_complex_t circuit::getQV(int r, int c) { return MatrixQV[r * size + c]; }
-
-/* Sets the circuits C-HB matrix value depending on the port
-   numbers. */
-void circuit::setQV(int r, int c, nr_complex_t qv) { MatrixQV[r * size + c] = qv; }
-
-/* Returns the circuits GV-HB vector value depending on the port
-   number. */
-nr_complex_t circuit::getGV(int port) { return VectorGV[port]; }
-
-/* Sets the circuits GV-HB matrix value depending on the port
-   number. */
-void circuit::setGV(int port, nr_complex_t gv) { VectorGV[port] = gv; }
-
-/* Returns the circuits CV-HB vector value depending on the port
-   number. */
-nr_complex_t circuit::getCV(int port) { return VectorCV[port]; }
-
-/* Sets the circuits CV-HB matrix value depending on the port
-   number. */
-void circuit::setCV(int port, nr_complex_t cv) { VectorCV[port] = cv; }
-
-/* This function adds a operating point consisting of a key and a
-   value to the circuit. */
+/* Adds a operating point consisting of a key and a value to the circuit. */
 void circuit::addOperatingPoint(const std::string &n, double val) {
   qucs::pair p(n, val);
   oper.insert({{n, p}});
@@ -456,27 +331,6 @@ void circuit::setCharacteristic(const std::string &n, double val) {
    characteristic value.  If so it returns non-zero, otherwise it
    returns zero. */
 int circuit::hasCharacteristic(const std::string &n) { return charac.find(n) != charac.end(); }
-
-// Returns the S-parameter at the given matrix position.
-nr_complex_t circuit::getS(int x, int y) { return MatrixS[y + x * size]; }
-
-// Sets the S-parameter at the given matrix position.
-void circuit::setS(int x, int y, nr_complex_t z) { MatrixS[y + x * size] = z; }
-
-// Returns the noise-correlation-parameter at the given matrix position.
-nr_complex_t circuit::getN(int r, int c) { return MatrixN[c + r * (size + nsources)]; }
-
-// Sets the noise-correlation-parameter at the given matrix position.
-void circuit::setN(int r, int c, nr_complex_t z) { MatrixN[c + r * (size + nsources)] = z; }
-
-// Returns the number of internal noise sources for AC analysis.
-int circuit::getNoiseSources() { return nsources; }
-
-// Sets the number of internal noise voltage sources for AC analysis.
-void circuit::setNoiseSources(int s) {
-  assert(s >= 0);
-  nsources = s;
-}
 
 /* The function returns an internal node or circuit name with the
    given prefix and based on the given circuits name.  The caller is
@@ -555,30 +409,6 @@ matrix circuit::getMatrixY() {
       res(i, j) = MatrixY[i * size + j];
   return res;
 }
-
-// Cleans up the B-MNA matrix entries.
-void circuit::clearB() { memset(MatrixB, 0, sizeof(nr_complex_t) * size * vsources); }
-
-// Cleans up the C-MNA matrix entries.
-void circuit::clearC() { memset(MatrixC, 0, sizeof(nr_complex_t) * size * vsources); }
-
-// Cleans up the D-MNA matrix entries.
-void circuit::clearD() { memset(MatrixD, 0, sizeof(nr_complex_t) * vsources * vsources); }
-
-// Cleans up the E-MNA matrix entries.
-void circuit::clearE() { memset(VectorE, 0, sizeof(nr_complex_t) * vsources); }
-
-// Cleans up the J-MNA matrix entries.
-void circuit::clearJ() { memset(VectorJ, 0, sizeof(nr_complex_t) * vsources); }
-
-// Cleans up the I-MNA matrix entries.
-void circuit::clearI() { memset(VectorI, 0, sizeof(nr_complex_t) * size); }
-
-// Cleans up the V-MNA matrix entries.
-void circuit::clearV() { memset(VectorV, 0, sizeof(nr_complex_t) * size); }
-
-// Cleans up the G-MNA matrix entries.
-void circuit::clearY() { memset(MatrixY, 0, sizeof(nr_complex_t) * size * size); }
 
 /* This function can be used by several components in order to place
    the n-th voltage source between node 'pos' and node 'neg' with the
