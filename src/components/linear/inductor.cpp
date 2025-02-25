@@ -20,101 +20,101 @@
  */
 
 #include "component.h"
+
 #include "inductor.h"
 
 using namespace qucs;
 
-inductor::inductor () : circuit (2) {
+inductor::inductor() : circuit(2) {
   type = CIR_INDUCTOR;
-  setISource (true);
+  setISource(true);
 }
 
-void inductor::calcSP (double frequency) {
-  double l = getPropertyDouble ("L") / z0;
-  nr_complex_t z = nr_complex_t (0, 2.0 * pi * frequency * l);
-  setS (NODE_1, NODE_1, z / (z + 2.0));
-  setS (NODE_2, NODE_2, z / (z + 2.0));
-  setS (NODE_1, NODE_2, 2.0 / (z + 2.0));
-  setS (NODE_2, NODE_1, 2.0 / (z + 2.0));
+void inductor::calcSP(double frequency) {
+  double l = getPropertyDouble("L") / z0;
+  nr_complex_t z = nr_complex_t(0, 2.0 * pi * frequency * l);
+  setS(NODE_1, NODE_1, z / (z + 2.0));
+  setS(NODE_2, NODE_2, z / (z + 2.0));
+  setS(NODE_1, NODE_2, 2.0 / (z + 2.0));
+  setS(NODE_2, NODE_1, 2.0 / (z + 2.0));
 }
 
-void inductor::initDC (void) {
-  setVoltageSources (1);
-  allocMatrixMNA ();
-  voltageSource (VSRC_1, NODE_1, NODE_2);
+void inductor::initDC() {
+  setVoltageSources(1);
+  allocMatrixMNA();
+  voltageSource(VSRC_1, NODE_1, NODE_2);
 }
 
-void inductor::calcDC (void) {
-  clearY ();
-}
+void inductor::calcDC() { clearY(); }
 
-void inductor::initAC (void) {
-  double l = getPropertyDouble ("L");
-
-  // for non-zero inductance usual MNA entries
+void inductor::initAC() {
+  double l = getPropertyDouble("L");
   if (l != 0.0) {
-    setVoltageSources (0);
-    allocMatrixMNA ();
-  }
-  // for zero inductance create a zero voltage source
-  else {
-    initDC ();
-    calcDC ();
+    // for non-zero inductance usual MNA entries
+    setVoltageSources(0);
+    allocMatrixMNA();
+  } else {
+    // for zero inductance create a zero voltage source
+    initDC();
+    calcDC();
   }
 }
 
-void inductor::calcAC (double frequency) {
-  double l = getPropertyDouble ("L");
-
-  // for non-zero inductance usual MNA entries
+void inductor::calcAC(double frequency) {
+  double l = getPropertyDouble("L");
   if (l != 0.0) {
-    nr_complex_t y = nr_complex_t (0, -1 / (2.0 * pi * frequency * l));
-    setY (NODE_1, NODE_1, +y); setY (NODE_2, NODE_2, +y);
-    setY (NODE_1, NODE_2, -y); setY (NODE_2, NODE_1, -y);
+    // for non-zero inductance usual MNA entries
+    nr_complex_t y = nr_complex_t(0, -1 / (2.0 * pi * frequency * l));
+    setY(NODE_1, NODE_1, +y);
+    setY(NODE_2, NODE_2, +y);
+    setY(NODE_1, NODE_2, -y);
+    setY(NODE_2, NODE_1, -y);
   }
 }
 
-void inductor::initTR (void) {
-  initDC ();
-  clearY ();
-  setStates (2);
+void inductor::initTR() {
+  initDC();
+  clearY();
+  setStates(2);
 }
 
 #define fState 0 // flux state
 #define vState 1 // voltage state
 
-void inductor::calcTR (double) {
-  double l = getPropertyDouble ("L");
-  double r, v;
-  double i = real (getJ (VSRC_1));
-
+void inductor::calcTR(double) {
+  double l = getPropertyDouble("L");
+  double i = real(getJ(VSRC_1));
   /* apply initial condition if requested */
-  if (getMode () == MODE_INIT && isPropertyGiven ("I")) {
-    i = getPropertyDouble ("I");
+  if (getMode() == MODE_INIT && isPropertyGiven("I")) {
+    i = getPropertyDouble("I");
   }
-
-  setState (fState, i * l);
-  integrate (fState, l, r, v);
-  setD (VSRC_1, VSRC_1, -r);
-  setE (VSRC_1, v);
+  double r, v;
+  setState(fState, i * l);
+  integrate(fState, l, r, v);
+  setD(VSRC_1, VSRC_1, -r);
+  setE(VSRC_1, v);
 }
 
-void inductor::initHB (void) {
-  setVoltageSources (1);
-  setInternalVoltageSource (1);
-  allocMatrixMNA ();
-  voltageSource (VSRC_1, NODE_1, NODE_2);
+void inductor::initHB() {
+  setVoltageSources(1);
+  setInternalVoltageSource(1);
+  allocMatrixMNA();
+  voltageSource(VSRC_1, NODE_1, NODE_2);
 }
 
-void inductor::calcHB (double frequency) {
-  double l = getPropertyDouble ("L");
-  setD (VSRC_1, VSRC_1, -l * 2 * pi * frequency);
+void inductor::calcHB(double frequency) {
+  double l = getPropertyDouble("L");
+  setD(VSRC_1, VSRC_1, -l * 2 * pi * frequency);
 }
 
-// properties
-PROP_REQ [] = {
-  { "L", PROP_REAL, { 1e-9, PROP_NO_STR }, PROP_NO_RANGE }, PROP_NO_PROP };
-PROP_OPT [] = {
-  { "I", PROP_REAL, { 0, PROP_NO_STR }, PROP_NO_RANGE }, PROP_NO_PROP };
-struct define_t inductor::cirdef =
-  { "L", 2, PROP_COMPONENT, PROP_NO_SUBSTRATE, PROP_LINEAR, PROP_DEF };
+PROP_REQ[] = {
+    {"L", PROP_REAL, {1e-9, PROP_NO_STR}, PROP_NO_RANGE},
+    PROP_NO_PROP,
+};
+PROP_OPT[] = {
+    {"I", PROP_REAL, {0, PROP_NO_STR}, PROP_NO_RANGE},
+    PROP_NO_PROP,
+};
+struct define_t inductor::cirdef = {
+    "L", 2, PROP_COMPONENT, PROP_NO_SUBSTRATE, PROP_LINEAR, PROP_DEF,
+};

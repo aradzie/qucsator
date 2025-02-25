@@ -194,15 +194,15 @@ void circuit::allocMatrixN(int sources) {
 void circuit::allocMatrixMNA() {
   freeMatrixMNA();
   if (size > 0) {
-    MatrixY = new nr_complex_t[size * size];
-    VectorI = new nr_complex_t[size];
-    VectorV = new nr_complex_t[size];
+    MatrixY = new nr_complex_t[size * size]; // ARA: Input matrix, conductances.
+    VectorI = new nr_complex_t[size]; // ARA: Input vector, currents.
+    VectorV = new nr_complex_t[size]; // ARA: Output vector, voltages.
     if (vsources > 0) {
-      MatrixB = new nr_complex_t[vsources * size];
-      MatrixC = new nr_complex_t[vsources * size];
-      MatrixD = new nr_complex_t[vsources * vsources];
-      VectorE = new nr_complex_t[vsources];
-      VectorJ = new nr_complex_t[vsources];
+      MatrixB = new nr_complex_t[vsources * size]; // ARA: Input matrix.
+      MatrixC = new nr_complex_t[vsources * size]; // ARA: Input matrix.
+      MatrixD = new nr_complex_t[vsources * vsources]; // ARA: Input matrix.
+      VectorE = new nr_complex_t[vsources]; // ARA: Input vector, voltages.
+      VectorJ = new nr_complex_t[vsources]; // ARA: Output vector, currents.
     }
   }
 }

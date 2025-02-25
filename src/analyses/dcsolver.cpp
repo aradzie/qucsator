@@ -104,8 +104,9 @@ int dcsolver::solve() {
     bool retry;
     do {
       retry = false;
-      // Run the DC solver once.
+      // Use the user provided node voltages.
       applyNodeset();
+      // Run the DC solver once.
       error = solve_nonlinear();
 #if DEBUG
       if (!error) {

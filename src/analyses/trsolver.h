@@ -38,12 +38,12 @@ class naentry {
 public:
   naentry() = default;
   naentry(const naentry &) = default;
-  naentry(double &v, int c) : current(c), value(v) {};
+  naentry(const double &v, const int c) : value(v), current(c) {}
   ~naentry() = default;
 
 public:
-  int current;
-  double value;
+  double value; // MNA vector x entry.
+  int current; // Voltage source index in a circuit.
 };
 
 class trsolver final : public nasolver<double>, public states<double> {
@@ -116,7 +116,10 @@ private:
   bool initialDC;
   int ohm;
 
-  std::unordered_map<std::string, naentry> dcSolution;
+  std::unordered_map<
+      /* node or circuit name */ std::string,
+      /* MNA vector x entry */ naentry>
+      dcSolution;
 };
 
 } // namespace qucs

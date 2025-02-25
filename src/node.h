@@ -30,35 +30,30 @@ class circuit;
 
 class node final {
 public:
-  node() : name(), nNode(0), port(0), internal(0), cir(nullptr) {};
-  node(char *const n) : name(n), nNode(0), port(0), internal(0), cir(nullptr) {};
+  node() : name(), port(0), internal(0), cir(nullptr), nNode(0) {}
+  node(char *const n) : name(n), port(0), internal(0), cir(nullptr), nNode(0) {}
 
-  void setName(const std::string &n) { this->name = n; };
-  const char *getName() const { return this->name.c_str(); };
+  void setName(const std::string &n) { this->name = n; }
+  const char *getName() const { return this->name.c_str(); }
 
-  // Sets the unique number of this node
-  void setNode(const int n) { this->nNode = n; };
-  // Returns the unique number of this node.
-  int getNode() const { return this->nNode; };
+  void setPort(const int p) { this->port = p; }
+  int getPort() const { return this->port; }
 
-  // Sets the port number of this node.
-  void setPort(const int p) { this->port = p; };
-  // Returns the port number of this node.
-  int getPort() const { return this->port; };
-
-  // Sets this node's circuit.
-  void setCircuit(circuit *const c) { this->cir = c; };
-  circuit *getCircuit() const { return this->cir; };
+  void setCircuit(circuit *const c) { this->cir = c; }
+  circuit *getCircuit() const { return this->cir; }
 
   void setInternal(int i) { internal = i; }
   int getInternal() { return internal; }
 
+  void setNode(const int n) { this->nNode = n; }
+  int getNode() const { return this->nNode; }
+
 private:
   std::string name; // Name, like "gnd", "_net2", etc.
-  int nNode; // The unique number of this node.
-  int port; // The port number of this node.
+  int port;         // The port number of this node.
   int internal;
   circuit *cir;
+  int nNode; // The unique number of this node. Only used in the HB solver.
 };
 
 } // namespace qucs

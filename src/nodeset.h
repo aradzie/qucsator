@@ -26,6 +26,7 @@
 
 namespace qucs {
 
+/* Nodeset provides initial node voltages configured by the user. */
 class nodeset {
 public:
   MCREATOR(nodeset);

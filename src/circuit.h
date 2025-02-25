@@ -100,7 +100,7 @@ public:
 
   virtual void initDC() { allocMatrixMNA(); }
   virtual void calcDC() {}
-  virtual void restartDC() {} // ARA: What is this method for?
+  virtual void restartDC() {}
 
   virtual void initTR() { allocMatrixMNA(); }
   virtual void calcTR(double) {}

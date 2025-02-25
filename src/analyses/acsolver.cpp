@@ -162,9 +162,9 @@ void acsolver::saveNoiseResults(qucs::vector *f) {
       continue;
     int np, nn;
     double vp, vn;
-    np = getNodeNr(c->getNode(NODE_1)->getName());
+    np = getNodeIndex(c->getNode(NODE_1)->getName());
     vp = np > 0 ? xn->get(np - 1) : 0.0;
-    nn = getNodeNr(c->getNode(NODE_2)->getName());
+    nn = getNodeIndex(c->getNode(NODE_2)->getName());
     vn = nn > 0 ? xn->get(nn - 1) : 0.0;
     c->setOperatingPoint("Vr", fabs((vp - vn) * sqrt(kB * T0)));
     c->setOperatingPoint("Vi", 0.0);

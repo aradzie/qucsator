@@ -76,18 +76,18 @@ bool nodelist::contains(const std::string &str) const {
 }
 
 // Returns the node number of the given node name.
-int nodelist::getNodeNr(const std::string &str) const {
+int nodelist::getNodeIndex(const std::string &name) const {
   if (sorting) {
     auto it =
-        std::find_if(narray.begin(), narray.end(), [str](nodelist_t *n) { return n->name == str; });
+        std::find_if(narray.begin(), narray.end(), [name](nodelist_t *n) { return n->name == name; });
     if (it == narray.end())
       return -1;
-    return (*it)->n;
+    return (*it)->index;
   }
-  auto it = std::find_if(root.begin(), root.end(), [str](nodelist_t *n) { return n->name == str; });
+  auto it = std::find_if(root.begin(), root.end(), [name](nodelist_t *n) { return n->name == name; });
   if (it == root.end())
     return -1;
-  return (*it)->n;
+  return (*it)->index;
 }
 
 /* Returns the node name positioned at the specified
@@ -138,14 +138,14 @@ void nodelist::assignNodes() {
   for (auto n : root) {
     // ground node gets a zero counter
     if (n->name == "gnd") {
-      n->n = 0;
+      n->index = 0;
       narray[0] = n;
     }
     // others get a unique number greater than zero
     else {
       narray.resize(i + 1);
       narray[i] = n;
-      n->n = i++;
+      n->index = i++;
     }
   }
 }
@@ -314,7 +314,7 @@ void nodelist::sortedNodes(node **node1, node **node2) {
 
 void nodelist::print() const {
   for (auto n : root) {
-    logprint(LOG_STATUS, "DEBUG: node %s-%d [", n->name.c_str(), n->n);
+    logprint(LOG_STATUS, "DEBUG: node %s-%d [", n->name.c_str(), n->index);
     std::size_t i = 0;
     for (const auto &currentnode : *n) {
       logprint(LOG_STATUS, "%s", currentnode->getCircuit()->getName());

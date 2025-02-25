@@ -50,16 +50,16 @@ public:
   nasolver(const nasolver &) = delete;
   ~nasolver() override;
 
+  void setDescription(const std::string &n) { desc = n; }
+  std::string getDescription() const { return desc; }
+
   void solve_pre();
   void solve_post();
   int solve_once();
   int solve_linear();
   int solve_nonlinear();
-  int solve_nonlinear_continuation_gMin();
-  int solve_nonlinear_continuation_Source();
-
-  void setDescription(const std::string &n) { desc = n; }
-  std::string getDescription() const { return desc; }
+  int solve_nonlinear_continuation_gMinStepping();
+  int solve_nonlinear_continuation_SourceStepping();
 
   void saveResults(const std::string &, const std::string &, int, qucs::vector *f = nullptr);
 
@@ -83,17 +83,18 @@ protected:
   void savePreviousIteration();
   void restorePreviousIteration();
   int countNodes();
-  int getNodeNr(const std::string &);
+  int getNodeIndex(const std::string &);
   int findAssignedNode(circuit *, int);
   int countVoltageSources();
-  void saveSolution();
   circuit *findVoltageSource(int);
-  void applyNodeset(bool discard = true);
   void solveLinearEquations();
   bool checkConvergence();
+  void saveSolution();
 
   void createMatrix();
   void createNoiseMatrix();
+
+  void applyNodeset(bool reset = true);
 
 private:
   void assignVoltageSources();

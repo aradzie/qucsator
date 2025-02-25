@@ -87,9 +87,9 @@ template <class nr_type_t> void nasolver<nr_type_t>::solve_pre() {
 
   nlist = new nodelist(subnet);
   nlist->assignNodes();
+  nlist->print();
   assignVoltageSources(); // ARA: Count the number of nodes and branches, assign unique indices to
                           // voltage sources.
-  nlist->print();
 
   // create matrix, solution vector and right hand side vector
   const int M = countVoltageSources(); // ARA: See assignVoltageSources above.
@@ -159,14 +159,14 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear() {
     // use the alternative non-linear solver solve_nonlinear_continuation_gMin
     // instead of the basic solver provided by this function
     iterations = 0;
-    return solve_nonlinear_continuation_gMin();
+    return solve_nonlinear_continuation_gMinStepping();
   }
 
   if (convHelper == CONV_SourceStepping) {
     // use the alternative non-linear solver solve_nonlinear_continuation_Source
     // instead of the basic solver provided by this function
     iterations = 0;
-    return solve_nonlinear_continuation_Source();
+    return solve_nonlinear_continuation_SourceStepping();
   }
 
   logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_nonlinear()\n", getName());
@@ -203,7 +203,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear() {
 
 /* Uses the gMin-stepping algorithm in order to solve the given non-linear netlist
  * by continuous iterations. */
-template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation_gMin() {
+template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation_gMinStepping() {
   logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_nonlinear_continuation_gMin()\n", getName());
 
   const int MaxIter = getPropertyInteger("MaxIter") / 4 + 1;
@@ -250,7 +250,7 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation
 
 /* Uses the source-stepping algorithm in order to solve
  * the given non-linear netlist by continuous iterations. */
-template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation_Source() {
+template <class nr_type_t> int nasolver<nr_type_t>::solve_nonlinear_continuation_SourceStepping() {
   logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_nonlinear_continuation_Source()\n", getName());
 
   const int MaxIter = getPropertyInteger("MaxIter") / 4 + 1;
@@ -663,8 +663,8 @@ template <class nr_type_t> void nasolver<nr_type_t>::saveBranchCurrents() {
 template <class nr_type_t> int nasolver<nr_type_t>::countNodes() { return nlist->length() - 1; }
 
 // Returns the node number of the give node name.
-template <class nr_type_t> int nasolver<nr_type_t>::getNodeNr(const std::string &str) {
-  return nlist->getNodeNr(str);
+template <class nr_type_t> int nasolver<nr_type_t>::getNodeIndex(const std::string &name) {
+  return nlist->getNodeIndex(name);
 }
 
 /* Returns the assigned node number for the port of the given circuits,
@@ -921,15 +921,11 @@ template <class nr_type_t> void nasolver<nr_type_t>::restartDC() {
  * Then the function saves the solution vector back into the actual component nodes. */
 // ARA: Is not called from within this class. Subclasses `dcsolver` and `trsolver`
 // ARA: call this method before calling `solve_nonlinear()`.
-template <class nr_type_t> void nasolver<nr_type_t>::applyNodeset(bool discard) {
+template <class nr_type_t> void nasolver<nr_type_t>::applyNodeset(bool reset) {
   logprint(LOG_STATUS, "NOTIFY: %s: nasolver::applyNodeset()\n", getName());
 
-  if (x == nullptr || nlist == nullptr) {
-    return;
-  }
-
   // set each solution to zero
-  if (discard) {
+  if (reset) {
     for (int i = 0; i < x->size(); i++) {
       x->set(i, 0);
     }
@@ -939,7 +935,7 @@ template <class nr_type_t> void nasolver<nr_type_t>::applyNodeset(bool discard) 
   for (nodeset *n = subnet->getNodeset(); n; n = n->getNext()) {
     struct nodelist_t *nl = nlist->getNode(n->getName());
     if (nl != nullptr) {
-      x->set(nl->n, n->getValue());
+      x->set(nl->index, n->getValue());
     } else {
       logprint(LOG_ERROR,
                "WARNING: %s: no such node `%s' found, cannot "

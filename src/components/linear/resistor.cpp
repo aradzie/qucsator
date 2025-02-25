@@ -20,6 +20,7 @@
  */
 
 #include "component.h"
+
 #include "resistor.h"
 
 using namespace qucs;

@@ -37,7 +37,7 @@ typedef std::vector<node *> nodevector;
 struct nodelist_t {
 public:
   nodelist_t(const std::string &n = "", bool intern = false)
-      : n(0), name(n), internal(intern), nodes() {}
+      : index(0), name(n), internal(intern), nodes() {}
 
   nodelist_t(nodelist_t &c) = default;
 
@@ -48,12 +48,6 @@ public:
   typedef detail::nodevector::reference reference;
   typedef detail::nodevector::const_reference const_reference;
   typedef detail::nodevector::const_iterator erase_iterator;
-
-  /* Unique node index. `gnd` has index 0. */
-  std::size_t n;
-  /* name of node */
-  std::string name;
-  bool internal;
 
   reference operator[](size_type n) { return (this->nodes[n]); }
   const_reference operator[](size_type n) const { return (this->nodes[n]); }
@@ -71,6 +65,13 @@ public:
 
   bool empty() const noexcept { return nodes.empty(); }
 
+public:
+  /* Unique node index. `gnd` has index 0. */
+  std::size_t index;
+  /* name of node */
+  std::string name;
+  bool internal;
+
 private:
   std::vector<value_type> nodes;
 };
@@ -81,12 +82,10 @@ public:
   nodelist(net *);
   ~nodelist();
   int length() const;
-  int getNodeNr(const std::string &) const;
+  int getNodeIndex(const std::string &) const;
   std::string get(int) const;
   bool isInternal(int) const;
   void assignNodes();
-  void print() const;
-  std::string getNodeString(int) const;
   void sort();
   void remove(circuit *);
   void insert(circuit *);
@@ -94,6 +93,8 @@ public:
   nodelist_t *getNode(const std::string &) const;
   nodelist_t *getNode(int nr) const { return narray[nr + 1]; }
   nodelist_t &operator[](int nr) const { return *narray[nr + 1]; }
+  std::string getNodeString(int) const;
+  void print() const;
 
 private:
   std::vector<nodelist_t *> narray;
