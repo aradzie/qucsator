@@ -10,6 +10,7 @@ set(
   SOURCES
   bjt.cpp
   device.cpp
+  devstates.cpp
   diac.cpp
   diode.cpp
   eqndefined.cpp

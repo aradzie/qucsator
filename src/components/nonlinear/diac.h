@@ -22,9 +22,7 @@
 #ifndef __DIAC_H__
 #define __DIAC_H__
 
-#include "devstates.h"
-
-class diac final : public qucs::circuit, public qucs::devstates {
+class diac final : public qucs::circuit {
 public:
   CREATOR(diac);
   void calcAC(double) override;

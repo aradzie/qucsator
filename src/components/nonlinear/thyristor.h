@@ -22,9 +22,7 @@
 #ifndef __THYRISTOR_H__
 #define __THYRISTOR_H__
 
-#include "devstates.h"
-
-class thyristor final : public qucs::circuit, public qucs::devstates {
+class thyristor final : public qucs::circuit {
 public:
   CREATOR(thyristor);
   void calcAC(double) override;

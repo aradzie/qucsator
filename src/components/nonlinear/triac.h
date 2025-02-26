@@ -22,9 +22,7 @@
 #ifndef __TRIAC_H__
 #define __TRIAC_H__
 
-#include "devstates.h"
-
-class triac final : public qucs::circuit, public qucs::devstates {
+class triac final : public qucs::circuit {
 public:
   CREATOR(triac);
   void calcAC(double) override;

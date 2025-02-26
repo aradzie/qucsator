@@ -12,7 +12,6 @@ set(
   ${TEMPLATE_SOURCES}
   circuit.cpp
   dataset.cpp
-  devstates.cpp
   differentiate.cpp
   environment.cpp
   equation.cpp

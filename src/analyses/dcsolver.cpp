@@ -34,6 +34,15 @@
 
 namespace qucs {
 
+constexpr int helpers[] = {
+    CONV_SourceStepping,  //
+    CONV_GMinStepping,    //
+    CONV_SteepestDescent, //
+    CONV_LineSearch,      //
+    CONV_Attenuation,     //
+    -1,
+};
+
 dcsolver::dcsolver() : nasolver<double>() {
   saveOPs = 0;
   type = ANALYSIS_DC;
@@ -81,10 +90,6 @@ int dcsolver::solve() {
     // Start the linear solver.
     error = solve_linear();
   } else {
-    constexpr int helpers[] = {
-        CONV_SourceStepping, CONV_GMinStepping, CONV_SteepestDescent,
-        CONV_LineSearch,     CONV_Attenuation,  -1,
-    };
     int helperIndex = 0;
 
     // Iterate to find the solution.
