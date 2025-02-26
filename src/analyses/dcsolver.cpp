@@ -71,35 +71,22 @@ int dcsolver::solve() {
   else if (!strcmp(solver, "GolubSVD"))
     eqnAlgo = ALGO_SV_DECOMPOSITION;
 
-  const char *const helper = getPropertyString("convHelper");
-  convHelper = CONV_None;
-  if (!strcmp(helper, "LineSearch")) {
-    convHelper = CONV_LineSearch;
-  } else if (!strcmp(helper, "SteepestDescent")) {
-    convHelper = CONV_SteepestDescent;
-  } else if (!strcmp(helper, "Attenuation")) {
-    convHelper = CONV_Attenuation;
-  } else if (!strcmp(helper, "gMinStepping")) {
-    convHelper = CONV_GMinStepping;
-  } else if (!strcmp(helper, "SourceStepping")) {
-    convHelper = CONV_SourceStepping;
-  }
-  const int preferredHelper = convHelper;
-
-  constexpr int helpers[] = {
-      CONV_SourceStepping, CONV_GMinStepping, CONV_SteepestDescent,
-      CONV_LineSearch,     CONV_Attenuation,  -1,
-  };
-
   // Allocate the nodes, SLE matrices and vectors.
   solve_pre();
 
-  int error = 0, fallback = 0;
+  convHelper = CONV_None;
+
+  int error = 0;
   if (!subnet->isNonLinear()) {
     // Start the linear solver.
-    convHelper = CONV_None;
     error = solve_linear();
   } else {
+    constexpr int helpers[] = {
+        CONV_SourceStepping, CONV_GMinStepping, CONV_SteepestDescent,
+        CONV_LineSearch,     CONV_Attenuation,  -1,
+    };
+    int helperIndex = 0;
+
     // Iterate to find the solution.
     bool retry;
     do {
@@ -118,15 +105,12 @@ int dcsolver::solve() {
         switch (estack.top()->getCode()) {
         case EXCEPTION_NO_CONVERGENCE:
           estack.pop();
-          if (preferredHelper && preferredHelper == helpers[fallback]) {
-            fallback++; // Skip the preferred helper.
-          }
-          convHelper = helpers[fallback++];
+          convHelper = helpers[helperIndex++];
           if (convHelper != -1) {
             logprint(LOG_ERROR,
                      "WARNING: %s: %s analysis failed, using fallback "
                      "#%d (%s)\n",
-                     getName(), getDescription().c_str(), fallback, getHelperDescription());
+                     getName(), getDescription().c_str(), helperIndex, getHelperDescription());
             retry = true;
             restartDC();
           }
@@ -191,13 +175,6 @@ PROP_OPT[] = {
     {"saveOPs", PROP_STR, {PROP_NO_VAL, "no"}, PROP_RNG_YESNO},
     {"Temp", PROP_REAL, {26.85, PROP_NO_STR}, PROP_MIN_VAL(K)},
     {"saveAll", PROP_STR, {PROP_NO_VAL, "no"}, PROP_RNG_YESNO},
-    {
-        "convHelper",
-        PROP_STR,
-        {PROP_NO_VAL, "none"},
-        PROP_RNG_STR6("none", "SourceStepping", "gMinStepping", "LineSearch", "Attenuation",
-                      "SteepestDescent"),
-    },
     {"Solver", PROP_STR, {PROP_NO_VAL, "CroutLU"}, PROP_RNG_SOL},
     PROP_NO_PROP,
 };
