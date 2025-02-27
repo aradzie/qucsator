@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <cstring>
+
 #include "complex.h"
 #include "object.h"
 #include "vector.h"

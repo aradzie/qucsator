@@ -29,28 +29,32 @@
 
 namespace qucs {
 
-class integrator : public states<double> {
+class integrator : public states {
 public:
   integrator();
-  integrator(const integrator &);
-  ~integrator();
+  integrator(const integrator &) = delete;
 
   typedef void (*integrate_func_t)(integrator *, int, double, double &, double &);
-  void setIntegration(integrate_func_t f) { integrate_func = f; }
+  void setIntegrateFunc(integrate_func_t const f) { integrate_func = f; }
+
   typedef void (*conductor_func_t)(integrator *, double, double &);
-  void setConductance(conductor_func_t f) { conductor_func = f; }
+  void setConductorFunc(conductor_func_t const f) { conductor_func = f; }
+
   void integrate(int, double, double &, double &);
   void conductor(double, double &);
-  void setOrder(int o) { order = o; }
-  int getOrder() { return order; }
-  void setMode(int s) { state = s; }
-  int getMode() { return state; }
+
+  void setMode(int const m) { mode = m; }
+  [[nodiscard]] int getMode() const { return mode; }
+
+  void setOrder(int const o) { order = o; }
+  [[nodiscard]] int getOrder() const { return order; }
+
   void setCoefficients(double *c) { coefficients = c; }
-  double *getCoefficients() { return coefficients; }
+  [[nodiscard]] const double *getCoefficients() const { return coefficients; }
 
 private:
+  int mode;
   int order;
-  int state;
   double *coefficients;
   integrate_func_t integrate_func;
   conductor_func_t conductor_func;

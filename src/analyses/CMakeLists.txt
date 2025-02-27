@@ -14,6 +14,7 @@ set(
   parasweep.cpp
   spsolver.cpp
   trsolver.cpp
+  trsolver_dc.cpp
 )
 
 add_library(coreAnalyses OBJECT ${SOURCES})

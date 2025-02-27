@@ -19,44 +19,22 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cstdlib>
-
 #include "integrator.h"
-
-// Some definitions for the save-state variables.
-#define STATE_SHIFT 3
-#define STATE_NUM 8
-#define STATE_MASK 7
 
 namespace qucs {
 
-integrator::integrator() : states() {
-  coefficients = nullptr;
-  order = 0;
-  state = 0;
-  integrate_func = nullptr;
-  conductor_func = nullptr;
-}
-
-integrator::integrator(const integrator &c) : states(c) {
-  coefficients = c.coefficients;
-  order = c.order;
-  state = c.state;
-  integrate_func = c.integrate_func;
-  conductor_func = c.conductor_func;
-}
-
-integrator::~integrator() {}
+integrator::integrator()
+    : mode(0), order(0), coefficients(nullptr), integrate_func(nullptr), conductor_func(nullptr) {}
 
 /* Evaluates the state of the integration-using component
  * and runs the appropriate integrator function. */
 void integrator::integrate(int qstate, double cap, double &geq, double &ceq) {
   int cstate = qstate + 1;
-  if (state & MODE_INIT) {
+  if (mode & MODE_INIT) {
     fillState(qstate, getState(qstate));
   }
   (*integrate_func)(this, qstate, cap, geq, ceq);
-  if (state & MODE_INIT) {
+  if (mode & MODE_INIT) {
     fillState(cstate, getState(cstate));
   }
 }
