@@ -195,14 +195,14 @@ void circuit::allocMatrixMNA() {
   freeMatrixMNA();
   if (size > 0) {
     MatrixY = new nr_complex_t[size * size]; // ARA: Input matrix, conductances.
-    VectorI = new nr_complex_t[size]; // ARA: Input vector, currents.
-    VectorV = new nr_complex_t[size]; // ARA: Output vector, voltages.
+    VectorI = new nr_complex_t[size];        // ARA: Input vector, currents.
+    VectorV = new nr_complex_t[size];        // ARA: Output vector, voltages.
     if (vsources > 0) {
-      MatrixB = new nr_complex_t[vsources * size]; // ARA: Input matrix.
-      MatrixC = new nr_complex_t[vsources * size]; // ARA: Input matrix.
+      MatrixB = new nr_complex_t[vsources * size];     // ARA: Input matrix.
+      MatrixC = new nr_complex_t[vsources * size];     // ARA: Input matrix.
       MatrixD = new nr_complex_t[vsources * vsources]; // ARA: Input matrix.
-      VectorE = new nr_complex_t[vsources]; // ARA: Input vector, voltages.
-      VectorJ = new nr_complex_t[vsources]; // ARA: Output vector, currents.
+      VectorE = new nr_complex_t[vsources];            // ARA: Input vector, voltages.
+      VectorJ = new nr_complex_t[vsources];            // ARA: Output vector, currents.
     }
   }
 }
@@ -242,6 +242,22 @@ void circuit::freeMatrixMNA() {
     VectorJ = nullptr;
   }
 }
+
+void circuit::clearB() { memset(MatrixB, 0, sizeof(nr_complex_t) * size * vsources); }
+
+void circuit::clearC() { memset(MatrixC, 0, sizeof(nr_complex_t) * size * vsources); }
+
+void circuit::clearD() { memset(MatrixD, 0, sizeof(nr_complex_t) * vsources * vsources); }
+
+void circuit::clearE() { memset(VectorE, 0, sizeof(nr_complex_t) * vsources); }
+
+void circuit::clearJ() { memset(VectorJ, 0, sizeof(nr_complex_t) * vsources); }
+
+void circuit::clearI() { memset(VectorI, 0, sizeof(nr_complex_t) * size); }
+
+void circuit::clearV() { memset(VectorV, 0, sizeof(nr_complex_t) * size); }
+
+void circuit::clearY() { memset(MatrixY, 0, sizeof(nr_complex_t) * size * size); }
 
 /* Sets the name and port number of one of the circuit's
    nodes.  It also tells the appropriate node about the circuit it

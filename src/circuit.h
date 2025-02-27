@@ -197,8 +197,8 @@ public:
   void transientCapacitanceC2V(int, int, int, double, double);
   void transientCapacitanceC2Q(int, int, int, double, double);
 
-  void setDelta(double *d) { deltas = d; }
-  double *getDelta() const { return deltas; }
+  void setDelta(double *d) { deltas = d; } // ARA: Only used by the BJT model.
+  double *getDelta() const { return deltas; } // ARA: Only used by the BJT model.
 
   // history specific functionality
 
@@ -311,14 +311,14 @@ public:
   /* Sets the circuits G-MNA matrix value depending on the port numbers. */
   void setG(int r, int c, double y) { MatrixY[r * size + c] = y; }
 
-  void clearB() { memset(MatrixB, 0, sizeof(nr_complex_t) * size * vsources); }
-  void clearC() { memset(MatrixC, 0, sizeof(nr_complex_t) * size * vsources); }
-  void clearD() { memset(MatrixD, 0, sizeof(nr_complex_t) * vsources * vsources); }
-  void clearE() { memset(VectorE, 0, sizeof(nr_complex_t) * vsources); }
-  void clearJ() { memset(VectorJ, 0, sizeof(nr_complex_t) * vsources); }
-  void clearI() { memset(VectorI, 0, sizeof(nr_complex_t) * size); }
-  void clearV() { memset(VectorV, 0, sizeof(nr_complex_t) * size); }
-  void clearY() { memset(MatrixY, 0, sizeof(nr_complex_t) * size * size); }
+  void clearB();
+  void clearC();
+  void clearD();
+  void clearE();
+  void clearJ();
+  void clearI();
+  void clearV();
+  void clearY();
 
   // operating point functionality
 
@@ -369,9 +369,9 @@ protected:
   int pol;
 
 private:
-  int size; // The number of ports/nodes.
-  int pacport; // ARA: Something for S-parameters.
-  int vsource; // ARA: Index of the first voltage source in the MNA matrix.
+  int size;     // The number of ports/nodes.
+  int pacport;  // ARA: Something for S-parameters.
+  int vsource;  // ARA: Index of the first voltage source in the MNA matrix.
   int vsources; // ARA: The number of internal voltage sources.
   int nsources; // ARA: The number of internal voltage noise sources for AC analysis.
   int inserted;
@@ -405,7 +405,7 @@ private:
   valuelist<pair> charac;
   net *subnet;
   environment *env;
-  double *deltas;
+  double *deltas; // The shared array of time steps for TR. ARA: Only used by the BJT model.
   int nHistories;
   history *histories;
 };

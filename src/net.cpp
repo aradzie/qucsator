@@ -20,10 +20,10 @@
  */
 
 #include <cassert>
+#include <cstring>
 
 #include "analysis.h"
 #include "circuit.h"
-#include "complex.h"
 #include "component_id.h"
 #include "dataset.h"
 #include "environment.h"

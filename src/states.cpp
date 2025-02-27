@@ -1,5 +1,5 @@
 /*
- * states.cpp - save-state variable template class implementation
+ * states.cpp - save-state variable class implementation
  *
  * Copyright (C) 2004 Stefan Jahn <stefan@lkcc.org>
  *
@@ -19,7 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cstring>
+#include <cstdlib>
 
 #include "states.h"
 
@@ -29,97 +29,58 @@
 
 namespace qucs {
 
-template <class state_type_t> states<state_type_t>::states() {
+states::states() {
   nstates = 0;
-  currentstate = 0;
   stateval = nullptr;
-}
-
-template <class state_type_t> states<state_type_t>::states(const states &c) {
-  nstates = c.nstates;
-  currentstate = c.currentstate;
-
-  // copy state variables if necessary
-  if (nstates && c.stateval) {
-    int size = nstates * sizeof(state_type_t) * STATE_NUM;
-    stateval = (state_type_t *)malloc(size);
-    memcpy(stateval, c.stateval, size);
-  } else {
-    stateval = nullptr;
-  }
-}
-
-template <class state_type_t> states<state_type_t>::~states() { free(stateval); }
-
-/* Allocates and initializes memory for the save-state variables. */
-template <class state_type_t> void states<state_type_t>::initStates() {
-  free(stateval);
-  if (nstates) {
-    stateval = (state_type_t *)calloc(nstates, sizeof(state_type_t) * STATE_NUM);
-  }
   currentstate = 0;
 }
 
-// Clears the save-state variables.
-template <class state_type_t> void states<state_type_t>::clearStates() {
-  if (nstates && stateval) {
-    memset(stateval, 0, nstates * sizeof(state_type_t) * STATE_NUM);
+states::~states() {
+  if (stateval) {
+    free(stateval);
   }
+}
+
+void states::setStates(int const n) {
+  nstates = n;
+  if (stateval) {
+    free(stateval);
+  }
+  stateval = (double *)calloc(nstates, sizeof(double) * STATE_NUM);
   currentstate = 0;
 }
 
-/* Returns a save-state variable at the given position.
-   Higher positions mean earlier states.
-   By default the function returns the current state of the save-state variable. */
-template <class state_type_t> state_type_t states<state_type_t>::getState(int state, int n) {
-  int i = (n + currentstate) & STATE_MASK;
-  return stateval[(state << STATE_SHIFT) + i];
+int states::getStates() const { return nstates; }
+
+/* Applies the given value to a save-state variable through all history values. */
+void states::fillState(const int stateId, double value) {
+  for (int i = 0; i < STATE_NUM; i++) {
+    stateval[(stateId << STATE_SHIFT) + i] = value;
+  }
 }
 
 /* Applies the given value to a save-state variable.
    Higher positions mean earlier states.
    By default the function sets the current state of the save-state variable. */
-template <class state_type_t>
-void states<state_type_t>::setState(int state, state_type_t val, int n) {
-  int i = (n + currentstate) & STATE_MASK;
-  stateval[(state << STATE_SHIFT) + i] = val;
+void states::setState(const int stateId, const double value, const int offset) {
+  const int index = (offset + currentstate) & STATE_MASK;
+  stateval[(stateId << STATE_SHIFT) + index] = value;
+}
+
+/* Returns a save-state variable at the given position.
+   Higher positions mean earlier states.
+   By default the function returns the current state of the save-state variable. */
+double states::getState(const int stateId, const int offset) const {
+  const int index = (offset + currentstate) & STATE_MASK;
+  return stateval[(stateId << STATE_SHIFT) + index];
 }
 
 // Shifts one state forward.
-template <class state_type_t> void states<state_type_t>::nextState() {
-  if (--currentstate < 0) {
+void states::nextState() {
+  if (currentstate > 0) {
+    currentstate--;
+  } else {
     currentstate = STATE_NUM - 1;
-  }
-}
-
-// Shifts one state backward.
-template <class state_type_t> void states<state_type_t>::prevState() {
-  currentstate = (currentstate + 1) & STATE_MASK;
-}
-
-/* Applies the given value to a save-state variable through all history values. */
-template <class state_type_t> void states<state_type_t>::fillState(int state, state_type_t val) {
-  // get a pointer to the start of the state array
-  state_type_t *p = &stateval[state << STATE_SHIFT];
-  // fill each array member with the supplied value
-  for (int i = 0; i < STATE_NUM; i++) {
-    *p++ = val;
-  }
-}
-
-/* Stores the values of the given state into the given pointer location. */
-template <class state_type_t>
-void states<state_type_t>::saveState(int state, state_type_t *values) {
-  for (int i = 0; i < STATE_NUM; i++) {
-    values[i] = getState(state, i);
-  }
-}
-
-/* Stores the values in the given pointer location into the state. */
-template <class state_type_t>
-void states<state_type_t>::inputState(int state, state_type_t *values) {
-  for (int i = 0; i < STATE_NUM; i++) {
-    setState(state, values[i], i);
   }
 }
 

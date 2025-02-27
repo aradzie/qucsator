@@ -33,20 +33,19 @@ enum integrator_type {
   INTEGRATOR_ADAMSBASHFORD = 4
 };
 
-class circuit;
 class integrator;
 
 namespace transient {
 
-void calcCorrectorCoeff(int, int, double *, double *);
-void calcPredictorCoeff(int, int, double *, double *);
+void calcCorrectorCoeff(int, int, const double *, double *);
+void calcPredictorCoeff(int, int, const double *, double *);
 void getConductance(integrator *, double, double &);
 void integrateEuler(integrator *, int, double, double &, double &);
 void integrateBilinear(integrator *, int, double, double &, double &);
 void integrateGear(integrator *, int, double, double &, double &);
 void integrateMoulton(integrator *, int, double, double &, double &);
-void setIntegrationMethod(circuit *, int);
-int correctorType(const char *const, int &);
+void setIntegrationMethod(integrator *, int);
+int correctorType(const char *, int &);
 int correctorType(int, int);
 int predictorType(int, int, int &);
 double getCorrectorError(int, int);
