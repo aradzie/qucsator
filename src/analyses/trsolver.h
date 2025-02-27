@@ -26,7 +26,6 @@
 #include <unordered_map>
 
 #include "nasolver.h"
-#include "states.h"
 
 namespace qucs {
 
@@ -43,10 +42,10 @@ public:
 
 public:
   double value; // MNA vector x entry.
-  int current; // Voltage source index in a circuit.
+  int current;  // Voltage source index in a circuit.
 };
 
-class trsolver final : public nasolver<double>, public states<double> {
+class trsolver final : public nasolver<double> {
 public:
   ACREATOR(trsolver);
   explicit trsolver(const std::string &name);
@@ -61,60 +60,50 @@ private:
   void nextStates();
   void fillStates();
   void setMode(int);
-  void setDelta();
   void adjustDelta(double);
   void adjustOrder(int reduce = 0);
-  void initTR();
-  void deinitTR();
-  static void calcTR(trsolver *);
   void initDC();
   static void calcDC(trsolver *);
-  void initSteps();
+  void initTR();
+  static void calcTR(trsolver *);
   void saveAllResults(double);
   double checkDelta();
-  void updateCoefficients(double);
   void initHistory(double);
   void updateHistory(double);
   void saveHistory(circuit *);
   void predictBashford();
   void predictEuler();
   void predictGear();
-  void initCircuitTR(circuit *);
-  void fillSolution(tvector<double> *);
 
   void storeDcSolution();
   void recallDcSolution();
 
 private:
   sweep *swp;
-  double predCoeff[8];
-  double corrCoeff[8];
-  double deltas[8];
+  tvector<double> *solution[8]; // The list of previous solution vectors X.
+  double predCoeff[8];          // This array is shared with the circuits (integrators).
+  double corrCoeff[8];          // This array is shared with the circuits (integrators).
+  double deltas[8];             // This array is shared with the circuits (integrators).
   double delta;
   double deltaMax;
   double deltaMin;
   double deltaOld;
   double stepDelta;
-  int CMethod;      // user specified corrector method
-  int PMethod;      // user specified predictor method
+  int corrMethod0;  // user specified corrector method
+  int corrMethod;   // current corrector method
+  int predMethod;   // current predictor method
   int corrMaxOrder; // maximum corrector order
   int predMaxOrder; // maximum predictor order
-  int corrType;     // current corrector method
-  int predType;     // current predictor method
   int corrOrder;    // current corrector order
   int predOrder;    // current predictor order
   int rejected;
   int converged;
-  tvector<double> *solution[8];
   double current;
   int statSteps;
   int statRejected;
   int statIterations;
   int statConvergence;
-  history *tHistory;
-  bool relaxTSR;
-  bool initialDC;
-  int ohm;
+  history *hist;
 
   std::unordered_map<
       /* node or circuit name */ std::string,

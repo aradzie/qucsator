@@ -117,6 +117,8 @@ template <class nr_type_t> void nasolver<nr_type_t>::solve_post() {
 template <class nr_type_t> int nasolver<nr_type_t>::solve_once() {
   logprint(LOG_STATUS, "NOTIFY: %s: nasolver::solve_once()\n", getName());
 
+  log_indent();
+
   // run the calculation function such as calcDC, calcTR, etc, for each circuit
   // ARA: Circuits update their internal matrices and vectors.
   calculate();
@@ -136,6 +138,8 @@ template <class nr_type_t> int nasolver<nr_type_t>::solve_once() {
   // save results into circuits
   // ARA: Copy the solution vector to the circuit output vectors `VectorV` and `VectorJ`.
   saveSolution();
+
+  log_dedent();
 
   return NO_ERROR;
 }

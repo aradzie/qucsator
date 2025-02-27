@@ -32,6 +32,7 @@ set(
   property.cpp
   range.cpp
   receiver.cpp
+  states.cpp
   strlist.cpp
   sweep.cpp
   transient.cpp

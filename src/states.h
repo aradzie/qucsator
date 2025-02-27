@@ -24,40 +24,32 @@
 
 namespace qucs {
 
-/*
- * This class is used for storing sets of states for use
- * by the transient integrators.
+/**
+ * Acts like N circular buffers of values.
+ * Each such buffer has a fixed length of 8 elements.
+ * Each such buffer has a unique numeric id, starting from zero.
  */
-template <class state_type_t> class states {
+class states {
 public:
   states();
-  states(const states &);
+  states(const states &) = delete;
   ~states();
 
-  state_type_t getState(int, int n = 0);
-  void setState(int, state_type_t, int n = 0);
-  void initStates();
-  void clearStates();
-  int getStates() { return nstates; }
-  void setStates(int n) { nstates = n; }
+  void setStates(int n);
+  [[nodiscard]] int getStates() const;
+
+  void fillState(int, double);
+  void setState(int, double, int offset = 0);
+  [[nodiscard]] double getState(int, int offset = 0) const;
+
   void nextState();
-  void prevState();
-  void fillState(int, state_type_t);
-  void saveState(int, state_type_t *);
-  void inputState(int, state_type_t *);
 
 private:
-  // Array for holding all the sets of states.
-  // Multiple sets of states are stored in one large array which is indexed appropriately
-  // to get the right state set and value.
-  state_type_t *stateval;
-  // The number of sets of states stored.
-  int nstates;
-  int currentstate;
+  int size;
+  double *values;
+  int pos;
 };
 
 } // namespace qucs
-
-#include "states.cpp"
 
 #endif /* __STATES_H__ */

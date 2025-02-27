@@ -23,106 +23,79 @@
 #define __HISTORY_H__
 
 #include <memory>
-#include <vector>
 #include <utility>
+#include <vector>
 
 namespace qucs {
 
-class history
-{
+class history {
 public:
-  /*! default constructor */
-  history ():
-    sign(false),
-    age(0),
-    values(std::make_shared<std::vector<double>>()),
-    t(std::make_shared<std::vector<double>>())
-  {};
+  history()
+      : sign(false), age(0), values(std::make_shared<std::vector<double>>()),
+        t(std::make_shared<std::vector<double>>()) {};
 
-  /*! The copy constructor creates a new instance based on the given
-      history object. */
-  history (const history &h)
-  {
-      this->age = h.age;
-      this->t = std::make_shared<std::vector<double>>(*(h.t));
-      this->values = std::make_shared<std::vector<double>>(*(h.values));
-  }
+  history(const history &h) = delete;
 
-  /*! The function appends the given value to the history. */
-  void push_back (const double val) {
+  /* Appends the given value to the history. */
+  void push_back(const double val) {
     this->values->push_back(val);
-    if (this->values != this->t)
-      this->drop ();
+    if (this->values != this->t) {
+      this->drop();
+    }
   }
 
-  /* This function drops the most recent n values in the history. */
-  void truncate (const std::size_t n) = delete;
-  void resize(const std::size_t n)
-  {
-    this->t->resize (n);
-    this->values->resize (n);
+  /* Drops the most recent n values in the history. */
+  void truncate(const std::size_t n) = delete;
+  void resize(const std::size_t n) {
+    this->t->resize(n);
+    this->values->resize(n);
   }
 
-  std::size_t size (void) const
-  {
-    return t->size ();
-  }
+  std::size_t size() const { return t->size(); }
 
-  void setAge (const double a) { this->age = a; }
-  double getAge (void) const { return this->age; }
+  void setAge(const double a) { this->age = a; }
+  double getAge() const { return this->age; }
 
-  // apply history
-  void apply (const history & h) {
-    this->t = h.t;
-  }
+  void apply(const history &h) { this->t = h.t; }
 
-  //! Returns the last (youngest) time value in the history
-  double last (void) const {
-    return this->t->empty() ? 0.0 : this->t->back();
-  }
+  // Returns the last (youngest) time value in the history
+  double last() const { return this->t->empty() ? 0.0 : this->t->back(); }
 
-  //! Returns the first (oldest) time value in the history.
-  double first (void) const {
-    return this->t->empty() ? 0.0 : (*this->t)[leftidx ()];
-  }
+  // Returns the first (oldest) time value in the history.
+  double first() const { return this->t->empty() ? 0.0 : (*this->t)[leftidx()]; }
 
   // Returns left-most valid index into the time value vector.
-  unsigned int leftidx (void) const {
-    int ts = this->t->size ();
-    int vs = this->values->size ();
+  unsigned int leftidx() const {
+    int ts = this->t->size();
+    int vs = this->values->size();
     return ts - vs > 0 ? ts - vs : 0;
   }
 
-  /*! Returns number of unused values (time value vector shorter than
-   value vector). */
-  std::size_t unused (void) {
-    int ts = t->size ();
-    int vs = values->size ();
+  /* Returns number of unused values (time value vector shorter than value vector). */
+  std::size_t unused() {
+    int ts = t->size();
+    int vs = values->size();
     return vs - ts > 0 ? vs - ts : 0;
   }
 
-  //! Returns the duration of the history.
-  double duration(void) const {
-     return last () - first ();
+  // Returns the duration of the history.
+  double duration() const { return last() - first(); }
+
+  void truncate(const double);
+
+  void drop();
+  void self() { this->t = this->values; }
+
+  double interpol(double, int, bool);
+  double nearest(double, bool interpolate = true);
+  int seek(double, int, int, double &, int);
+
+  double getTfromidx(const int idx) { return this->t == nullptr ? 0.0 : (*this->t)[idx]; }
+  double getValfromidx(const int idx) {
+    return this->values == nullptr ? 0.0 : (*this->values)[idx];
   }
 
-  void truncate (const double);
-
-  void drop (void);
-  void self (void) { this->t = this->values; }
-
-  double interpol (double, int, bool);
-  double nearest (double, bool interpolate = true);
-  int seek (double, int, int, double&, int);
-
-  double getTfromidx (const int idx)  {
-    return this->t == NULL ? 0.0 : (*this->t)[idx];
-  }
-  double getValfromidx (const int idx) {
-    return this->values == NULL ? 0.0 : (*this->values)[idx];
-  }
-
- private:
+private:
   bool sign;
   double age;
   std::shared_ptr<std::vector<double>> values;
