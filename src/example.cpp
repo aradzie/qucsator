@@ -62,12 +62,6 @@ int main(int argc, char **argv) {
   delete root;
   delete env;
 
-  // delete static modules and dynamic modules
-  module::unregisterModules();
-
-  // close all the dynamic libs if any opened
-  module::closeDynamicLibs();
-
   netlist_destroy_env();
 
   return ret;
