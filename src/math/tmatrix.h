@@ -26,75 +26,66 @@
 
 namespace qucs {
 
-template <class nr_type_t>
-class tmatrix;
+template <class nr_type_t> class tmatrix;
 
-template <class nr_type_t>
-class tvector;
+template <class nr_type_t> class tvector;
 
 // Forward declarations of friend functions.
-template <class nr_type_t>
-tmatrix<nr_type_t> inverse (tmatrix<nr_type_t>);
-template <class nr_type_t>
-tmatrix<nr_type_t> teye (int);
-template <class nr_type_t>
-tmatrix<nr_type_t> operator * (tmatrix<nr_type_t>, tmatrix<nr_type_t>);
-template <class nr_type_t>
-tvector<nr_type_t> operator * (tmatrix<nr_type_t>, tvector<nr_type_t>);
-template <class nr_type_t>
-tvector<nr_type_t> operator * (tvector<nr_type_t>, tmatrix<nr_type_t>);
+template <class nr_type_t> tmatrix<nr_type_t> inverse(tmatrix<nr_type_t>);
+template <class nr_type_t> tmatrix<nr_type_t> teye(int);
+template <class nr_type_t> tmatrix<nr_type_t> operator*(tmatrix<nr_type_t>, tmatrix<nr_type_t>);
+template <class nr_type_t> tvector<nr_type_t> operator*(tmatrix<nr_type_t>, tvector<nr_type_t>);
+template <class nr_type_t> tvector<nr_type_t> operator*(tvector<nr_type_t>, tmatrix<nr_type_t>);
 
-template <class nr_type_t>
-class tmatrix
-{
- public:
-  tmatrix ();
-  tmatrix (int);
-  tmatrix (int, int);
-  tmatrix (const tmatrix &);
-  const tmatrix& operator = (const tmatrix &);
-  ~tmatrix ();
-  nr_type_t get (int, int);
-  void set (int, int, nr_type_t);
-  void set (nr_type_t);
-  int  getCols (void) { return cols; }
-  int  getRows (void) { return rows; }
-  nr_type_t * getData (void) { return data; }
-  tvector<nr_type_t> getRow (int);
-  void setRow (int, tvector<nr_type_t>);
-  tvector<nr_type_t> getCol (int);
-  void setCol (int, tvector<nr_type_t>);
-  void exchangeRows (int, int);
-  void exchangeCols (int, int);
-  void transpose (void);
-  int  isFinite (void);
-  void print (bool realonly = false);
+template <class nr_type_t> class tmatrix {
+public:
+  tmatrix();
+  explicit tmatrix(int);
+  explicit tmatrix(int, int);
+  tmatrix(const tmatrix &);
+  const tmatrix &operator=(const tmatrix &);
+  ~tmatrix();
+  nr_type_t get(int, int);
+  void set(int, int, nr_type_t);
+  void set(nr_type_t);
+  int getCols() { return cols; }
+  int getRows() { return rows; }
+  nr_type_t *getData() { return data; }
+  tvector<nr_type_t> getRow(int);
+  void setRow(int, tvector<nr_type_t>);
+  tvector<nr_type_t> getCol(int);
+  void setCol(int, tvector<nr_type_t>);
+  void exchangeRows(int, int);
+  void exchangeCols(int, int);
+  void transpose();
+  int isFinite();
+  void print(bool realonly = false);
 
   // some basic matrix operations
-#ifndef _MSC_VER
-  friend tmatrix inverse<> (tmatrix);
-  friend tmatrix teye<nr_type_t> (int);
-  friend tmatrix operator *<> (tmatrix, tmatrix);
-  friend tvector<nr_type_t> operator *<> (tmatrix, tvector<nr_type_t>);
-  friend tvector<nr_type_t> operator *<> (tvector<nr_type_t>, tmatrix);
-#endif
+  friend tmatrix inverse<>(tmatrix);
+  friend tmatrix teye<nr_type_t>(int);
+  friend tmatrix operator* <>(tmatrix, tmatrix);
+  friend tvector<nr_type_t> operator* <>(tmatrix, tvector<nr_type_t>);
+  friend tvector<nr_type_t> operator* <>(tvector<nr_type_t>, tmatrix);
 
   // intrinsic operators
-  tmatrix operator += (tmatrix);
-  tmatrix operator -= (tmatrix);
+  tmatrix operator+=(tmatrix);
+  tmatrix operator-=(tmatrix);
 
   // easy accessor operators
-  nr_type_t  operator () (int r, int c) const {
-    assert (r >= 0 && r < rows && c >= 0 && c < cols);
-    return data[r * cols + c]; }
-  nr_type_t& operator () (int r, int c) {
-    assert (r >= 0 && r < rows && c >= 0 && c < cols);
-    return data[r * cols + c]; }
+  nr_type_t operator()(const int r, const int c) const {
+    assert(r >= 0 && r < rows && c >= 0 && c < cols);
+    return data[r * cols + c];
+  }
+  nr_type_t &operator()(const int r, const int c) {
+    assert(r >= 0 && r < rows && c >= 0 && c < cols);
+    return data[r * cols + c];
+  }
 
- private:
+private:
   int cols;
   int rows;
-  nr_type_t * data;
+  nr_type_t *data;
 };
 
 } // namespace qucs
